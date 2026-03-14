@@ -6,5 +6,5 @@ import com.uade.tpo.marketplace.entity.Category;
 
 public class CategoryRepository {
     public ArrayList<Category> categories = new ArrayList<Category>();
-    Arrays.asList(Category.builder().description("Electronica").id(1).build())
+    // Arrays.asList(Category.builder().description("Electronica").id(1).build());
 }

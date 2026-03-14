@@ -28,7 +28,6 @@ public class CategoryController {
     
     @PostMapping("path")
     public String createCategory(@RequestBody String categoryId) {
-        //TODO: process POST request
         CategoryService categoryService = new CategoryService();
         return categoryService.createCategory(categoryId);
     }
