@@ -27,7 +27,6 @@ import com.uade.tpo.marketplace.service.CategoryService;
 @RequestMapping("Categories")
 public class CategoryController {
 
-    // Dependency Injection
     @Autowired
     private CategoryService categoryService;
 

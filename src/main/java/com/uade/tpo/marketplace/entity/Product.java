@@ -25,6 +25,4 @@ public class Product extends BaseEntity {
     private Long categoryId;
     @Column
     private String imageUrl;
-
-
 }
