@@ -27,7 +27,7 @@ public class OrderService implements IBaseService<
         UpdateOrderRequest> {
  
     @Autowired
-    private OrderRepository ordersRepository;
+    private OrderRepository orderRepository;
  
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
@@ -95,7 +95,7 @@ public class OrderService implements IBaseService<
         BigDecimal total = BigDecimal.ZERO;
  
         try {
-            ordersRepository.save(order);
+            orderRepository.save(order);
         } catch (Exception e) {
             throw new RuntimeException("Error creating order: " + e.getMessage());
         }
@@ -118,7 +118,8 @@ public class OrderService implements IBaseService<
             }
  
             OrderDetails detail = new OrderDetails();
-            detail.setOrderId(order.getId());
+            // detail.setOrderId(order.getId());
+            detail.setOrder(order);
             detail.setBoxId(box.getId());
             detail.setBoxName(box.getName());
             detail.setQuantity(item.getQuantity());
@@ -143,7 +144,7 @@ public class OrderService implements IBaseService<
         order.setTotalAmount(total);
  
         try {
-            ordersRepository.save(order);
+            orderRepository.save(order);
         } catch (Exception e) {
             throw new RuntimeException("Error updating order total: " + e.getMessage());
         }

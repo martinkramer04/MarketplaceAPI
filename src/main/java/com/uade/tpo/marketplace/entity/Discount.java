@@ -1,7 +1,9 @@
 package com.uade.tpo.marketplace.entity;
  
 import java.util.Date;
- 
+
+import com.uade.tpo.marketplace.entity.enums.DiscountTypeEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

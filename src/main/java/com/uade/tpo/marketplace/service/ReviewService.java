@@ -19,7 +19,7 @@ public class ReviewService implements IBaseService<
         UpdateReviewRequest> {
  
     @Autowired
-    private ReviewRepository reviewsRepository;
+    private ReviewRepository reviewRepository;
  
     @Override
     public List<Review> getAll() {

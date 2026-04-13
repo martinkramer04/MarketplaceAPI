@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentMethods {
+public class PaymentMethods extends BaseEntity {
  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
