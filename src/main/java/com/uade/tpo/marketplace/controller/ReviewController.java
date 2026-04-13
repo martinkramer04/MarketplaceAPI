@@ -30,7 +30,7 @@ public class ReviewController {
     // GET /api/reviews
     @GetMapping
     public ResponseEntity<List<Review>> getAll() {
-        return ResponseEntity.ok(ReviewService.getAll());
+        return ResponseEntity.ok(reviewsService.getAll());
     }
  
     // GET /api/reviews/{id}

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
  
 import com.uade.tpo.marketplace.entity.Discount;
+import com.uade.tpo.marketplace.entity.enums.DiscountTypeEnum;
  
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
@@ -16,4 +17,5 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
  
     // Listar descuentos activos
     List<Discount> findByIsActiveTrue();
+    List<Discount> findByDiscountType(DiscountTypeEnum discountType);
 }
