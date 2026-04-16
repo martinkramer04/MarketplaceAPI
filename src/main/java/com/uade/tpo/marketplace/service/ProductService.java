@@ -28,7 +28,11 @@ public class ProductService implements IBaseService<
     public List<Product> getAll() {
         return productRepository.findAll();
     }
-
+    
+    public List<Product> getByUserId(Long userId) {
+        return productRepository.findByUserId(userId);
+    }
+    
     public Optional<Product> getById(Long id) {
         return productRepository.findById(id);
     }
@@ -40,7 +44,7 @@ public class ProductService implements IBaseService<
             return Optional.empty();
         }
 
-        if (entity.getName() == null || entity.getPrice() == null || entity.getStock() == null || entity.getCategoryId() == null) {
+        if (entity.getName() == null || entity.getPrice() == null || entity.getStock() == null || entity.getCategoryId() == null || entity.getUserId() == null) {
             return Optional.empty();
         }
     
@@ -52,6 +56,7 @@ public class ProductService implements IBaseService<
         product.setCategoryId(entity.getCategoryId());
         product.setImageUrl(entity.getImageUrl());
         product.setDescription(entity.getDescription());
+        product.setUserId(entity.getUserId());
 
         try {
             productRepository.save(product);

@@ -47,12 +47,11 @@ public class ProductsController {
     
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequest request) {
-        Product createdProduct = productService.create(request).orElse(null);
-        if (createdProduct == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(createdProduct);
-    }
+        request.setUserId(1L); // HARCODEO HASTA IMPLEMENTAR JWT
+        return productService.create(request)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.badRequest().build());
+}
 
     @PutMapping("/{productId}")
     public ResponseEntity<Product> updateProduct(@RequestBody UpdateProductRequest request, @PathVariable Long productId) {

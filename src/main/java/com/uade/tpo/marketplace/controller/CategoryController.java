@@ -30,12 +30,13 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-
+    //GET
     @GetMapping 
     public ResponseEntity<List<Category>> getCategories() {
         return ResponseEntity.ok(categoryService.getAll());
     }
-
+    
+    //GET
     @GetMapping("/{categoryId}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long categoryId) {
         Optional<Category> category = categoryService.getById(categoryId);
@@ -45,16 +46,22 @@ public class CategoryController {
 
         return ResponseEntity.notFound().build();
     }
+    //GET
+    @GetMapping("/user/{userId}") 
+    public ResponseEntity<List<Category>> getByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(categoryService.getByUserId(userId));
+    }
     
+    //POST
     @PostMapping
     public ResponseEntity<Category> createCategory(@RequestBody CreateCategoryRequest request) {
+        request.setUserId(1L); //MODIFICAR LUEGO DE IMPLEMENTAR JWT
         Category createdCategory = categoryService.create(request).orElse(null);
-        if (createdCategory == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(createdCategory);
+        if (createdCategory == null) return ResponseEntity.badRequest().build();
+            return ResponseEntity.ok(createdCategory);
     }
 
+    //PUT
     @PutMapping("/{categoryId}")
     public ResponseEntity<Category> updateCategory(@RequestBody UpdateCategoryRequest request, @PathVariable Long categoryId) {
         Category updatedCategory = categoryService.update(request, categoryId).orElse(null);
@@ -64,6 +71,7 @@ public class CategoryController {
         return ResponseEntity.ok(updatedCategory);
     }
 
+    //DELETE
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Category> deleteCategory(@PathVariable Long categoryId) {
         categoryService.delete(categoryId);

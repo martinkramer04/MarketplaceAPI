@@ -30,6 +30,9 @@ public class PaymentMethodsService implements IBaseService<
     public Optional<PaymentMethods> getById(Long id) {
         return paymentMethodsRepository.findById(id);
     }
+    public List<PaymentMethods> getByUserId(Long userId) {
+        return paymentMethodsRepository.findByUserId(userId);
+    }
  
     @Override
     public Optional<PaymentMethods> create(CreatePaymentMethodsRequest entity) {
@@ -44,7 +47,8 @@ public class PaymentMethodsService implements IBaseService<
         PaymentMethods paymentMethod = new PaymentMethods();
         paymentMethod.setName(entity.getName());
         paymentMethod.setDescription(entity.getDescription());
- 
+        paymentMethod.setUserId(entity.getUserId());
+
         try {
             paymentMethodsRepository.save(paymentMethod);
         } catch (Exception e) {

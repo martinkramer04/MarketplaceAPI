@@ -28,4 +28,7 @@ public class Box extends BaseEntity {
  
     @Column
     private Integer stock;
+
+    @Column(nullable = false)
+    private Long userId; 
 }

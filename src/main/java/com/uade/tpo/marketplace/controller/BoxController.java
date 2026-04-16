@@ -52,14 +52,21 @@ public class BoxController {
         return result.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
- 
+    
+    //GET
+    @GetMapping("/user/{userId}") 
+    public ResponseEntity<List<Box>> getByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(boxService.getByUserId(userId));
+    }
+    
     //POST
     @PostMapping
     public ResponseEntity<Box> create(@RequestBody CreateBoxRequest request) {
+        request.setUserId(1L); //MODIFICAR LUEGO DE IMPLEMENTAR JWT
         Optional<Box> result = boxService.create(request);
         return result.map(b -> ResponseEntity.status(HttpStatus.CREATED).body(b))
-                .orElse(ResponseEntity.badRequest().build());
-    }
+            .orElse(ResponseEntity.badRequest().build());
+}
  
     //PUT
     @PutMapping("/{id}")

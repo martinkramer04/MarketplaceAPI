@@ -28,7 +28,7 @@ public class OrderService implements IBaseService<
 
     @Autowired
     private OrderRepository orderRepository;
-
+ 
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
 
@@ -113,7 +113,8 @@ public class OrderService implements IBaseService<
             }
 
             OrderDetails detail = new OrderDetails();
-            detail.setOrderId(order.getId());
+            // detail.setOrderId(order.getId());
+            detail.setOrder(order);
             detail.setBoxId(box.getId());
             detail.setBoxName(box.getName());
             detail.setQuantity(item.getQuantity());

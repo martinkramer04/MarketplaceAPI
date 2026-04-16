@@ -40,14 +40,19 @@ public class PaymentMethodsController {
         return result.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
- 
+    //GET
+    @GetMapping("/user/{userId}") 
+    public ResponseEntity<List<PaymentMethods>> getByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(paymentMethodsService.getByUserId(userId));
+    }
     //POST 
     @PostMapping
     public ResponseEntity<PaymentMethods> create(@RequestBody CreatePaymentMethodsRequest request) {
+        request.setUserId(1L); //MODIFICAR LUEGO DE IMPLEMENTAR JWT
         Optional<PaymentMethods> result = paymentMethodsService.create(request);
         return result.map(pm -> ResponseEntity.status(HttpStatus.CREATED).body(pm))
-                .orElse(ResponseEntity.badRequest().build());
-    }
+            .orElse(ResponseEntity.badRequest().build());
+}
  
     //PUT 
     @PutMapping("/{id}")

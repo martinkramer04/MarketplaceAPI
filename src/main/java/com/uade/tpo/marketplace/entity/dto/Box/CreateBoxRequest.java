@@ -12,4 +12,5 @@ public class CreateBoxRequest {
     private String description;
     private BigDecimal price;
     private Integer stock;
+    private Long userId;
 }

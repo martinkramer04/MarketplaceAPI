@@ -33,10 +33,14 @@ public class CategoryService implements IBaseService<
         return categoryRepository.findById(id);
         // throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
+    public List<Category> getByUserId(Long userId) {
+        return categoryRepository.findByUserId(userId);
+    }
 
     public Optional<Category> create(CreateCategoryRequest entity) {
         Category category = new Category();
         category.setDescription(entity.getDescription());
+        category.setUserId(entity.getUserId());
 
         try {
             categoryRepository.save(category);

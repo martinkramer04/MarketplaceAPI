@@ -1,14 +1,16 @@
 package com.uade.tpo.marketplace.entity;
  
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "payment_methods")
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class PaymentMethods extends BaseEntity{
+@NoArgsConstructor
+@AllArgsConstructor
+public class PaymentMethods extends BaseEntity {
  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +21,7 @@ public class PaymentMethods extends BaseEntity{
  
     @Column
     private String description;
+    
+    @Column(nullable = false)
+    private Long userId; 
 }

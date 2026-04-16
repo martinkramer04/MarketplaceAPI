@@ -12,6 +12,6 @@ public class CreateProductRequest {
     private Long categoryId;
     private String imageUrl;
     private BigDecimal price;
-
+    private Long userId;
 }
 

@@ -20,7 +20,7 @@ public class ReviewService implements IBaseService<
 
     @Autowired
     private ReviewRepository reviewRepository;
-
+ 
     @Override
     public List<Review> getAll() {
         return reviewRepository.findAll();
