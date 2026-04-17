@@ -12,6 +12,8 @@ import com.uade.tpo.marketplace.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Service
+@RequiredArgsConstructor
 public class AuthService {
         private  UserRepository repository;
         private  PasswordEncoder passwordEncoder;
@@ -21,8 +23,8 @@ public class AuthService {
 
         public AuthAuthenticateResponse register(AuthRegisterRequest request) {
                 var user = User.builder()
-                                .firstName(request.getFirstname())
-                                .lastName(request.getLastname())
+                                .firstname(request.getFirstname())
+                                .lastname(request.getLastname())
                                 .email(request.getEmail())
                                 .password(passwordEncoder.encode(request.getPassword()))
                                 .role(request.getRole())
@@ -30,7 +32,7 @@ public class AuthService {
 
                 repository.save(user);
                 var jwtToken = jwtService.generateToken(user);
-                return AuthenticationResponse.builder()
+                return AuthAuthenticateResponse.builder()
                                 .accessToken(jwtToken)
                                 .build();
     }
@@ -43,7 +45,7 @@ public class AuthService {
                 var user = repository.findByEmail(request.getEmail())
                                 .orElseThrow();
                 var jwtToken = jwtService.generateToken(user);
-                return AuthenticationResponse.builder()
+                return AuthAuthenticateResponse.builder()
                                 .accessToken(jwtToken)
                                 .build();
     }

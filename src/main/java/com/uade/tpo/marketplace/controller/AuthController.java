@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.dto.Auth.AuthAuthenticateRequest;
 import com.uade.tpo.marketplace.entity.dto.Auth.AuthAuthenticateResponse;
 import com.uade.tpo.marketplace.entity.dto.Auth.AuthRegisterRequest;
-import com.uade.tpo.marketplace.entity.dto.Auth.AuthRegisterResponse;
 import com.uade.tpo.marketplace.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthRegisterResponse> register(@RequestBody AuthRegisterRequest request) {
+    public ResponseEntity<AuthAuthenticateResponse> register(@RequestBody AuthRegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 

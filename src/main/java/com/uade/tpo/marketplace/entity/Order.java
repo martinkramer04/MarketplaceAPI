@@ -27,9 +27,6 @@ import com.uade.tpo.marketplace.entity.enums.StatusOrderEnum;
 public class Order extends BaseEntity {
 
     @Column
-    private Long userId;
-
-    @Column
     private Long paymentMethodId;
 
     @Column
