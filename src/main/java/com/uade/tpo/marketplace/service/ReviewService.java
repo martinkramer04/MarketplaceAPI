@@ -7,9 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Review;
 import com.uade.tpo.marketplace.entity.dto.Review.CreateReviewRequest;
 import com.uade.tpo.marketplace.entity.dto.Review.UpdateReviewRequest;
+import com.uade.tpo.marketplace.repository.BoxRepository;
 import com.uade.tpo.marketplace.repository.ReviewRepository;
 
 @Service
@@ -20,10 +22,12 @@ public class ReviewService implements IBaseService<
 
     @Autowired
     private ReviewRepository reviewRepository;
+    @Autowired
+    private BoxRepository boxRepository;
  
     @Override
     public List<Review> getAll() {
-        return reviewRepository.findAll();
+        return reviewRepository.findBy(null, null);
     }
 
     @Override
@@ -54,9 +58,14 @@ public class ReviewService implements IBaseService<
             return Optional.empty();
         }
 
+        Optional<Box> box = boxRepository.findById(entity.getBoxId());
+        if (box.isEmpty()) {
+            return Optional.empty();
+        }
+ 
         Review review = new Review();
         review.setUserId(entity.getUserId());
-        review.setBoxId(entity.getBoxId());
+        review.setBox(box.get());
         review.setRating(entity.getRating());
         review.setComment(entity.getComment());
         review.setCreatedAt(LocalDateTime.now());

@@ -3,14 +3,16 @@ package com.uade.tpo.marketplace.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
  
 import com.uade.tpo.marketplace.entity.Box;
+import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
 import com.uade.tpo.marketplace.repository.BoxRepository;
+import com.uade.tpo.marketplace.repository.CategoryRepository;
  
 @Service
 public class BoxService implements IBaseService<
@@ -20,10 +22,12 @@ public class BoxService implements IBaseService<
  
     @Autowired
     private BoxRepository boxRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
  
     @Override
     public List<Box> getAll() {
-        return boxRepository.findAll();
+        return boxRepository.findByIsDeletedFalseAndStockGreaterThan(0);
     }
  
     @Override
@@ -55,9 +59,14 @@ public class BoxService implements IBaseService<
                 || entity.getStock() == null || entity.getCategoryId() == null) {
             return Optional.empty();
         }
+
+    Optional<Category> category = categoryRepository.findById(entity.getCategoryId());
+        if (category.isEmpty()) {
+            return Optional.empty();
+        }
  
         Box box = new Box();
-        box.setCategoryId(entity.getCategoryId());
+        box.setCategory(category.get());
         box.setName(entity.getName());
         box.setDescription(entity.getDescription());
         box.setPrice(entity.getPrice());
@@ -82,11 +91,25 @@ public class BoxService implements IBaseService<
             return Optional.empty();
         }
  
-        box.setCategoryId(entity.getCategoryId());
-        box.setName(entity.getName());
-        box.setDescription(entity.getDescription());
-        box.setPrice(entity.getPrice());
-        box.setStock(entity.getStock());
+        if (entity.getCategoryId() != null) {
+            Optional<Category> category = categoryRepository.findById(entity.getCategoryId());
+            if (category.isEmpty()) {
+                return Optional.empty();
+            }
+            box.setCategory(category.get());
+        }
+        if (entity.getName() != null) {
+            box.setName(entity.getName());
+        }
+        if (entity.getDescription() != null) {
+            box.setDescription(entity.getDescription());
+        }
+        if (entity.getPrice() != null) {
+            box.setPrice(entity.getPrice());
+        }
+        if (entity.getStock() != null) {
+            box.setStock(entity.getStock());
+        }
         box.setUpdatedAt(LocalDateTime.now());
  
         try {

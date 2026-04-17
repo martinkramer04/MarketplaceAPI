@@ -1,7 +1,9 @@
 package com.uade.tpo.marketplace.entity;
  
 import java.math.BigDecimal;
- 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -39,6 +41,7 @@ public class OrderDetails extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     private Order order;
 }
  

@@ -20,6 +20,9 @@ import com.uade.tpo.marketplace.repository.DiscountRepository;
 import com.uade.tpo.marketplace.repository.OrderDetailsRepository;
 import com.uade.tpo.marketplace.repository.OrderRepository;
 
+import com.uade.tpo.marketplace.repository.UserRepository;
+import com.uade.tpo.marketplace.entity.User;
+ 
 @Service
 public class OrderService implements IBaseService<
         Order,
@@ -34,11 +37,14 @@ public class OrderService implements IBaseService<
 
     @Autowired
     private BoxRepository boxRepository;
-
+ 
     @Autowired
     private DiscountRepository discountRepository;
 
-    @Override
+    @Autowired
+    private UserRepository userRepository;
+
+@Override
     public List<Order> getAll() {
         return orderRepository.findAll();
     }
@@ -69,21 +75,26 @@ public class OrderService implements IBaseService<
 
         // Resolver descuento si se envió un código
         Discount discount = null;
-        if (entity.getDiscountCode() != null && !entity.getDiscountCode().isBlank()) {
-            discount = discountRepository.findByCode(entity.getDiscountCode()).orElse(null);
+        if (entity.getDiscountCode() != null && !entity.getDiscountCode().isEmpty()) {
+            discount = discountRepository.findByCode(entity.getDiscountCode().orElse(""))
+                    .orElse(null);
             if (discount != null && !discount.getIsActive()) {
                 discount = null;
             }
         }
 
         Order order = new Order();
-        order.setUserId(entity.getUserId());
+        User user = userRepository.findById(entity.getUserId()).orElse(null);
+        if (user == null) {
+            return Optional.empty();
+        }
+        order.setUser(user);
         order.setPaymentMethodId(entity.getPaymentMethodId());
         order.setStatus(StatusOrderEnum.GENERADA);
         order.setCreatedAt(LocalDateTime.now());
 
         if (discount != null) {
-            order.setDiscountId(discount.getId());
+            order.setDiscount(discount);
             order.setDiscountPercentage(discount.getPercentage());
             order.setDiscountCode(discount.getCode());
         }
@@ -124,6 +135,7 @@ public class OrderService implements IBaseService<
             detail.setBoxStock(box.getStock());
 
             total = total.add(subtotal);
+
             box.setStock(box.getStock() - item.getQuantity());
 
             try {

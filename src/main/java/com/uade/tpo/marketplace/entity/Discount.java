@@ -1,6 +1,7 @@
 package com.uade.tpo.marketplace.entity;
  
 import java.util.Date;
+import java.util.List;
 
 import com.uade.tpo.marketplace.entity.enums.DiscountTypeEnum;
 
@@ -8,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -43,4 +45,7 @@ public class Discount extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column
     private DiscountTypeEnum discountType;
+
+    @OneToMany(mappedBy = "discount")
+    private List<Order> orders;
 }

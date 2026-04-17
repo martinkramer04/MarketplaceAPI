@@ -1,21 +1,21 @@
 package com.uade.tpo.marketplace.entity;
  
 import java.time.LocalDateTime;
- 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
  
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "reviews")
 public class Review extends BaseEntity {
- 
-    @Column
-    private LocalDateTime createdAt;
  
     @Column
     private Integer rating;
@@ -26,6 +26,8 @@ public class Review extends BaseEntity {
     @Column
     private Long userId;
  
-    @Column
-    private Long boxId;
+    @ManyToOne
+    @JoinColumn(name = "box_id", nullable = false)
+    @JsonBackReference
+    private Box box;
 }

@@ -10,10 +10,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.uade.tpo.marketplace.entity.enums.StatusOrderEnum;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -35,17 +40,20 @@ public class Order extends BaseEntity {
     private StatusOrderEnum status;
 
     @Column
-    private LocalDateTime createdAt;
-
-    @Column
-    private Long discountId;
-
-    @Column
     private Integer discountPercentage;
 
     @Column
     private String discountCode;
 
     @OneToMany(mappedBy = "order")
+    @JsonManagedReference
     private List<OrderDetails> orderDetails;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "discount_id", nullable = true)
+    private Discount discount;
 }
