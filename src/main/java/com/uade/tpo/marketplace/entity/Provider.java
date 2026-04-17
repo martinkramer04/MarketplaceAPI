@@ -1,7 +1,5 @@
 package com.uade.tpo.marketplace.entity;
  
-import java.math.BigDecimal;
- 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,24 +9,18 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "boxes")
-public class Box extends BaseEntity {
+@Table(name = "providers")
+public class Provider extends BaseEntity {
  
     @Column
-    private Long categoryId;
+    private Long userId;
  
     @Column
-    private String name;
+    private String companyName;
  
     @Column
-    private String description;
+    private String email;
  
     @Column
-    private BigDecimal price;
- 
-    @Column
-    private Integer stock;
-
-    @Column(nullable = false)
-    private Long userId; 
+    private String phone;
 }

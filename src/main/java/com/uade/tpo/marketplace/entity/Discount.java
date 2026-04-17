@@ -12,8 +12,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
  
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "discounts")
 public class Discount extends BaseEntity {
@@ -35,7 +37,6 @@ public class Discount extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date endDate;
  
-    // Código único para descuentos tipo CUPON. Null si es GENERAL
     @Column(unique = true)
     private String code;
  

@@ -18,4 +18,7 @@ public class Category extends BaseEntity {
     @Column
     private String description;
 
+    @Column(nullable = false)
+    private Long userId; 
+
 }

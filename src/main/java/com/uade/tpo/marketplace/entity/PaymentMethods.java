@@ -1,10 +1,10 @@
 package com.uade.tpo.marketplace.entity;
  
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
- 
+
 @Entity
 @Table(name = "payment_methods")
 @Data
@@ -21,4 +21,7 @@ public class PaymentMethods extends BaseEntity {
  
     @Column
     private String description;
+    
+    @Column(nullable = false)
+    private Long userId; 
 }

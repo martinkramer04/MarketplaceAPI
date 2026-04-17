@@ -35,6 +35,10 @@ public class BoxService implements IBaseService<
     public List<Box> getByCategory(Long categoryId) {
         return boxRepository.findByCategoryId(categoryId);
     }
+    
+    public List<Box> getByUserId(Long userId) {
+        return boxRepository.findByUserId(userId);
+    }
  
     // Método extra: cajas con stock disponible
     public List<Box> getAvailable() {
@@ -58,7 +62,8 @@ public class BoxService implements IBaseService<
         box.setDescription(entity.getDescription());
         box.setPrice(entity.getPrice());
         box.setStock(entity.getStock());
- 
+        box.setUserId(entity.getUserId());
+
         try {
             boxRepository.save(box);
         } catch (Exception e) {

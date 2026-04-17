@@ -7,4 +7,5 @@ public class CreatePaymentMethodsRequest {
 
     private String name;
     private String description;
+    private Long userId;
 }
