@@ -46,12 +46,6 @@ public class CategoryController {
 
         return ResponseEntity.notFound().build();
     }
-    //GET
-    @GetMapping("/user/{userId}") 
-    public ResponseEntity<List<Category>> getByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(categoryService.getByUserId(userId));
-    }
-    
     //POST
     @PostMapping
     public ResponseEntity<Category> createCategory(@RequestBody CreateCategoryRequest request) {

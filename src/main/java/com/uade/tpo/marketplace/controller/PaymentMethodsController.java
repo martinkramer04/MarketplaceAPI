@@ -40,11 +40,6 @@ public class PaymentMethodsController {
         return result.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    //GET
-    @GetMapping("/user/{userId}") 
-    public ResponseEntity<List<PaymentMethods>> getByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(paymentMethodsService.getByUserId(userId));
-    }
     //POST 
     @PostMapping
     public ResponseEntity<PaymentMethods> create(@RequestBody CreatePaymentMethodsRequest request) {
