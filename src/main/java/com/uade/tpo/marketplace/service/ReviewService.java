@@ -9,14 +9,17 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Review;
+import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Review.CreateReviewRequest;
+import com.uade.tpo.marketplace.entity.dto.Review.ReviewDto;
 import com.uade.tpo.marketplace.entity.dto.Review.UpdateReviewRequest;
 import com.uade.tpo.marketplace.repository.BoxRepository;
 import com.uade.tpo.marketplace.repository.ReviewRepository;
+import com.uade.tpo.marketplace.repository.UserRepository;
 
 @Service
 public class ReviewService implements IBaseService<
-        Review,
+        ReviewDto,
         CreateReviewRequest,
         UpdateReviewRequest> {
 
@@ -24,27 +27,39 @@ public class ReviewService implements IBaseService<
     private ReviewRepository reviewRepository;
     @Autowired
     private BoxRepository boxRepository;
+    @Autowired
+    private UserRepository userRepository;
  
     @Override
-    public List<Review> getAll() {
-        return reviewRepository.findBy(null, null);
+    public List<ReviewDto> getAll() {
+        return reviewRepository.findAll().stream()
+                .map(ReviewDto::convertToDto)
+                .toList();
+    }
+
+
+
+    @Override
+    public Optional<ReviewDto> getById(Long id) {
+        return reviewRepository.findById(id).stream()
+                .map(ReviewDto::convertToDto)
+                .findFirst();
+    }
+
+    public List<ReviewDto> getByBox(Long boxId) {
+        return reviewRepository.findByBoxId(boxId).stream()
+                .map(ReviewDto::convertToDto)
+                .toList();
+    }
+
+    public List<ReviewDto> getByUser(Long userId) {
+        return reviewRepository.findByUserId(userId).stream()
+                .map(ReviewDto::convertToDto)
+                .toList();
     }
 
     @Override
-    public Optional<Review> getById(Long id) {
-        return reviewRepository.findById(id);
-    }
-
-    public List<Review> getByBox(Long boxId) {
-        return reviewRepository.findByBoxId(boxId);
-    }
-
-    public List<Review> getByUser(Long userId) {
-        return reviewRepository.findByUserId(userId);
-    }
-
-    @Override
-    public Optional<Review> create(CreateReviewRequest entity) {
+    public Optional<ReviewDto> create(CreateReviewRequest entity) {
         if (entity == null) {
             return Optional.empty();
         }
@@ -62,13 +77,17 @@ public class ReviewService implements IBaseService<
         if (box.isEmpty()) {
             return Optional.empty();
         }
+
+        Optional<User> user = userRepository.findById(entity.getUserId());
+        if (user.isEmpty()) {
+            return Optional.empty();
+        }
  
         Review review = new Review();
-        review.setUserId(entity.getUserId());
+        review.setUser(user.get());
         review.setBox(box.get());
         review.setRating(entity.getRating());
         review.setComment(entity.getComment());
-        review.setCreatedAt(LocalDateTime.now());
 
         try {
             reviewRepository.save(review);
@@ -76,11 +95,11 @@ public class ReviewService implements IBaseService<
             throw new RuntimeException("Error creating review: " + e.getMessage());
         }
 
-        return Optional.of(review);
+        return Optional.of(ReviewDto.convertToDto(review));
     }
 
     @Override
-    public Optional<Review> update(UpdateReviewRequest entity, Long id) {
+    public Optional<ReviewDto> update(UpdateReviewRequest entity, Long id) {
         Review review = reviewRepository.findById(id).orElse(null);
 
         if (review == null) {
@@ -106,7 +125,7 @@ public class ReviewService implements IBaseService<
             throw new RuntimeException("Error updating review: " + e.getMessage());
         }
 
-        return Optional.of(review);
+        return Optional.of(ReviewDto.convertToDto(review));
     }
 
     @Override

@@ -53,12 +53,6 @@ public class BoxController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    //GET
-    @GetMapping("/user/{userId}") 
-    public ResponseEntity<List<Box>> getByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(boxService.getByUserId(userId));
-    }
-    
     //POST
     @PostMapping
     public ResponseEntity<Box> create(@RequestBody CreateBoxRequest request) {

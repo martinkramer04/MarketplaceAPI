@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+
 @Data
 @Entity
 @Table(name = "categories")
@@ -18,7 +19,7 @@ public class Category extends BaseEntity {
     private String description;
 
     @Column(nullable = false)
-    private Long userId; 
+    private Long userId;
 
     @OneToMany(mappedBy = "category")
     @JsonBackReference

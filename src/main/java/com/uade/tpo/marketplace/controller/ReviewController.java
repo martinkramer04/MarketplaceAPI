@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  
 import com.uade.tpo.marketplace.entity.Review;
 import com.uade.tpo.marketplace.entity.dto.Review.CreateReviewRequest;
+import com.uade.tpo.marketplace.entity.dto.Review.ReviewDto;
 import com.uade.tpo.marketplace.entity.dto.Review.UpdateReviewRequest;
 import com.uade.tpo.marketplace.service.ReviewService;
  
@@ -29,44 +30,44 @@ public class ReviewController {
  
     // GET /api/reviews
     @GetMapping
-    public ResponseEntity<List<Review>> getAll() {
+    public ResponseEntity<List<ReviewDto>> getAll() {
         return ResponseEntity.ok(reviewsService.getAll());
     }
  
     // GET /api/reviews/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<Review> getById(@PathVariable Long id) {
-        Optional<Review> result = reviewsService.getById(id);
+    public ResponseEntity<ReviewDto> getById(@PathVariable Long id) {
+        Optional<ReviewDto> result = reviewsService.getById(id);
         return result.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
  
     // GET /api/reviews/box/{boxId}
     @GetMapping("/box/{boxId}")
-    public ResponseEntity<List<Review>> getByBox(@PathVariable Long boxId) {
+    public ResponseEntity<List<ReviewDto>> getByBox(@PathVariable Long boxId) {
         return ResponseEntity.ok(reviewsService.getByBox(boxId));
     }
  
     // GET /api/reviews/user/{userId}
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Review>> getByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<ReviewDto>> getByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(reviewsService.getByUser(userId));
     }
  
     // POST /api/reviews
     @PostMapping
-    public ResponseEntity<Review> create(@RequestBody CreateReviewRequest request) {
-        Optional<Review> result = reviewsService.create(request);
+    public ResponseEntity<ReviewDto> create(@RequestBody CreateReviewRequest request) {
+        Optional<ReviewDto> result = reviewsService.create(request);
         return result.map(r -> ResponseEntity.status(HttpStatus.CREATED).body(r))
                 .orElse(ResponseEntity.badRequest().build());
     }
  
     // PUT /api/reviews/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<Review> update(
+    public ResponseEntity<ReviewDto> update(
             @PathVariable Long id,
             @RequestBody UpdateReviewRequest request) {
-        Optional<Review> result = reviewsService.update(request, id);
+        Optional<ReviewDto> result = reviewsService.update(request, id);
         return result.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

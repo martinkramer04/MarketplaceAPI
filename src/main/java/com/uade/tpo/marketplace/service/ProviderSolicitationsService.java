@@ -11,8 +11,8 @@ import com.uade.tpo.marketplace.entity.ProviderSolicitations;
 import com.uade.tpo.marketplace.entity.dto.Provider.CreateProviderSolicitationRequest;
 import com.uade.tpo.marketplace.entity.dto.Provider.UpdateProviderSolicitationRequest;
 import com.uade.tpo.marketplace.entity.enums.SolicitationStatusEnum;
-import com.uade.tpo.marketplace.repository.ProviderRepository;
 import com.uade.tpo.marketplace.repository.ProviderSolicitationsRepository;
+import com.uade.tpo.marketplace.repository.UserRepository;
 
 @Service
 public class ProviderSolicitationsService implements IBaseService<
@@ -24,7 +24,10 @@ public class ProviderSolicitationsService implements IBaseService<
     private ProviderSolicitationsRepository solicitationsRepository;
 
     @Autowired
-    private ProviderRepository providerRepository;
+    // private ProviderRepository providerRepository;
+    private UserRepository userRepository;
+
+     @Autowired
 
     @Override
     public List<ProviderSolicitations> getAll() {
@@ -36,8 +39,8 @@ public class ProviderSolicitationsService implements IBaseService<
         return solicitationsRepository.findById(id);
     }
 
-    public List<ProviderSolicitations> getByProvider(Long providerId) {
-        return solicitationsRepository.findByProviderId(providerId);
+    public List<ProviderSolicitations> getByUser(Long userId) {
+        return solicitationsRepository.findByUserId(userId);
     }
 
     public List<ProviderSolicitations> getByStatus(SolicitationStatusEnum status) {
@@ -50,16 +53,17 @@ public class ProviderSolicitationsService implements IBaseService<
             return Optional.empty();
         }
 
-        if (entity.getProviderId() == null) {
+        if (entity.getUserId() == null) {
             return Optional.empty();
         }
 
-        if (!providerRepository.existsById(entity.getProviderId())) {
+        if (!userRepository.existsById(entity.getUserId())) {
             return Optional.empty();
         }
+
 
         ProviderSolicitations solicitation = new ProviderSolicitations();
-        solicitation.setProviderId(entity.getProviderId());
+        solicitation.setUser(userRepository.findById(entity.getUserId()).orElse(null));
         solicitation.setDescription(entity.getDescription());
         solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA);
         solicitation.setCreatedAt(LocalDateTime.now());

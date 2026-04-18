@@ -23,8 +23,9 @@ public class Review extends BaseEntity {
     @Column
     private String comment;
  
-    @Column
-    private Long userId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
  
     @ManyToOne
     @JoinColumn(name = "box_id", nullable = false)

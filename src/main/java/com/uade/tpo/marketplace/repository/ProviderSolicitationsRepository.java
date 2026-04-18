@@ -12,7 +12,7 @@ import com.uade.tpo.marketplace.entity.enums.SolicitationStatusEnum;
 public interface ProviderSolicitationsRepository extends JpaRepository<ProviderSolicitations, Long> {
  
     // Solicitudes de un provider específico
-    List<ProviderSolicitations> findByProviderId(Long providerId);
+    List<ProviderSolicitations> findByUserId(Long userId);
  
     // Solicitudes por estado
     List<ProviderSolicitations> findBySolicitationStatus(SolicitationStatusEnum status);

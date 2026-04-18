@@ -2,9 +2,12 @@ package com.uade.tpo.marketplace.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.EqualsAndHashCode;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -22,8 +25,12 @@ public class Product extends BaseEntity {
     private Integer stock;
     @Column
     private String description;
-    @Column
-    private Long categoryId;
+    
+    @ManyToOne
+    @JsonManagedReference
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+    
     @Column
     private String imageUrl;
     

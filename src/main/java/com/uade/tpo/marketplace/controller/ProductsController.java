@@ -19,18 +19,15 @@ import com.uade.tpo.marketplace.entity.dto.Product.CreateProductRequest;
 import com.uade.tpo.marketplace.entity.dto.Product.UpdateProductRequest;
 import com.uade.tpo.marketplace.service.ProductService;
 
-
-
 @RestController
-@RequestMapping("Products")
+@RequestMapping("/api/Products")
 public class ProductsController {
 
     // Dependency Injection
     @Autowired
     private ProductService productService;
 
-
-    @GetMapping 
+    @GetMapping
     public ResponseEntity<List<Product>> get() {
         return ResponseEntity.ok(productService.getAll());
     }
@@ -40,21 +37,22 @@ public class ProductsController {
         Optional<Product> product = productService.getById(productId);
         if (product.isPresent()) {
             return ResponseEntity.ok(product.get());
-        }   
+        }
 
         return ResponseEntity.notFound().build();
     }
-    
+
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequest request) {
         request.setUserId(1L); // HARCODEO HASTA IMPLEMENTAR JWT
         return productService.create(request)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.badRequest().build());
-}
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
+    }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Product> updateProduct(@RequestBody UpdateProductRequest request, @PathVariable Long productId) {
+    public ResponseEntity<Product> updateProduct(@RequestBody UpdateProductRequest request,
+            @PathVariable Long productId) {
         Product updatedProduct = productService.update(request, productId).orElse(null);
         if (updatedProduct == null) {
             return ResponseEntity.notFound().build();

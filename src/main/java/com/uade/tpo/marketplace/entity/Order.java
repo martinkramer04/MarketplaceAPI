@@ -18,7 +18,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.uade.tpo.marketplace.entity.enums.StatusOrderEnum;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
