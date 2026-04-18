@@ -37,10 +37,10 @@ public class SecurityConfig {
                     "/swagger-resources/**",
                     "/webjars/**"
                 ).permitAll()
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/v1/user/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/categories").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/auth/**").permitAll()
+                // .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                // .requestMatchers("/api/v1/user/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/categories", "/Categories").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

@@ -15,13 +15,18 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-        private  UserRepository repository;
-        private  PasswordEncoder passwordEncoder;
-        private  JwtService jwtService;
-        private AuthenticationManager authenticationManager;
+        private final UserRepository repository;
+        private final PasswordEncoder passwordEncoder;
+        private final JwtService jwtService;
+        private final AuthenticationManager authenticationManager;
 
 
         public AuthAuthenticateResponse register(AuthRegisterRequest request) {
+
+                if (repository.findByEmail(request.getEmail()).isPresent()) {
+                        throw new RuntimeException("Email already in use");
+                }
+
                 var user = User.builder()
                                 .firstname(request.getFirstname())
                                 .lastname(request.getLastname())
