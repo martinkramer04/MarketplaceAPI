@@ -20,11 +20,6 @@ import lombok.EqualsAndHashCode;
 @Table(name = "provider_solicitations")
 public class ProviderSolicitations extends BaseEntity {
 
-
-
-    @Column
-    private LocalDateTime createdAt;
-
     @Enumerated(EnumType.STRING)
     @Column
     private SolicitationStatusEnum solicitationStatus;

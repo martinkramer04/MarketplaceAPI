@@ -22,7 +22,7 @@ import com.uade.tpo.marketplace.entity.dto.Category.UpdateCategoryRequest;
 import com.uade.tpo.marketplace.service.CategoryService;
 
 @RestController
-@RequestMapping("/api/Categories")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
     @Autowired

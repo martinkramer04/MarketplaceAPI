@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Box;
@@ -22,29 +23,26 @@ import com.uade.tpo.marketplace.repository.OrderRepository;
 
 import com.uade.tpo.marketplace.repository.UserRepository;
 import com.uade.tpo.marketplace.entity.User;
- 
+
 @Service
-public class OrderService implements IBaseService<
-        Order,
-        CreateOrderRequest,
-        UpdateOrderRequest> {
+public class OrderService implements IBaseService<Order, CreateOrderRequest, UpdateOrderRequest> {
 
     @Autowired
     private OrderRepository orderRepository;
- 
+
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
 
     @Autowired
     private BoxRepository boxRepository;
- 
+
     @Autowired
     private DiscountRepository discountRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-@Override
+    @Override
     public List<Order> getAll() {
         return orderRepository.findAll();
     }
@@ -68,7 +66,11 @@ public class OrderService implements IBaseService<
             return Optional.empty();
         }
 
-        if (entity.getUserId() == null || entity.getPaymentMethodId() == null
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        if (currentUser == null || entity.getPaymentMethodId() == null
                 || entity.getItems() == null || entity.getItems().isEmpty()) {
             return Optional.empty();
         }
@@ -84,7 +86,7 @@ public class OrderService implements IBaseService<
         }
 
         Order order = new Order();
-        User user = userRepository.findById(entity.getUserId()).orElse(null);
+        User user = userRepository.findById(currentUser.getId()).orElse(null);
         if (user == null) {
             return Optional.empty();
         }

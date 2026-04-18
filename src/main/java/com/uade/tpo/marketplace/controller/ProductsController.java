@@ -20,7 +20,7 @@ import com.uade.tpo.marketplace.entity.dto.Product.UpdateProductRequest;
 import com.uade.tpo.marketplace.service.ProductService;
 
 @RestController
-@RequestMapping("/api/Products")
+@RequestMapping("/api/products")
 public class ProductsController {
 
     // Dependency Injection

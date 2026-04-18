@@ -1,7 +1,11 @@
 package com.uade.tpo.marketplace.config;
 
 import org.springframework.stereotype.Service;
+
+import com.uade.tpo.marketplace.entity.User;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.nio.charset.StandardCharsets;
@@ -67,5 +71,9 @@ public class JwtService {
 
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

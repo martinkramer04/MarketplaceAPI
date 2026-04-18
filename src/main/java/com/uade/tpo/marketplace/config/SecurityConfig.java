@@ -78,9 +78,7 @@ public class SecurityConfig {
                 "/api/boxes/category/{category}",
                 "/api/boxes/available",
                 "/api/categories",
-                "/api/Categories",
                 "/api/categories/{categoryId}",
-                "/api/Categories/{categoryId}",
         };
     }
 
@@ -90,7 +88,6 @@ public class SecurityConfig {
                 "/api/discounts",
                 "/api/boxes",
                 "/api/categories",
-                "/api/Categories",
                 "/api/products",
         };
     }
@@ -144,7 +141,6 @@ public class SecurityConfig {
                 "/api/discounts/{id}",
                 "/api/boxes/{id}",
                 "/api/categories/{categoryId}",
-                "/api/Categories/{categoryId}",
                 "/api/products/{productId}",
         };
     }
@@ -164,7 +160,6 @@ public class SecurityConfig {
                 "/api/orders/{id}",
                 "/api/boxes/{id}",
                 "/api/categories/{categoryId}",
-                "/api/Categories/{categoryId}",
                 "/api/products/{productId}",
         };
     }
