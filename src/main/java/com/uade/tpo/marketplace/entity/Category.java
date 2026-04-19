@@ -16,6 +16,9 @@ import lombok.Data;
 public class Category extends BaseEntity {
 
     @Column
+    private String name;
+
+    @Column
     private String description;
 
     @Column(nullable = false)
