@@ -77,6 +77,7 @@ public class SecurityConfig {
                 "/api/boxes/{id}",
                 "/api/boxes/category/{category}",
                 "/api/boxes/available",
+                "/api/boxes/display-image",
                 "/api/categories",
                 "/api/categories/{categoryId}",
         };
@@ -87,6 +88,7 @@ public class SecurityConfig {
                 "/api/paymentMethods",
                 "/api/discounts",
                 "/api/boxes",
+                "/api/boxes/add-image",
                 "/api/categories",
                 "/api/products",
         };

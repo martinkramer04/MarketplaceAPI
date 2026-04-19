@@ -11,8 +11,8 @@ public class CategoryDto {
     private String description;
     private Long id;
 
-    public static ProductDto convertToDto(Category category) {
-        ProductDto dto = new ProductDto();
+    public static CategoryDto convertToDto(Category category) {
+        CategoryDto dto = new CategoryDto();
         dto.setName(category.getName());
         dto.setId(category.getId());
         dto.setDescription(category.getDescription());

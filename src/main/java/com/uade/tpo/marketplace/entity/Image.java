@@ -20,10 +20,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @NoArgsConstructor
 @Table(name = "image_table")
 public class Image extends BaseEntity {
+    private String name;
+
     private Blob image;
 
     @ManyToOne
-    @JoinColumn(name = "box_id", nullable = false)
     @JsonBackReference
+    @JoinColumn(name = "box_id", nullable = false)
     private Box box;
 }

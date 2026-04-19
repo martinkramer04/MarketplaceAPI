@@ -1,12 +1,10 @@
 package com.uade.tpo.marketplace.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Category;
@@ -56,10 +54,6 @@ public class ProductService implements IBaseService<Product, CreateProductReques
         Product product = new Product();
 
         product.setName(entity.getName());
-        product.setPrice(entity.getPrice());
-        product.setStock(entity.getStock());
-        product.setCategory(category.get());
-        product.setImageUrl(entity.getImageUrl());
         product.setDescription(entity.getDescription());
         product.setUserId(entity.getUserId());
 
@@ -86,10 +80,6 @@ public class ProductService implements IBaseService<Product, CreateProductReques
         }
 
         product.setName(entity.getName());
-        product.setPrice(entity.getPrice());
-        product.setStock(entity.getStock());
-        product.setCategory(category.get());
-        product.setImageUrl(entity.getImageUrl());
         product.setDescription(entity.getDescription());
 
         product.setUpdatedAt(LocalDateTime.now());
