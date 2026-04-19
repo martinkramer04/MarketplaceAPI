@@ -20,6 +20,9 @@ import com.uade.tpo.marketplace.entity.Order;
 import com.uade.tpo.marketplace.entity.OrderDetails;
 import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Order.CreateOrderRequest;
+import com.uade.tpo.marketplace.entity.dto.Order.OrderAdminDto;
+import com.uade.tpo.marketplace.entity.dto.Order.OrderDetailsDto;
+import com.uade.tpo.marketplace.entity.dto.Order.OrderUserDto;
 import com.uade.tpo.marketplace.entity.dto.Order.UpdateOrderRequest;
 import com.uade.tpo.marketplace.service.OrderService;
 
@@ -32,45 +35,51 @@ public class OrderController {
 
     // GET /api/orders
     @GetMapping
-    public ResponseEntity<List<Order>> getAll() {
-        return ResponseEntity.ok(orderService.getAll());
+    public ResponseEntity<List<OrderAdminDto>> getAll() {
+        return ResponseEntity.ok(orderService.getAll().stream()
+                .map(OrderAdminDto::convertToDto)
+                .toList());
     }
 
     // GET /api/orders/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getById(@PathVariable Long id) {
-        Optional<Order> result = orderService.getById(id);
-        return result.map(ResponseEntity::ok)
+    public ResponseEntity<OrderAdminDto> getById(@PathVariable Long id) {
+        return orderService.getById(id).map(OrderAdminDto::convertToDto)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // GET /api/orders/{id}/details
     @GetMapping("/{id}/details")
-    public ResponseEntity<List<OrderDetails>> getDetails(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.getDetailsByOrder(id));
+    public ResponseEntity<List<OrderDetailsDto>> getDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getDetailsByOrder(id).stream()
+                .map(OrderDetailsDto::convertToDto)
+                .toList());
     }
 
     // GET /api/orders/user/{userId}
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Order>> getByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(orderService.getByUser(userId));
+    public ResponseEntity<List<OrderUserDto>> getByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(orderService.getByUser(userId).stream()
+                .map(OrderUserDto::convertToDto)
+                .toList());
     }
 
     // POST /api/orders
     @PostMapping
-    public ResponseEntity<Order> create(@RequestBody CreateOrderRequest request) {
+    public ResponseEntity<OrderUserDto> create(@RequestBody CreateOrderRequest request) {
         Optional<Order> result = orderService.create(request);
-        return result.map(o -> ResponseEntity.status(HttpStatus.CREATED).body(o))
+        return result.map(o -> ResponseEntity.status(HttpStatus.CREATED).body(OrderUserDto.convertToDto(o)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     // PUT /api/orders/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<Order> update(
+    public ResponseEntity<OrderUserDto> update(
             @PathVariable Long id,
             @RequestBody UpdateOrderRequest request) {
         Optional<Order> result = orderService.update(request, id);
-        return result.map(ResponseEntity::ok)
+        return result.map(o -> ResponseEntity.ok(OrderUserDto.convertToDto(o)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
