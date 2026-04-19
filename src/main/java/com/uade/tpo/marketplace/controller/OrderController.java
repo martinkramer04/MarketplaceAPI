@@ -50,10 +50,10 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getDetailsByOrder(id));
     }
 
-    // GET /api/orders/user
-    @GetMapping("/user")
-    public ResponseEntity<List<Order>> getByUser() {
-        return ResponseEntity.ok(orderService.getByUser());
+    // GET /api/orders/user/{userId}
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Order>> getByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(orderService.getByUser(userId));
     }
 
     // POST /api/orders

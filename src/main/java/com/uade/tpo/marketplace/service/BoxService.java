@@ -68,10 +68,6 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
                 .getAuthentication()
                 .getPrincipal();
 
-        if (currentUser == null) {
-            return Optional.empty();
-        }
-
         Box box = new Box();
         box.setCategory(category.get());
         box.setName(entity.getName());

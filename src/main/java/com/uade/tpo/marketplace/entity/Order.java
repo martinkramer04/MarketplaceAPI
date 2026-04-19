@@ -26,9 +26,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Order extends BaseEntity {
 
     @Column
-    private Long paymentMethodId;
-
-    @Column
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
@@ -40,6 +37,18 @@ public class Order extends BaseEntity {
 
     @Column
     private String discountCode;
+
+    @Column
+    private String cardNumber;
+
+    @Column
+    private String cvc;
+
+    @Column
+    private String cardHolderName;
+
+    @Column
+    private String cardExpiration;
 
     @OneToMany(mappedBy = "order")
     @JsonManagedReference
@@ -54,4 +63,10 @@ public class Order extends BaseEntity {
     @JsonManagedReference
     @JoinColumn(name = "discount_id", nullable = true)
     private Discount discount;
+
+    @ManyToOne(optional = true)
+    @JsonManagedReference
+    @JoinColumn(name = "payment_method_id", nullable = true)
+    private PaymentMethods paymentMethods;
+
 }

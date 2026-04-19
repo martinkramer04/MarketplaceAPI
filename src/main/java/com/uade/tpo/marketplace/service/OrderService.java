@@ -52,11 +52,8 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
         return orderRepository.findById(id);
     }
 
-    public List<Order> getByUser() {
-        User currentUser = (User) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-        return orderRepository.findByUserId(currentUser.getId());
+    public List<Order> getByUser(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 
     public List<OrderDetails> getDetailsByOrder(Long orderId) {
@@ -88,7 +85,6 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
             }
         }
 
-        // Validate all items have sufficient stock before processing
         for (CreateOrderRequest.OrderItemRequest item : entity.getItems()) {
             Box box = boxRepository.findById(item.getBoxId()).orElse(null);
             if (box == null || box.getStock() < item.getQuantity()) {
