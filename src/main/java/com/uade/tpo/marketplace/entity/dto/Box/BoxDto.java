@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Image;
 import com.uade.tpo.marketplace.entity.dto.Auth.UserDto;
+import com.uade.tpo.marketplace.entity.dto.Category.CategoryDto;
 import com.uade.tpo.marketplace.entity.dto.Image.ImageDto;
 import com.uade.tpo.marketplace.entity.dto.Review.ReviewDto;
 
@@ -19,7 +20,7 @@ public class BoxDto {
     private String description;
     private BigDecimal price;
     private Integer stock;
-    private Category category;
+    private CategoryDto category;
     private List<ImageDto> images;
 
     public static BoxDto convertToDto(Box box) {
@@ -32,7 +33,7 @@ public class BoxDto {
                 box.getImages().stream()
                         .map(ImageDto::convertToDto)
                         .collect(Collectors.toList()));
-        // dto.setCategory(box.getCategory());
+        dto.setCategory(CategoryDto.convertToDto(box.getCategory()));
         return dto;
     }
 

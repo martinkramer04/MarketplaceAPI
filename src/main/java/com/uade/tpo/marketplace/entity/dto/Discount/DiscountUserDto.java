@@ -4,13 +4,13 @@ import com.uade.tpo.marketplace.entity.Discount;
 import lombok.Data;
 
 @Data
-public class UserDiscountDto {
+public class DiscountUserDto {
     private Long id;
     private String code;
     private Integer percentage;
 
-    public static UserDiscountDto convertToDto(Discount discount) {
-        UserDiscountDto dto = new UserDiscountDto();
+    public static DiscountUserDto convertToDto(Discount discount) {
+        DiscountUserDto dto = new DiscountUserDto();
         dto.setId(discount.getId());
         dto.setCode(discount.getCode());
         dto.setPercentage(discount.getPercentage());

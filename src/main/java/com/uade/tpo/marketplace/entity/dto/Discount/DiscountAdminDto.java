@@ -10,7 +10,7 @@ import com.uade.tpo.marketplace.entity.enums.DiscountTypeEnum;
 import lombok.Data;
 
 @Data
-public class AdminDiscountDto {
+public class DiscountAdminDto {
     private Long id;
     private String code;
     private Integer percentage;
@@ -20,8 +20,8 @@ public class AdminDiscountDto {
     private DiscountTypeEnum discountType;
     private List<Order> orders;
 
-    public static AdminDiscountDto convertToDto(Discount discount) {
-        AdminDiscountDto dto = new AdminDiscountDto();
+    public static DiscountAdminDto convertToDto(Discount discount) {
+        DiscountAdminDto dto = new DiscountAdminDto();
         dto.setId(discount.getId());
         dto.setCode(discount.getCode());
         dto.setPercentage(discount.getPercentage());

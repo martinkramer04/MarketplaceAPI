@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Discount;
-import com.uade.tpo.marketplace.entity.dto.Discount.AdminDiscountDto;
+import com.uade.tpo.marketplace.entity.dto.Discount.DiscountAdminDto;
 import com.uade.tpo.marketplace.entity.dto.Discount.CreateDiscountRequest;
 import com.uade.tpo.marketplace.entity.dto.Discount.UpdateDiscountRequest;
-import com.uade.tpo.marketplace.entity.dto.Discount.UserDiscountDto;
+import com.uade.tpo.marketplace.entity.dto.Discount.DiscountUserDto;
 import com.uade.tpo.marketplace.service.DiscountService;
 
 @RestController
@@ -31,51 +31,51 @@ public class DiscountController {
 
     // GET /api/discounts
     @GetMapping
-    public ResponseEntity<List<AdminDiscountDto>> getAll() {
-        return ResponseEntity.ok(discountService.getAll().stream().map(AdminDiscountDto::convertToDto)
+    public ResponseEntity<List<DiscountAdminDto>> getAll() {
+        return ResponseEntity.ok(discountService.getAll().stream().map(DiscountAdminDto::convertToDto)
                 .collect(java.util.stream.Collectors.toList()));
     }
 
     // GET /api/discounts/active
     @GetMapping("/active")
-    public ResponseEntity<List<UserDiscountDto>> getActive() {
-        return ResponseEntity.ok(discountService.getActive().stream().map(UserDiscountDto::convertToDto)
+    public ResponseEntity<List<DiscountUserDto>> getActive() {
+        return ResponseEntity.ok(discountService.getActive().stream().map(DiscountUserDto::convertToDto)
                 .collect(java.util.stream.Collectors.toList()));
     }
 
     // GET /api/discounts/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<AdminDiscountDto> getById(@PathVariable Long id) {
+    public ResponseEntity<DiscountAdminDto> getById(@PathVariable Long id) {
         Optional<Discount> result = discountService.getById(id);
-        return result.map(AdminDiscountDto::convertToDto)
+        return result.map(DiscountAdminDto::convertToDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // GET /api/discounts/code/{code} → validar cupón antes de aplicarlo
     @GetMapping("/code/{code}")
-    public ResponseEntity<UserDiscountDto> getByCode(@PathVariable String code) {
+    public ResponseEntity<DiscountUserDto> getByCode(@PathVariable String code) {
         Optional<Discount> result = discountService.getByCode(code);
-        return result.map(UserDiscountDto::convertToDto)
+        return result.map(DiscountUserDto::convertToDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // POST /api/discounts
     @PostMapping
-    public ResponseEntity<AdminDiscountDto> create(@RequestBody CreateDiscountRequest request) {
+    public ResponseEntity<DiscountAdminDto> create(@RequestBody CreateDiscountRequest request) {
         Optional<Discount> result = discountService.create(request);
-        return result.map(d -> ResponseEntity.status(HttpStatus.CREATED).body(AdminDiscountDto.convertToDto(d)))
+        return result.map(d -> ResponseEntity.status(HttpStatus.CREATED).body(DiscountAdminDto.convertToDto(d)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     // PUT /api/discounts/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<AdminDiscountDto> update(
+    public ResponseEntity<DiscountAdminDto> update(
             @PathVariable Long id,
             @RequestBody UpdateDiscountRequest request) {
         Optional<Discount> result = discountService.update(request, id);
-        return result.map(AdminDiscountDto::convertToDto)
+        return result.map(DiscountAdminDto::convertToDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

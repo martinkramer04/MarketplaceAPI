@@ -52,8 +52,11 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
         return orderRepository.findById(id);
     }
 
-    public List<Order> getByUser(Long userId) {
-        return orderRepository.findByUserId(userId);
+    public List<Order> getByUser() {
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        return orderRepository.findByUserId(currentUser.getId());
     }
 
     public List<OrderDetails> getDetailsByOrder(Long orderId) {
@@ -94,11 +97,8 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
         }
 
         Order order = new Order();
-        User user = userRepository.findById(currentUser.getId()).orElse(null);
-        if (user == null) {
-            return Optional.empty();
-        }
-        order.setUser(user);
+
+        order.setUser(currentUser);
         order.setPaymentMethodId(entity.getPaymentMethodId());
         order.setStatus(StatusOrderEnum.GENERADA);
         order.setCreatedAt(LocalDateTime.now());

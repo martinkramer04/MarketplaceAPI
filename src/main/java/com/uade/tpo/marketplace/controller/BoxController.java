@@ -46,9 +46,6 @@ public class BoxController {
     @Autowired
     private ImageService imageService;
 
-    @Autowired
-    private UserRepository userRepository;
-
     // GET
     @GetMapping
     public ResponseEntity<List<BoxDto>> getAll() {

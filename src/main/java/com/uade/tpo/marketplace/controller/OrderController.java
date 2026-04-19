@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Order;
 import com.uade.tpo.marketplace.entity.OrderDetails;
+import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Order.CreateOrderRequest;
 import com.uade.tpo.marketplace.entity.dto.Order.UpdateOrderRequest;
 import com.uade.tpo.marketplace.service.OrderService;
@@ -48,10 +50,10 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getDetailsByOrder(id));
     }
 
-    // GET /api/orders/user/{userId}
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Order>> getByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(orderService.getByUser(userId));
+    // GET /api/orders/user
+    @GetMapping("/user")
+    public ResponseEntity<List<Order>> getByUser() {
+        return ResponseEntity.ok(orderService.getByUser());
     }
 
     // POST /api/orders
