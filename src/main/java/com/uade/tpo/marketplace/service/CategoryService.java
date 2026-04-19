@@ -6,23 +6,20 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Category;
+import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Category.CreateCategoryRequest;
 import com.uade.tpo.marketplace.entity.dto.Category.UpdateCategoryRequest;
 import com.uade.tpo.marketplace.repository.CategoryRepository;
 
 @Service
-public class CategoryService implements IBaseService<
-        Category, 
-        CreateCategoryRequest, 
-        UpdateCategoryRequest
-    > {
-    
+public class CategoryService implements IBaseService<Category, CreateCategoryRequest, UpdateCategoryRequest> {
+
     @Autowired
     private CategoryRepository categoryRepository;
-
 
     public List<Category> getAll() {
         return categoryRepository.findAll();
@@ -33,14 +30,20 @@ public class CategoryService implements IBaseService<
         return categoryRepository.findById(id);
         // throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
+
     public List<Category> getByUserId(Long userId) {
         return categoryRepository.findByUserId(userId);
     }
 
     public Optional<Category> create(CreateCategoryRequest entity) {
         Category category = new Category();
+
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
         category.setDescription(entity.getDescription());
-        category.setUserId(entity.getUserId());
+        category.setUserId(currentUser.getId());
 
         try {
             categoryRepository.save(category);
@@ -53,7 +56,7 @@ public class CategoryService implements IBaseService<
 
     public Optional<Category> update(UpdateCategoryRequest entity, Long id) {
         Category category = categoryRepository.findById(id)
-            .orElse(null);
+                .orElse(null);
 
         if (category == null) {
             return Optional.empty();
@@ -69,8 +72,8 @@ public class CategoryService implements IBaseService<
     }
 
     public boolean delete(Long id) {
-            Category category = categoryRepository.findById(id)
-            .orElse(null);
+        Category category = categoryRepository.findById(id)
+                .orElse(null);
 
         if (category == null) {
             return false;

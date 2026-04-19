@@ -2,19 +2,18 @@ package com.uade.tpo.marketplace.entity.dto.Order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.security.access.method.P;
-
-import com.uade.tpo.marketplace.entity.Discount;
 import com.uade.tpo.marketplace.entity.Order;
-import com.uade.tpo.marketplace.entity.OrderDetails;
-import com.uade.tpo.marketplace.entity.PaymentMethods;
-import com.uade.tpo.marketplace.entity.User;
+import com.uade.tpo.marketplace.entity.dto.Auth.UserDto;
+import com.uade.tpo.marketplace.entity.dto.Discount.DiscountAdminDto;
+import com.uade.tpo.marketplace.entity.dto.PaymentMethods.PaymentMethodsDto;
 
 import lombok.Data;
 
 @Data
 public class OrderAdminDto {
+    private Long id;
     private BigDecimal totalAmount;
     private String status;
     private Integer discountPercentage;
@@ -24,12 +23,13 @@ public class OrderAdminDto {
     private String cardHolderName;
     private String cardExpiration;
     private List<OrderDetailsDto> orderDetails;
-    private User user;
-    private Discount discount;
-    private PaymentMethods paymentMethod;
+    private UserDto user;
+    private Optional<DiscountAdminDto> discount;
+    private PaymentMethodsDto paymentMethod;
 
     public static OrderAdminDto convertToDto(Order order) {
         OrderAdminDto dto = new OrderAdminDto();
+        dto.setId(order.getId());
         dto.setTotalAmount(order.getTotalAmount());
         dto.setStatus(order.getStatus().name());
         dto.setDiscountPercentage(order.getDiscountPercentage());
@@ -41,11 +41,8 @@ public class OrderAdminDto {
         dto.setOrderDetails(order.getOrderDetails().stream()
                 .map(OrderDetailsDto::convertToDto)
                 .toList());
-        dto.setUser(order.getUser());
-        // Aquí se asume que el descuento se obtiene de alguna manera, por ejemplo, a
-        // través de un servicio
-        // dto.setDiscount(obtenerDescuentoParaOrden(order));
-        dto.setPaymentMethod(order.getPaymentMethods());
+        dto.setUser(UserDto.convertToDto(order.getUser()));
+        dto.setPaymentMethod(PaymentMethodsDto.convertToDto(order.getPaymentMethods()));
         return dto;
     }
 }

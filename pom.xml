@@ -10,11 +10,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.uade.API.Grupo15</groupId>
-    <artifactId>MarketPlaceGrupo15</artifactId>
+    <groupId>com.uade.API.Grupo14</groupId>
+    <artifactId>MarketPlaceGrupo14</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>MarketPlace Grupo 15</name>
-    <description>TPO API - GRUPO 15 - MARKETPLACE</description>
+    <name>MarketPlace Grupo 14</name>
+    <description>TPO API - GRUPO 14 - MARKETPLACE</description>
 
 	<properties>
 		<java.version>17</java.version>

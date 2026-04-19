@@ -52,7 +52,7 @@ public class Order extends BaseEntity {
 
     @OneToMany(mappedBy = "order")
     @JsonManagedReference
-    private List<OrderDetails> orderDetails;
+    private List<OrderDetails> orderDetails = List.of();
 
     @ManyToOne(optional = false)
     @JsonManagedReference

@@ -1,32 +1,39 @@
 package com.uade.tpo.marketplace.entity;
- 
+
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.uade.tpo.marketplace.entity.enums.ReviewStatusEnum;
+import com.uade.tpo.marketplace.entity.enums.StatusOrderEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
- 
+
 @Data
 @Entity
 @Table(name = "reviews")
 public class Review extends BaseEntity {
- 
+
     @Column
     private Integer rating;
- 
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private ReviewStatusEnum status;
+
     @Column
     private String comment;
- 
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
- 
+
     @ManyToOne
     @JoinColumn(name = "box_id", nullable = false)
     @JsonBackReference

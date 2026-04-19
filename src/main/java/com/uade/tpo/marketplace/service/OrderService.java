@@ -2,6 +2,7 @@ package com.uade.tpo.marketplace.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,14 +14,17 @@ import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Discount;
 import com.uade.tpo.marketplace.entity.Order;
 import com.uade.tpo.marketplace.entity.OrderDetails;
+import com.uade.tpo.marketplace.entity.Review;
 import com.uade.tpo.marketplace.entity.dto.Order.CreateOrderRequest;
 import com.uade.tpo.marketplace.entity.dto.Order.UpdateOrderRequest;
+import com.uade.tpo.marketplace.entity.enums.ReviewStatusEnum;
 import com.uade.tpo.marketplace.entity.enums.StatusOrderEnum;
 import com.uade.tpo.marketplace.repository.BoxRepository;
 import com.uade.tpo.marketplace.repository.DiscountRepository;
 import com.uade.tpo.marketplace.repository.OrderDetailsRepository;
 import com.uade.tpo.marketplace.repository.OrderRepository;
-
+import com.uade.tpo.marketplace.repository.PaymentMethodsRepository;
+import com.uade.tpo.marketplace.repository.ReviewRepository;
 import com.uade.tpo.marketplace.repository.UserRepository;
 import com.uade.tpo.marketplace.entity.User;
 
@@ -40,7 +44,10 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
     private DiscountRepository discountRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private PaymentMethodsRepository paymentMethodsRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Override
     public List<Order> getAll() {
@@ -66,16 +73,11 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
             return Optional.empty();
         }
 
-        User currentUser = (User) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-
-        if (currentUser == null || entity.getPaymentMethodId() == null
+        if (entity.getPaymentMethodId() == null
                 || entity.getItems() == null || entity.getItems().isEmpty()) {
             return Optional.empty();
         }
 
-        // Resolver descuento si se envió un código
         Discount discount = null;
         if (entity.getDiscountCode() != null && !entity.getDiscountCode().isEmpty()) {
             discount = discountRepository.findByCode(entity.getDiscountCode().orElse(""))
@@ -88,14 +90,18 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
         for (CreateOrderRequest.OrderItemRequest item : entity.getItems()) {
             Box box = boxRepository.findById(item.getBoxId()).orElse(null);
             if (box == null || box.getStock() < item.getQuantity()) {
-                return Optional.empty();
+                throw new RuntimeException("Insufficient stock for box: " + box.getName());
             }
         }
+
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         Order order = new Order();
 
         order.setUser(currentUser);
-        order.setPaymentMethodId(entity.getPaymentMethodId());
+        order.setPaymentMethods(paymentMethodsRepository.findById(entity.getPaymentMethodId()).orElse(null));
         order.setStatus(StatusOrderEnum.GENERADA);
         order.setCreatedAt(LocalDateTime.now());
 
@@ -112,6 +118,7 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
         }
 
         BigDecimal total = BigDecimal.ZERO;
+        List<OrderDetails> details = new ArrayList<>();
 
         for (CreateOrderRequest.OrderItemRequest item : entity.getItems()) {
             Box box = boxRepository.findById(item.getBoxId()).orElse(null);
@@ -130,7 +137,6 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
             }
 
             OrderDetails detail = new OrderDetails();
-            // detail.setOrderId(order.getId());
             detail.setOrder(order);
             detail.setBox(box);
             detail.setBoxName(box.getName());
@@ -141,17 +147,24 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
             detail.setBoxStock(box.getStock());
 
             total = total.add(subtotal);
-
             box.setStock(box.getStock() - item.getQuantity());
+
+            Review review = new Review();
+            review.setBox(box);
+            review.setUser(currentUser);
+            review.setStatus(ReviewStatusEnum.WAITING_REVIEW);
 
             try {
                 orderDetailsRepository.save(detail);
                 boxRepository.save(box);
+                reviewRepository.save(review);
+                details.add(detail); // <-- collect it
             } catch (Exception e) {
                 throw new RuntimeException("Error creating order detail: " + e.getMessage());
             }
         }
 
+        order.setOrderDetails(details); // <-- set on order before returning
         order.setTotalAmount(total);
 
         try {

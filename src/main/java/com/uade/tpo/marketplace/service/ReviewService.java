@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Box;
@@ -13,15 +14,13 @@ import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Review.CreateReviewRequest;
 import com.uade.tpo.marketplace.entity.dto.Review.ReviewDto;
 import com.uade.tpo.marketplace.entity.dto.Review.UpdateReviewRequest;
+import com.uade.tpo.marketplace.entity.enums.ReviewStatusEnum;
 import com.uade.tpo.marketplace.repository.BoxRepository;
 import com.uade.tpo.marketplace.repository.ReviewRepository;
 import com.uade.tpo.marketplace.repository.UserRepository;
 
 @Service
-public class ReviewService implements IBaseService<
-        ReviewDto,
-        CreateReviewRequest,
-        UpdateReviewRequest> {
+public class ReviewService implements IBaseService<ReviewDto, CreateReviewRequest, UpdateReviewRequest> {
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -29,15 +28,13 @@ public class ReviewService implements IBaseService<
     private BoxRepository boxRepository;
     @Autowired
     private UserRepository userRepository;
- 
+
     @Override
     public List<ReviewDto> getAll() {
         return reviewRepository.findAll().stream()
                 .map(ReviewDto::convertToDto)
                 .toList();
     }
-
-
 
     @Override
     public Optional<ReviewDto> getById(Long id) {
@@ -64,29 +61,35 @@ public class ReviewService implements IBaseService<
             return Optional.empty();
         }
 
-        if (entity.getUserId() == null || entity.getBoxId() == null
+        if (entity.getBoxId() == null
                 || entity.getRating() == null) {
             return Optional.empty();
         }
 
         if (entity.getRating() < 1 || entity.getRating() > 5) {
-            return Optional.empty();
+            throw new IllegalArgumentException("Rating must be between 1 and 5");
         }
 
         Optional<Box> box = boxRepository.findById(entity.getBoxId());
         if (box.isEmpty()) {
-            return Optional.empty();
+            throw new IllegalArgumentException("Box not found with id: " + entity.getBoxId());
         }
 
-        Optional<User> user = userRepository.findById(entity.getUserId());
-        if (user.isEmpty()) {
-            return Optional.empty();
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Review review = reviewRepository.findByUserIdAndBoxIdAndStatus(
+                currentUser.getId(),
+                entity.getBoxId(),
+                ReviewStatusEnum.WAITING_REVIEW);
+
+        if (review == null) {
+            throw new IllegalStateException("User has not purchased this box or has already reviewed it");
         }
- 
-        Review review = new Review();
-        review.setUser(user.get());
-        review.setBox(box.get());
+
         review.setRating(entity.getRating());
+        review.setStatus(ReviewStatusEnum.REVIEWED);
         review.setComment(entity.getComment());
 
         try {

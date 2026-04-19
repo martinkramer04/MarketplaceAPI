@@ -1,31 +1,31 @@
 package com.uade.tpo.marketplace.entity.dto.Order;
 
-import com.uade.tpo.marketplace.entity.Box;
-import com.uade.tpo.marketplace.entity.Order;
+import java.math.BigDecimal;
+
 import com.uade.tpo.marketplace.entity.OrderDetails;
+import com.uade.tpo.marketplace.entity.dto.Box.BoxDto;
+
 import lombok.Data;
 
 @Data
 public class OrderDetailsDto {
     private String boxName;
     private Integer quantity;
-    private String unitPrice;
-    private String subtotal;
-    private String discountAmount;
+    private BigDecimal unitPrice;
+    private BigDecimal subtotal;
+    private BigDecimal discountAmount;
     private Integer boxStock;
-    private Order order;
-    private Box box;
+    private BoxDto box;
 
     public static OrderDetailsDto convertToDto(OrderDetails orderDetails) {
         OrderDetailsDto dto = new OrderDetailsDto();
         dto.setBoxName(orderDetails.getBoxName());
         dto.setQuantity(orderDetails.getQuantity());
-        dto.setUnitPrice(orderDetails.getUnitPrice().toString());
-        dto.setSubtotal(orderDetails.getSubtotal().toString());
-        dto.setDiscountAmount(orderDetails.getDiscountAmount().toString());
+        dto.setUnitPrice(orderDetails.getUnitPrice());
+        dto.setSubtotal(orderDetails.getSubtotal());
+        dto.setDiscountAmount(orderDetails.getDiscountAmount());
         dto.setBoxStock(orderDetails.getBoxStock());
-        dto.setOrder(orderDetails.getOrder());
-        dto.setBox(orderDetails.getBox());
+        dto.setBox(BoxDto.convertToDto(orderDetails.getBox()));
         return dto;
     }
 

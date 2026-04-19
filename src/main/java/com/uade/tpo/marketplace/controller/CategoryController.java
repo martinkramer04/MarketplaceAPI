@@ -50,7 +50,6 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@RequestBody CreateCategoryRequest request) {
-        request.setUserId(1L); // MODIFICAR LUEGO DE IMPLEMENTAR JWT
         CategoryDto createdCategory = categoryService.create(request)
                 .map(CategoryDto::convertToDto)
                 .orElse(null);

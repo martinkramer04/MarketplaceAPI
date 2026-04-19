@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.Product;
+import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Product.CreateProductRequest;
 import com.uade.tpo.marketplace.entity.dto.Product.UpdateProductRequest;
 import com.uade.tpo.marketplace.repository.CategoryRepository;
@@ -42,7 +44,7 @@ public class ProductService implements IBaseService<Product, CreateProductReques
         }
 
         if (entity.getName() == null || entity.getPrice() == null || entity.getStock() == null
-                || entity.getCategoryId() == null || entity.getUserId() == null) {
+                || entity.getCategoryId() == null) {
             return Optional.empty();
         }
 
@@ -53,9 +55,13 @@ public class ProductService implements IBaseService<Product, CreateProductReques
 
         Product product = new Product();
 
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
         product.setName(entity.getName());
         product.setDescription(entity.getDescription());
-        product.setUserId(entity.getUserId());
+        product.setUserId(currentUser.getId());
 
         try {
             productRepository.save(product);

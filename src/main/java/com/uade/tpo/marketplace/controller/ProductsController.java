@@ -46,7 +46,6 @@ public class ProductsController {
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductRequest request) {
-        request.setUserId(1L); // HARCODEO HASTA IMPLEMENTAR JWT
         return productService.create(request)
                 .map(ProductDto::convertToDto)
                 .map(ResponseEntity::ok)
