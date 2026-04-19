@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.EqualsAndHashCode;
 import jakarta.persistence.Table;
 import lombok.Data;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -19,21 +20,10 @@ public class Product extends BaseEntity {
 
     @Column
     private String name;
-    @Column
-    private BigDecimal price;
-    @Column
-    private Integer stock;
+
     @Column
     private String description;
-    
-    @ManyToOne
-    @JsonManagedReference
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-    
-    @Column
-    private String imageUrl;
-    
+
     @Column(nullable = false)
-    private Long userId; 
+    private Long userId;
 }
