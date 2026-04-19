@@ -85,6 +85,14 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
             }
         }
 
+        // Validate all items have sufficient stock before processing
+        for (CreateOrderRequest.OrderItemRequest item : entity.getItems()) {
+            Box box = boxRepository.findById(item.getBoxId()).orElse(null);
+            if (box == null || box.getStock() < item.getQuantity()) {
+                return Optional.empty();
+            }
+        }
+
         Order order = new Order();
         User user = userRepository.findById(currentUser.getId()).orElse(null);
         if (user == null) {
@@ -128,7 +136,7 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
             OrderDetails detail = new OrderDetails();
             // detail.setOrderId(order.getId());
             detail.setOrder(order);
-            detail.setBoxId(box.getId());
+            detail.setBox(box);
             detail.setBoxName(box.getName());
             detail.setQuantity(item.getQuantity());
             detail.setUnitPrice(unitPrice);

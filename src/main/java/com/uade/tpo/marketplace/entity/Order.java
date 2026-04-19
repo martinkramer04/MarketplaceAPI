@@ -46,10 +46,12 @@ public class Order extends BaseEntity {
     private List<OrderDetails> orderDetails;
 
     @ManyToOne(optional = false)
+    @JsonManagedReference
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(optional = true)
+    @JsonManagedReference
     @JoinColumn(name = "discount_id", nullable = true)
     private Discount discount;
 }

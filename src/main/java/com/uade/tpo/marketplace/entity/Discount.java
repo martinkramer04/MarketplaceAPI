@@ -1,8 +1,9 @@
 package com.uade.tpo.marketplace.entity;
- 
+
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.uade.tpo.marketplace.entity.enums.DiscountTypeEnum;
 
 import jakarta.persistence.Column;
@@ -15,37 +16,38 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
- 
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "discounts")
 public class Discount extends BaseEntity {
- 
+
     @Column
     private String name;
- 
+
     @Column
     private Integer percentage;
- 
+
     @Column
     private Boolean isActive;
- 
+
     @Column
     @Temporal(TemporalType.DATE)
     private Date startDate;
- 
+
     @Column
     @Temporal(TemporalType.DATE)
     private Date endDate;
- 
+
     @Column(unique = true)
     private String code;
- 
+
     @Enumerated(EnumType.STRING)
     @Column
     private DiscountTypeEnum discountType;
 
     @OneToMany(mappedBy = "discount")
+    @JsonBackReference
     private List<Order> orders;
 }
