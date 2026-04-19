@@ -32,8 +32,10 @@ public class Box extends BaseEntity {
     @Column
     private Integer stock;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne(optional = false)
+    @JsonManagedReference
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @OneToMany(mappedBy = "box")
     @JsonManagedReference

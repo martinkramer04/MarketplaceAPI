@@ -1,19 +1,27 @@
 package com.uade.tpo.marketplace.entity.dto.Discount;
+
+import java.util.Date;
+import java.util.List;
+
 import com.uade.tpo.marketplace.entity.Discount;
+import com.uade.tpo.marketplace.entity.Order;
+import com.uade.tpo.marketplace.entity.enums.DiscountTypeEnum;
+
 import lombok.Data;
 
-public class UserDiscountDto {
+@Data
+public class AdminDiscountDto {
     private Long id;
     private String code;
-    private Double percentage;
+    private Integer percentage;
     private Boolean isActive;
     private Date startDate;
     private Date endDate;
     private DiscountTypeEnum discountType;
     private List<Order> orders;
 
-    public static DiscountDto convertToDto(Discount discount) {
-        DiscountDto dto = new DiscountDto();
+    public static AdminDiscountDto convertToDto(Discount discount) {
+        AdminDiscountDto dto = new AdminDiscountDto();
         dto.setId(discount.getId());
         dto.setCode(discount.getCode());
         dto.setPercentage(discount.getPercentage());

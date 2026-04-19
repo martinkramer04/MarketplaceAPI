@@ -25,10 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Image;
+import com.uade.tpo.marketplace.entity.dto.Box.BoxDto;
 import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Image.AddImageBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Image.ImageResponse;
+import com.uade.tpo.marketplace.repository.UserRepository;
 import com.uade.tpo.marketplace.service.BoxService;
 import com.uade.tpo.marketplace.service.ImageService;
 
@@ -44,48 +46,53 @@ public class BoxController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // GET
     @GetMapping
-    public ResponseEntity<List<Box>> getAll() {
-        return ResponseEntity.ok(boxService.getAll());
+    public ResponseEntity<List<BoxDto>> getAll() {
+        return ResponseEntity.ok(boxService.getAll().stream().map(BoxDto::convertToDto).toList());
     }
 
     // GET
     @GetMapping("/available")
-    public ResponseEntity<List<Box>> getAvailable() {
-        return ResponseEntity.ok(boxService.getAvailable());
+    public ResponseEntity<List<BoxDto>> getAvailable() {
+        return ResponseEntity.ok(boxService.getAvailable().stream().map(BoxDto::convertToDto).toList());
     }
 
     // GET
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<Box>> getByCategory(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(boxService.getByCategory(categoryId));
+    public ResponseEntity<List<BoxDto>> getByCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(boxService.getByCategory(categoryId).stream().map(BoxDto::convertToDto).toList());
     }
 
     // GET
     @GetMapping("/{id}")
-    public ResponseEntity<Box> getById(@PathVariable Long id) {
+    public ResponseEntity<BoxDto> getById(@PathVariable Long id) {
         Optional<Box> result = boxService.getById(id);
-        return result.map(ResponseEntity::ok)
+        return result.map(BoxDto::convertToDto)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // POST
     @PostMapping
-    public ResponseEntity<Box> create(@RequestBody CreateBoxRequest request) {
-        request.setUserId(1L); // MODIFICAR LUEGO DE IMPLEMENTAR JWT
+    public ResponseEntity<BoxDto> create(@RequestBody CreateBoxRequest request) {
         Optional<Box> result = boxService.create(request);
-        return result.map(b -> ResponseEntity.status(HttpStatus.CREATED).body(b))
+        return result.map(BoxDto::convertToDto)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     // PUT
     @PutMapping("/{id}")
-    public ResponseEntity<Box> update(
+    public ResponseEntity<BoxDto> update(
             @PathVariable Long id,
             @RequestBody UpdateBoxRequest request) {
         Optional<Box> result = boxService.update(request, id);
-        return result.map(ResponseEntity::ok)
+        return result.map(BoxDto::convertToDto)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 

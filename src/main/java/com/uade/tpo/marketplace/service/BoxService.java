@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Category;
+import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
 import com.uade.tpo.marketplace.repository.BoxRepository;
@@ -62,13 +64,21 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
             return Optional.empty();
         }
 
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        if (currentUser == null) {
+            return Optional.empty();
+        }
+
         Box box = new Box();
         box.setCategory(category.get());
         box.setName(entity.getName());
         box.setDescription(entity.getDescription());
         box.setPrice(entity.getPrice());
         box.setStock(entity.getStock());
-        box.setUserId(entity.getUserId());
+        box.setUser(currentUser);
 
         try {
             boxRepository.save(box);
