@@ -17,63 +17,63 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Category;
+import com.uade.tpo.marketplace.entity.dto.Category.CategoryDto;
 import com.uade.tpo.marketplace.entity.dto.Category.CreateCategoryRequest;
 import com.uade.tpo.marketplace.entity.dto.Category.UpdateCategoryRequest;
+import com.uade.tpo.marketplace.entity.dto.Product.ProductDto;
 import com.uade.tpo.marketplace.service.CategoryService;
 
-
-
 @RestController
-@RequestMapping("Categories")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
-    //GET
-    @GetMapping 
-    public ResponseEntity<List<Category>> getCategories() {
-        return ResponseEntity.ok(categoryService.getAll());
+    // GET
+    @GetMapping
+    public ResponseEntity<List<CategoryDto>> getCategories() {
+        return ResponseEntity.ok(categoryService.getAll().stream().map(CategoryDto::convertToDto)
+                .collect(java.util.stream.Collectors.toList()));
     }
-    
-    //GET
+
+    // GET
     @GetMapping("/{categoryId}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long categoryId) {
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long categoryId) {
         Optional<Category> category = categoryService.getById(categoryId);
         if (category.isPresent()) {
-            return ResponseEntity.ok(category.get());
-        } 
+            return ResponseEntity.ok(CategoryDto.convertToDto(category.get()));
+        }
 
         return ResponseEntity.notFound().build();
     }
-    //GET
-    @GetMapping("/user/{userId}") 
-    public ResponseEntity<List<Category>> getByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(categoryService.getByUserId(userId));
-    }
-    
-    //POST
+
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody CreateCategoryRequest request) {
-        request.setUserId(1L); //MODIFICAR LUEGO DE IMPLEMENTAR JWT
-        Category createdCategory = categoryService.create(request).orElse(null);
-        if (createdCategory == null) return ResponseEntity.badRequest().build();
-            return ResponseEntity.ok(createdCategory);
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody CreateCategoryRequest request) {
+        CategoryDto createdCategory = categoryService.create(request)
+                .map(CategoryDto::convertToDto)
+                .orElse(null);
+        if (createdCategory == null)
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(createdCategory);
     }
 
-    //PUT
+    // PUT
     @PutMapping("/{categoryId}")
-    public ResponseEntity<Category> updateCategory(@RequestBody UpdateCategoryRequest request, @PathVariable Long categoryId) {
-        Category updatedCategory = categoryService.update(request, categoryId).orElse(null);
+    public ResponseEntity<CategoryDto> updateCategory(@RequestBody UpdateCategoryRequest request,
+            @PathVariable Long categoryId) {
+        CategoryDto updatedCategory = categoryService.update(request, categoryId)
+                .map(CategoryDto::convertToDto)
+                .orElse(null);
         if (updatedCategory == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedCategory);
     }
 
-    //DELETE
+    // DELETE
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Category> deleteCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<CategoryDto> deleteCategory(@PathVariable Long categoryId) {
         categoryService.delete(categoryId);
         return ResponseEntity.noContent().build();
     }

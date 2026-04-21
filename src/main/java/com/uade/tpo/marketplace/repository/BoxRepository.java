@@ -15,4 +15,5 @@ public interface BoxRepository extends JpaRepository<Box, Long> {
     List<Box> findByStockGreaterThan(Integer stock);
 
     List<Box> findByUserId(Long userId);    
+    List<Box> findByIsDeletedFalseAndStockGreaterThan(Integer stock);
 }

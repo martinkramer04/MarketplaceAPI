@@ -16,54 +16,54 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Product;
 import com.uade.tpo.marketplace.entity.dto.Product.CreateProductRequest;
+import com.uade.tpo.marketplace.entity.dto.Product.ProductDto;
 import com.uade.tpo.marketplace.entity.dto.Product.UpdateProductRequest;
 import com.uade.tpo.marketplace.service.ProductService;
 
-
-
 @RestController
-@RequestMapping("Products")
+@RequestMapping("/api/products")
 public class ProductsController {
 
     // Dependency Injection
     @Autowired
     private ProductService productService;
 
-
-    @GetMapping 
-    public ResponseEntity<List<Product>> get() {
-        return ResponseEntity.ok(productService.getAll());
+    @GetMapping
+    public ResponseEntity<List<ProductDto>> get() {
+        return ResponseEntity.ok(productService.getAll().stream().map(ProductDto::convertToDto)
+                .collect(java.util.stream.Collectors.toList()));
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long productId) {
         Optional<Product> product = productService.getById(productId);
         if (product.isPresent()) {
-            return ResponseEntity.ok(product.get());
-        }   
+            return ResponseEntity.ok(ProductDto.convertToDto(product.get()));
+        }
 
         return ResponseEntity.notFound().build();
     }
-    
+
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequest request) {
-        request.setUserId(1L); // HARCODEO HASTA IMPLEMENTAR JWT
+    public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductRequest request) {
         return productService.create(request)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.badRequest().build());
-}
+                .map(ProductDto::convertToDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
+    }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Product> updateProduct(@RequestBody UpdateProductRequest request, @PathVariable Long productId) {
+    public ResponseEntity<ProductDto> updateProduct(@RequestBody UpdateProductRequest request,
+            @PathVariable Long productId) {
         Product updatedProduct = productService.update(request, productId).orElse(null);
         if (updatedProduct == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updatedProduct);
+        return ResponseEntity.ok(ProductDto.convertToDto(updatedProduct));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<ProductDto> deleteProduct(@PathVariable Long productId) {
         productService.delete(productId);
         return ResponseEntity.noContent().build();
     }

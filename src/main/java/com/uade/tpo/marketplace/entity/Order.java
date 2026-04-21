@@ -10,22 +10,20 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {
-
-    @Column
-    private Long userId;
-
-    @Column
-    private Long paymentMethodId;
 
     @Column
     private BigDecimal totalAmount;
@@ -35,17 +33,40 @@ public class Order extends BaseEntity {
     private StatusOrderEnum status;
 
     @Column
-    private LocalDateTime createdAt;
-
-    @Column
-    private Long discountId;
-
-    @Column
     private Integer discountPercentage;
 
     @Column
     private String discountCode;
 
+    @Column
+    private String cardNumber;
+
+    @Column
+    private String cvc;
+
+    @Column
+    private String cardHolderName;
+
+    @Column
+    private String cardExpiration;
+
     @OneToMany(mappedBy = "order")
-    private List<OrderDetails> orderDetails;
+    @JsonManagedReference
+    private List<OrderDetails> orderDetails = List.of();
+
+    @ManyToOne(optional = false)
+    @JsonManagedReference
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(optional = true)
+    @JsonManagedReference
+    @JoinColumn(name = "discount_id", nullable = true)
+    private Discount discount;
+
+    @ManyToOne(optional = true)
+    @JsonManagedReference
+    @JoinColumn(name = "payment_method_id", nullable = true)
+    private PaymentMethods paymentMethods;
+
 }

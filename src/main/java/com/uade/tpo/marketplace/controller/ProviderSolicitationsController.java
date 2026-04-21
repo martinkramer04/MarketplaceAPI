@@ -42,10 +42,10 @@ public class ProviderSolicitationsController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /api/provider-solicitations/provider/{providerId}
-    @GetMapping("/provider/{providerId}")
-    public ResponseEntity<List<ProviderSolicitations>> getByProvider(@PathVariable Long providerId) {
-        return ResponseEntity.ok(solicitationsService.getByProvider(providerId));
+    // GET /api/provider-solicitations/provider/{userId}
+    @GetMapping("/provider/{userId}")
+    public ResponseEntity<List<ProviderSolicitations>> getByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(solicitationsService.getByUser(userId));
     }
 
     // GET /api/provider-solicitations/status/{status}

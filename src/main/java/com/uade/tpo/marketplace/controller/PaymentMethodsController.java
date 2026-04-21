@@ -1,8 +1,8 @@
 package com.uade.tpo.marketplace.controller;
- 
+
 import java.util.List;
 import java.util.Optional;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,47 +14,42 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 import com.uade.tpo.marketplace.entity.PaymentMethods;
 import com.uade.tpo.marketplace.entity.dto.PaymentMethods.CreatePaymentMethodsRequest;
 import com.uade.tpo.marketplace.entity.dto.PaymentMethods.UpdatePaymentMethodsRequest;
 import com.uade.tpo.marketplace.service.PaymentMethodsService;
- 
+
 @RestController
 @RequestMapping("/api/payment-methods")
 public class PaymentMethodsController {
- 
+
     @Autowired
     private PaymentMethodsService paymentMethodsService;
- 
-    //GET
+
+    // GET
     @GetMapping
     public ResponseEntity<List<PaymentMethods>> getAll() {
         return ResponseEntity.ok(paymentMethodsService.getAll());
     }
- 
-    //GET
+
+    // GET
     @GetMapping("/{id}")
     public ResponseEntity<PaymentMethods> getById(@PathVariable Long id) {
         Optional<PaymentMethods> result = paymentMethodsService.getById(id);
         return result.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    //GET
-    @GetMapping("/user/{userId}") 
-    public ResponseEntity<List<PaymentMethods>> getByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(paymentMethodsService.getByUserId(userId));
-    }
-    //POST 
+
+    // POST
     @PostMapping
     public ResponseEntity<PaymentMethods> create(@RequestBody CreatePaymentMethodsRequest request) {
-        request.setUserId(1L); //MODIFICAR LUEGO DE IMPLEMENTAR JWT
         Optional<PaymentMethods> result = paymentMethodsService.create(request);
         return result.map(pm -> ResponseEntity.status(HttpStatus.CREATED).body(pm))
-            .orElse(ResponseEntity.badRequest().build());
-}
- 
-    //PUT 
+                .orElse(ResponseEntity.badRequest().build());
+    }
+
+    // PUT
     @PutMapping("/{id}")
     public ResponseEntity<PaymentMethods> update(
             @PathVariable Long id,
@@ -63,8 +58,8 @@ public class PaymentMethodsController {
         return result.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
- 
-    //DELETE
+
+    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         boolean deleted = paymentMethodsService.delete(id);

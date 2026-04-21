@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class CreateProviderSolicitationRequest {
  
-    private Long providerId;
+    private Long userId;
     private String description;
 }

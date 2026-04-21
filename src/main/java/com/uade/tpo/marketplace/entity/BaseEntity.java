@@ -18,10 +18,7 @@ public class BaseEntity {
 
     @Column
     private Boolean isDeleted = false;
-    @Column
-    private Long createdBy;
-    @Column
-    private Long updatedBy;
+
     @Column
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column
