@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.ProviderSolicitations;
+import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Provider.CreateProviderSolicitationRequest;
 import com.uade.tpo.marketplace.entity.dto.Provider.UpdateProviderSolicitationRequest;
 import com.uade.tpo.marketplace.entity.enums.SolicitationStatusEnum;
@@ -15,10 +17,8 @@ import com.uade.tpo.marketplace.repository.ProviderSolicitationsRepository;
 import com.uade.tpo.marketplace.repository.UserRepository;
 
 @Service
-public class ProviderSolicitationsService implements IBaseService<
-        ProviderSolicitations,
-        CreateProviderSolicitationRequest,
-        UpdateProviderSolicitationRequest> {
+public class ProviderSolicitationsService implements
+        IBaseService<ProviderSolicitations, CreateProviderSolicitationRequest, UpdateProviderSolicitationRequest> {
 
     @Autowired
     private ProviderSolicitationsRepository solicitationsRepository;
@@ -27,7 +27,7 @@ public class ProviderSolicitationsService implements IBaseService<
     // private ProviderRepository providerRepository;
     private UserRepository userRepository;
 
-     @Autowired
+    @Autowired
 
     @Override
     public List<ProviderSolicitations> getAll() {
@@ -52,18 +52,12 @@ public class ProviderSolicitationsService implements IBaseService<
         if (entity == null) {
             return Optional.empty();
         }
-
-        if (entity.getUserId() == null) {
-            return Optional.empty();
-        }
-
-        if (!userRepository.existsById(entity.getUserId())) {
-            return Optional.empty();
-        }
-
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         ProviderSolicitations solicitation = new ProviderSolicitations();
-        solicitation.setUser(userRepository.findById(entity.getUserId()).orElse(null));
+        solicitation.setUser(currentUser);
         solicitation.setDescription(entity.getDescription());
         solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA);
         solicitation.setCreatedAt(LocalDateTime.now());

@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -32,6 +34,10 @@ public class Box extends BaseEntity {
     @Column
     private Integer stock;
 
+    @ManyToMany
+    @JoinTable(name = "box_products", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Product> products = List.of();
+
     @ManyToOne(optional = false)
     @JsonManagedReference
     @JoinColumn(name = "user_id", nullable = false)
@@ -39,11 +45,11 @@ public class Box extends BaseEntity {
 
     @OneToMany(mappedBy = "box")
     @JsonManagedReference
-    private List<Review> reviews;
+    private List<Review> reviews = List.of();
 
     @OneToMany(mappedBy = "box")
     @JsonManagedReference
-    private List<Image> images;
+    private List<Image> images = List.of();
 
     @ManyToOne
     @JsonManagedReference

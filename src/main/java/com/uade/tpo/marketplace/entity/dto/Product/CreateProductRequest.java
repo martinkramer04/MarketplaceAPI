@@ -8,8 +8,4 @@ import lombok.Data;
 public class CreateProductRequest {
     private String name;
     private String description;
-    private Integer stock;
-    private Long categoryId;
-    private String imageUrl;
-    private BigDecimal price;
 }

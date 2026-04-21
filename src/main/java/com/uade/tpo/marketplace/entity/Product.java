@@ -1,13 +1,14 @@
 package com.uade.tpo.marketplace.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import lombok.EqualsAndHashCode;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -26,4 +27,8 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private Long userId;
+
+    @ManyToMany(mappedBy = "products")
+    @JsonBackReference
+    private List<Box> boxes;
 }

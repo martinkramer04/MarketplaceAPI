@@ -43,16 +43,6 @@ public class ProductService implements IBaseService<Product, CreateProductReques
             return Optional.empty();
         }
 
-        if (entity.getName() == null || entity.getPrice() == null || entity.getStock() == null
-                || entity.getCategoryId() == null) {
-            return Optional.empty();
-        }
-
-        Optional<Category> category = categoryRepository.findById(entity.getCategoryId());
-        if (!category.isPresent()) {
-            return Optional.empty();
-        }
-
         Product product = new Product();
 
         User currentUser = (User) SecurityContextHolder.getContext()

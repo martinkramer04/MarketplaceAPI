@@ -1,6 +1,7 @@
 package com.uade.tpo.marketplace.service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Category;
+import com.uade.tpo.marketplace.entity.Product;
 import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
@@ -75,6 +77,16 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
         box.setPrice(entity.getPrice());
         box.setStock(entity.getStock());
         box.setUser(currentUser);
+
+        box.setProducts(entity.getProductIds() != null
+                ? Arrays.stream(entity.getProductIds())
+                        .map(productId -> {
+                            Product product = new Product();
+                            product.setId(productId);
+                            return product;
+                        })
+                        .toList()
+                : List.of());
 
         try {
             boxRepository.save(box);
