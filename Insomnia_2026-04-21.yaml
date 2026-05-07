@@ -1,0 +1,3275 @@
+type: spec.insomnia.rest/5.0
+schema_version: "5.1"
+name: OpenAPI definition v0
+meta:
+  id: wrk_94979b45f5dd44d1a871d085f8879025
+  created: 1776741962652
+  modified: 1776741962652
+  description: ""
+collection:
+  - url: "{{ _.base_url }}/api/reviews/:id"
+    name: /api/reviews/{id}
+    meta:
+      id: req_73505aacb690498fbb48097922f175d3
+      created: 1776741962660
+      modified: 1776741962660
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962660
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/reviews/:id"
+    name: /api/reviews/{id}
+    meta:
+      id: req_0fae3ee7225143929b02be990d76c979
+      created: 1776741962661
+      modified: 1776741962661
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962661
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "rating": 0,
+          "comment": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/reviews/:id"
+    name: /api/reviews/{id}
+    meta:
+      id: req_69978e6940cf4584b4457252c5e4e9c0
+      created: 1776741962661
+      modified: 1776741962661
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962661
+    method: DELETE
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/provider-solicitations/:id"
+    name: /api/provider-solicitations/{id}
+    meta:
+      id: req_53151d1e770742ee9598f4bdb9db06e3
+      created: 1776741962662
+      modified: 1776741962662
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962662
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/provider-solicitations/:id"
+    name: /api/provider-solicitations/{id}
+    meta:
+      id: req_3419e30b68ed4eca906b7e18b9a51013
+      created: 1776741962663
+      modified: 1776741962663
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962663
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "solicitationStatus": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/provider-solicitations/:id"
+    name: /api/provider-solicitations/{id}
+    meta:
+      id: req_ce8d12c48d234ab38a6385792a942307
+      created: 1776741962664
+      modified: 1776741962664
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962664
+    method: DELETE
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/products/:productId"
+    name: /api/products/{productId}
+    meta:
+      id: req_5a7dbf69a1d448d58be023243938abaa
+      created: 1776741962665
+      modified: 1776741962665
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962665
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "name": "string",
+          "description": "string",
+          "stock": 0,
+          "categoryId": 0,
+          "imageUrl": "string",
+          "price": 0
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/products/:productId"
+    name: /api/products/{productId}
+    meta:
+      id: req_e16e532a67f1499b979f9e98e46b0fe1
+      created: 1776741962665
+      modified: 1776741962665
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962665
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/products/:productId"
+    name: /api/products/{productId}
+    meta:
+      id: req_a4f8f873284f4f559921f2b63e94c678
+      created: 1776741962666
+      modified: 1776741962666
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962666
+    method: DELETE
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/payment-methods/:id"
+    name: /api/payment-methods/{id}
+    meta:
+      id: req_fbea9763e53a4c4dad96f0040d9eade9
+      created: 1776741962667
+      modified: 1776741962667
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962667
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/payment-methods/:id"
+    name: /api/payment-methods/{id}
+    meta:
+      id: req_2c7a3f8500bd44538de452db0c953435
+      created: 1776741962668
+      modified: 1776741962668
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962668
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "name": "string",
+          "description": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/orders/:id"
+    name: /api/orders/{id}
+    meta:
+      id: req_43c8e606f65646b2b3ba11e5de0ffcb2
+      created: 1776741962669
+      modified: 1776741962669
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962669
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/payment-methods/:id"
+    name: /api/payment-methods/{id}
+    meta:
+      id: req_d23f8a392f124000886cd422962dca5e
+      created: 1776741962669
+      modified: 1776741962669
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962669
+    method: DELETE
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/orders/:id"
+    name: /api/orders/{id}
+    meta:
+      id: req_b4a547cf3093409ca0812a6ee36dcaa5
+      created: 1776741962670
+      modified: 1776741962670
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962670
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "status": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/orders/:id"
+    name: /api/orders/{id}
+    meta:
+      id: req_1352617f25a64f14b75326012424922f
+      created: 1776741962671
+      modified: 1776741962671
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962671
+    method: DELETE
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/discounts/:id"
+    name: /api/discounts/{id}
+    meta:
+      id: req_3a135ad8b9094f9f9fe31f2dc4bc67aa
+      created: 1776741962672
+      modified: 1776741962672
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962672
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/discounts/:id"
+    name: /api/discounts/{id}
+    meta:
+      id: req_2e15d3bb0a2543daa1b3a869cfefdeae
+      created: 1776741962673
+      modified: 1776741962673
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962673
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "name": "string",
+          "percentage": 0,
+          "isActive": true,
+          "startDate": "2026-04-21T03:26:01.313Z",
+          "endDate": "2026-04-21T03:26:01.313Z",
+          "code": "string",
+          "discountType": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/discounts/:id"
+    name: /api/discounts/{id}
+    meta:
+      id: req_96fafe3d284d4e62a028e6c65d17afdc
+      created: 1776741962674
+      modified: 1776741962674
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962674
+    method: DELETE
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/categories/:categoryId"
+    name: /api/categories/{categoryId}
+    meta:
+      id: req_5b3e0d53bafe4a63b75d9edde4a66762
+      created: 1776741962675
+      modified: 1776741962675
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962675
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/categories/:categoryId"
+    name: /api/categories/{categoryId}
+    meta:
+      id: req_0833fa608b8044dd99d99ad8600c130f
+      created: 1776741962676
+      modified: 1776741962676
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962676
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "description": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/categories/:categoryId"
+    name: /api/categories/{categoryId}
+    meta:
+      id: req_4b5d0aa63d7945319a27c23e23c4cd68
+      created: 1776741962677
+      modified: 1776741962677
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962677
+    method: DELETE
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes/:id"
+    name: /api/boxes/{id}
+    meta:
+      id: req_676dcdd6aa104a0cbdc214960a5e0263
+      created: 1776741962678
+      modified: 1776741962678
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962678
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes/:id"
+    name: /api/boxes/{id}
+    meta:
+      id: req_47fe4d96b567462ca6cba032a715233b
+      created: 1776741962679
+      modified: 1776741962679
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962679
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "categoryId": 0,
+          "name": "string",
+          "description": "string",
+          "price": 0,
+          "stock": 0
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes/:id"
+    name: /api/boxes/{id}
+    meta:
+      id: req_4a8382a6ff074413b93b6a8518c5e60f
+      created: 1776741962680
+      modified: 1776741962680
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962680
+    method: DELETE
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/auth/register"
+    name: /auth/register
+    meta:
+      id: req_997f18b0c2274596b04936bfe7ae333c
+      created: 1776741962680
+      modified: 1776741962680
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962680
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "firstname": "string",
+          "lastname": "string",
+          "email": "string",
+          "password": "string",
+          "role": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/auth/authenticate"
+    name: /auth/authenticate
+    meta:
+      id: req_4a528ab243f64d92b5b4debbc56d42f7
+      created: 1776741962681
+      modified: 1776741962681
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962681
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "email": "string",
+          "password": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/reviews"
+    name: /api/reviews
+    meta:
+      id: req_28577ac03add419aa473bf12ce99a056
+      created: 1776741962682
+      modified: 1776741962682
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962682
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/reviews"
+    name: /api/reviews
+    meta:
+      id: req_2fc1f38a8d1b42feb0a4fced5161251d
+      created: 1776741962683
+      modified: 1776741962683
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962683
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "boxId": 0,
+          "rating": 0,
+          "comment": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/provider-solicitations"
+    name: /api/provider-solicitations
+    meta:
+      id: req_2e10b004a07346c9a357e8a2ee469916
+      created: 1776741962684
+      modified: 1776741962684
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962684
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/provider-solicitations"
+    name: /api/provider-solicitations
+    meta:
+      id: req_8eda995f83b54ecf9e60e18391e53ef8
+      created: 1776741962684
+      modified: 1776741962684
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962684
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "description": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/products"
+    name: /api/products
+    meta:
+      id: req_7ecad0d5869b4be28c5427d1ed3cf522
+      created: 1776741962685
+      modified: 1776741962685
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962685
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/products"
+    name: /api/products
+    meta:
+      id: req_a0507f2969684ff6b0b48ee60172624c
+      created: 1776741962686
+      modified: 1776741962686
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962686
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "name": "string",
+          "description": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/payment-methods"
+    name: /api/payment-methods
+    meta:
+      id: req_d92f7a7e780c4bb883aba3fce3331675
+      created: 1776741962687
+      modified: 1776741962687
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962687
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/payment-methods"
+    name: /api/payment-methods
+    meta:
+      id: req_900792e94a6d4d65b5c4a198873da976
+      created: 1776741962688
+      modified: 1776741962688
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962688
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "name": "string",
+          "description": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/orders"
+    name: /api/orders
+    meta:
+      id: req_2f9a35121ec242038da7851135c46cc3
+      created: 1776741962689
+      modified: 1776741962689
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962689
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/orders"
+    name: /api/orders
+    meta:
+      id: req_359442aef57d407fa67bc9bd60b6e1da
+      created: 1776741962690
+      modified: 1776741962690
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962690
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "paymentMethodId": 0,
+          "discountCode": "string",
+          "items": [
+            {
+              "boxId": 0,
+              "quantity": 0
+            }
+          ]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/discounts"
+    name: /api/discounts
+    meta:
+      id: req_204b55fb129241f89220b0be8a69df99
+      created: 1776741962691
+      modified: 1776741962691
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962691
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "name": "string",
+          "percentage": 0,
+          "isActive": true,
+          "startDate": "2026-04-21T03:26:01.314Z",
+          "endDate": "2026-04-21T03:26:01.314Z",
+          "code": "string",
+          "discountType": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/discounts"
+    name: /api/discounts
+    meta:
+      id: req_4750b228554c4eae8422b368b05570ba
+      created: 1776741962691
+      modified: 1776741962691
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962691
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/categories"
+    name: /api/categories
+    meta:
+      id: req_14d8bc4b2c17479fa05dfc1b4ad8f6b3
+      created: 1776741962692
+      modified: 1776741962692
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962692
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/categories"
+    name: /api/categories
+    meta:
+      id: req_018a50ad0d9c4f31babc3574834bf1b3
+      created: 1776741962693
+      modified: 1776741962693
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962693
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "description": "string"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes"
+    name: /api/boxes
+    meta:
+      id: req_734cdd573bc446a8b8a1dfc17742f997
+      created: 1776741962694
+      modified: 1776741962694
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962694
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes"
+    name: /api/boxes
+    meta:
+      id: req_f493cfe253e84c6b9b28b21b6c7bb44c
+      created: 1776741962695
+      modified: 1776741962695
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962695
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "categoryId": 0,
+          "name": "string",
+          "description": "string",
+          "price": 0,
+          "stock": 0,
+          "productIds": [
+            0
+          ]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes/add-image"
+    name: /api/boxes/add-image
+    meta:
+      id: req_6e0bc90586f44f3aa6cfef17fd659431
+      created: 1776741962696
+      modified: 1776741962696
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962696
+    method: POST
+    body:
+      mimeType: multipart/form-data
+    parameters:
+      - name: name
+        value: string
+        disabled: false
+      - name: boxId
+        value: "0"
+        disabled: false
+    headers:
+      - name: Content-Type
+        value: multipart/form-data
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/reviews/user/:userId"
+    name: /api/reviews/user/{userId}
+    meta:
+      id: req_07121a84f9dc46e2a770a977316949bb
+      created: 1776741962697
+      modified: 1776741962697
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962697
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/reviews/box/:boxId"
+    name: /api/reviews/box/{boxId}
+    meta:
+      id: req_f2149d3bb98c4bb6a503993c8804f6dc
+      created: 1776741962697
+      modified: 1776741962697
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962697
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/provider-solicitations/status/:status"
+    name: /api/provider-solicitations/status/{status}
+    meta:
+      id: req_2fc064aa8320467ba5b7150a808841ab
+      created: 1776741962698
+      modified: 1776741962698
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962698
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/provider-solicitations/provider/:userId"
+    name: /api/provider-solicitations/provider/{userId}
+    meta:
+      id: req_32190bf3b2444e49aaa90fa392554fbb
+      created: 1776741962699
+      modified: 1776741962699
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962699
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/orders/:id/details"
+    name: /api/orders/{id}/details
+    meta:
+      id: req_2e6c4c66d7574b728e656a47d403ee34
+      created: 1776741962700
+      modified: 1776741962700
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962700
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/orders/user/:userId"
+    name: /api/orders/user/{userId}
+    meta:
+      id: req_a81af40843324f029b28139d66c2e889
+      created: 1776741962700
+      modified: 1776741962700
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962700
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/discounts/code/:code"
+    name: /api/discounts/code/{code}
+    meta:
+      id: req_17e248c5d29247cd925b4996cf05c3ef
+      created: 1776741962701
+      modified: 1776741962701
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962701
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/discounts/active"
+    name: /api/discounts/active
+    meta:
+      id: req_3b949f308c504f2d8d131772c88b601f
+      created: 1776741962702
+      modified: 1776741962702
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962702
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes/display-image"
+    name: /api/boxes/display-image
+    meta:
+      id: req_d8bdd4b0d3e64e558f203ec11af04a6f
+      created: 1776741962703
+      modified: 1776741962703
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962703
+    method: GET
+    parameters:
+      - name: id
+        value: "0"
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes/category/:categoryId"
+    name: /api/boxes/category/{categoryId}
+    meta:
+      id: req_5270e9fae8ee4bf48a13dad4edeb00d0
+      created: 1776741962704
+      modified: 1776741962704
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962704
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/api/boxes/available"
+    name: /api/boxes/available
+    meta:
+      id: req_f1201093b02b4940822e72e0bc2454a4
+      created: 1776741962705
+      modified: 1776741962705
+      isPrivate: false
+      description: ""
+      sortKey: -1776741962705
+    method: GET
+    authentication:
+      type: bearer
+      token: "{{ _.bearerToken }}"
+      prefix: ""
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_aedc81cb9b476c840508bacfcf08ca8edc19df90
+    created: 1776741962914
+    modified: 1776741962914
+environments:
+  name: Base environment
+  meta:
+    id: env_f61ca539235e4ef180ba996bbe5459db
+    created: 1776741962658
+    modified: 1776741962658
+    isPrivate: false
+  data:
+    base_url: "{{ _.scheme }}://{{ _.host }}{{ _.base_path }}"
+  subEnvironments:
+    - name: OpenAPI env localhost:4002
+      meta:
+        id: env_6e07eed62e374731855bdc0bbdd188f9
+        created: 1776741962659
+        modified: 1776741962659
+        isPrivate: false
+        sortKey: 1776741962659
+      data:
+        scheme: http
+        base_path: ""
+        host: localhost:4002
+        bearerToken: bearerToken
+spec:
+  contents:
+    openapi: 3.1.0
+    info:
+      title: OpenAPI definition
+      version: v0
+    servers:
+      - url: http://localhost:4002
+        description: Generated server url
+    paths:
+      /api/reviews/{id}:
+        get:
+          tags:
+            - review-controller
+          operationId: getById
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ReviewDto"
+        put:
+          tags:
+            - review-controller
+          operationId: update
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdateReviewRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ReviewDto"
+        delete:
+          tags:
+            - review-controller
+          operationId: delete
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+      /api/provider-solicitations/{id}:
+        get:
+          tags:
+            - provider-solicitations-controller
+          operationId: getById_1
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ProviderSolicitations"
+        put:
+          tags:
+            - provider-solicitations-controller
+          operationId: update_1
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdateProviderSolicitationRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ProviderSolicitations"
+        delete:
+          tags:
+            - provider-solicitations-controller
+          operationId: delete_1
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+      /api/products/{productId}:
+        get:
+          tags:
+            - products-controller
+          operationId: getProductById
+          parameters:
+            - name: productId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ProductDto"
+        put:
+          tags:
+            - products-controller
+          operationId: updateProduct
+          parameters:
+            - name: productId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdateProductRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ProductDto"
+        delete:
+          tags:
+            - products-controller
+          operationId: deleteProduct
+          parameters:
+            - name: productId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ProductDto"
+      /api/payment-methods/{id}:
+        get:
+          tags:
+            - payment-methods-controller
+          operationId: getById_2
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/PaymentMethods"
+        put:
+          tags:
+            - payment-methods-controller
+          operationId: update_2
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdatePaymentMethodsRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/PaymentMethods"
+        delete:
+          tags:
+            - payment-methods-controller
+          operationId: delete_2
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+      /api/orders/{id}:
+        get:
+          tags:
+            - order-controller
+          operationId: getById_3
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/OrderAdminDto"
+        put:
+          tags:
+            - order-controller
+          operationId: update_3
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdateOrderRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/OrderUserDto"
+        delete:
+          tags:
+            - order-controller
+          operationId: delete_3
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+      /api/discounts/{id}:
+        get:
+          tags:
+            - discount-controller
+          operationId: getById_4
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/DiscountAdminDto"
+        put:
+          tags:
+            - discount-controller
+          operationId: update_4
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdateDiscountRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/DiscountAdminDto"
+        delete:
+          tags:
+            - discount-controller
+          operationId: delete_4
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+      /api/categories/{categoryId}:
+        get:
+          tags:
+            - category-controller
+          operationId: getCategoryById
+          parameters:
+            - name: categoryId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/CategoryDto"
+        put:
+          tags:
+            - category-controller
+          operationId: updateCategory
+          parameters:
+            - name: categoryId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdateCategoryRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/CategoryDto"
+        delete:
+          tags:
+            - category-controller
+          operationId: deleteCategory
+          parameters:
+            - name: categoryId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/CategoryDto"
+      /api/boxes/{id}:
+        get:
+          tags:
+            - box-controller
+          operationId: getById_5
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/BoxDto"
+        put:
+          tags:
+            - box-controller
+          operationId: update_5
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdateBoxRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/BoxDto"
+        delete:
+          tags:
+            - box-controller
+          operationId: delete_5
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+      /auth/register:
+        post:
+          tags:
+            - auth-controller
+          operationId: register
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/AuthRegisterRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/AuthAuthenticateResponse"
+      /auth/authenticate:
+        post:
+          tags:
+            - auth-controller
+          operationId: authenticate
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/AuthAuthenticateRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/AuthAuthenticateResponse"
+      /api/reviews:
+        get:
+          tags:
+            - review-controller
+          operationId: getAll
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReviewDto"
+        post:
+          tags:
+            - review-controller
+          operationId: create
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CreateReviewRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ReviewDto"
+      /api/provider-solicitations:
+        get:
+          tags:
+            - provider-solicitations-controller
+          operationId: getAll_1
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProviderSolicitations"
+        post:
+          tags:
+            - provider-solicitations-controller
+          operationId: create_1
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CreateProviderSolicitationRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ProviderSolicitations"
+      /api/products:
+        get:
+          tags:
+            - products-controller
+          operationId: get
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProductDto"
+        post:
+          tags:
+            - products-controller
+          operationId: createProduct
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CreateProductRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ProductDto"
+      /api/payment-methods:
+        get:
+          tags:
+            - payment-methods-controller
+          operationId: getAll_2
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PaymentMethods"
+        post:
+          tags:
+            - payment-methods-controller
+          operationId: create_2
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CreatePaymentMethodsRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/PaymentMethods"
+      /api/orders:
+        get:
+          tags:
+            - order-controller
+          operationId: getAll_3
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OrderAdminDto"
+        post:
+          tags:
+            - order-controller
+          operationId: create_3
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CreateOrderRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/OrderUserDto"
+      /api/discounts:
+        get:
+          tags:
+            - discount-controller
+          operationId: getAll_4
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DiscountAdminDto"
+        post:
+          tags:
+            - discount-controller
+          operationId: create_4
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CreateDiscountRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/DiscountAdminDto"
+      /api/categories:
+        get:
+          tags:
+            - category-controller
+          operationId: getCategories
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CategoryDto"
+        post:
+          tags:
+            - category-controller
+          operationId: createCategory
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CreateCategoryRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/CategoryDto"
+      /api/boxes:
+        get:
+          tags:
+            - box-controller
+          operationId: getAll_5
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/BoxDto"
+        post:
+          tags:
+            - box-controller
+          operationId: create_5
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/CreateBoxRequest"
+            required: true
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/BoxDto"
+      /api/boxes/add-image:
+        post:
+          tags:
+            - box-controller
+          operationId: addImageBox
+          parameters:
+            - name: name
+              in: query
+              required: true
+              schema:
+                type: string
+            - name: boxId
+              in: query
+              required: true
+              schema:
+                type: integer
+                format: int64
+          requestBody:
+            content:
+              multipart/form-data:
+                schema:
+                  type: object
+                  properties:
+                    file:
+                      type: string
+                      format: binary
+                  required:
+                    - file
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: string
+      /api/reviews/user/{userId}:
+        get:
+          tags:
+            - review-controller
+          operationId: getByUser
+          parameters:
+            - name: userId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReviewDto"
+      /api/reviews/box/{boxId}:
+        get:
+          tags:
+            - review-controller
+          operationId: getByBox
+          parameters:
+            - name: boxId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReviewDto"
+      /api/provider-solicitations/status/{status}:
+        get:
+          tags:
+            - provider-solicitations-controller
+          operationId: getByStatus
+          parameters:
+            - name: status
+              in: path
+              required: true
+              schema:
+                type: string
+                enum:
+                  - GENERADA
+                  - CONFIRMADA
+                  - RECHAZADA
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProviderSolicitations"
+      /api/provider-solicitations/provider/{userId}:
+        get:
+          tags:
+            - provider-solicitations-controller
+          operationId: getByUser_1
+          parameters:
+            - name: userId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProviderSolicitations"
+      /api/orders/{id}/details:
+        get:
+          tags:
+            - order-controller
+          operationId: getDetails
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OrderDetailsDto"
+      /api/orders/user/{userId}:
+        get:
+          tags:
+            - order-controller
+          operationId: getByUser_2
+          parameters:
+            - name: userId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OrderUserDto"
+      /api/discounts/code/{code}:
+        get:
+          tags:
+            - discount-controller
+          operationId: getByCode
+          parameters:
+            - name: code
+              in: path
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/DiscountUserDto"
+      /api/discounts/active:
+        get:
+          tags:
+            - discount-controller
+          operationId: getActive
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DiscountUserDto"
+      /api/boxes/display-image:
+        get:
+          tags:
+            - box-controller
+          operationId: displayImage
+          parameters:
+            - name: id
+              in: query
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    $ref: "#/components/schemas/ImageResponse"
+      /api/boxes/category/{categoryId}:
+        get:
+          tags:
+            - box-controller
+          operationId: getByCategory
+          parameters:
+            - name: categoryId
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int64
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/BoxDto"
+      /api/boxes/available:
+        get:
+          tags:
+            - box-controller
+          operationId: getAvailable
+          responses:
+            "200":
+              description: OK
+              content:
+                "*/*":
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/BoxDto"
+    components:
+      schemas:
+        UpdateReviewRequest:
+          type: object
+          properties:
+            rating:
+              type: integer
+              format: int32
+            comment:
+              type: string
+        BoxDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+            stock:
+              type: integer
+              format: int32
+            category:
+              $ref: "#/components/schemas/CategoryDto"
+            images:
+              type: array
+              items:
+                $ref: "#/components/schemas/ImageDto"
+            products:
+              type: array
+              items:
+                $ref: "#/components/schemas/ProductDto"
+        CategoryDto:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+            id:
+              type: integer
+              format: int64
+        ImageDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            base64Image:
+              type: string
+        ProductDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            description:
+              type: string
+        ReviewDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            createdAt:
+              type: string
+              format: date-time
+            comment:
+              type: string
+            rating:
+              type: integer
+              format: int32
+            user:
+              $ref: "#/components/schemas/UserDto"
+            box:
+              $ref: "#/components/schemas/BoxDto"
+        UserDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            firstname:
+              type: string
+            lastname:
+              type: string
+            email:
+              type: string
+        UpdateProviderSolicitationRequest:
+          type: object
+          properties:
+            solicitationStatus:
+              type: string
+              enum:
+                - GENERADA
+                - CONFIRMADA
+                - RECHAZADA
+        Box:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            name:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+            stock:
+              type: integer
+              format: int32
+            products:
+              type: array
+              items:
+                $ref: "#/components/schemas/Product"
+            user:
+              $ref: "#/components/schemas/User"
+            reviews:
+              type: array
+              items:
+                $ref: "#/components/schemas/Review"
+            images:
+              type: array
+              items:
+                $ref: "#/components/schemas/Image"
+            category:
+              $ref: "#/components/schemas/Category"
+        Category:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            name:
+              type: string
+            description:
+              type: string
+            userId:
+              type: integer
+              format: int64
+            boxes:
+              type: array
+              items:
+                $ref: "#/components/schemas/Box"
+        Discount:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            name:
+              type: string
+            percentage:
+              type: integer
+              format: int32
+            isActive:
+              type: boolean
+            startDate:
+              type: string
+              format: date-time
+            endDate:
+              type: string
+              format: date-time
+            code:
+              type: string
+            discountType:
+              type: string
+              enum:
+                - GENERAL
+                - CUPON
+            orders:
+              type: array
+              items:
+                $ref: "#/components/schemas/Order"
+        GrantedAuthority:
+          type: object
+          properties:
+            authority:
+              type: string
+        Image:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            name:
+              type: string
+            image:
+              type: object
+              properties:
+                binaryStream:
+                  type: object
+            box:
+              $ref: "#/components/schemas/Box"
+        Order:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            totalAmount:
+              type: number
+            status:
+              type: string
+              enum:
+                - GENERADA
+                - PROCESO_PAGO
+                - CONFIRMADA
+                - RECHAZADA
+            discountPercentage:
+              type: integer
+              format: int32
+            discountCode:
+              type: string
+            cardNumber:
+              type: string
+            cvc:
+              type: string
+            cardHolderName:
+              type: string
+            cardExpiration:
+              type: string
+            orderDetails:
+              type: array
+              items:
+                $ref: "#/components/schemas/OrderDetails"
+            user:
+              $ref: "#/components/schemas/User"
+            discount:
+              $ref: "#/components/schemas/Discount"
+            paymentMethods:
+              $ref: "#/components/schemas/PaymentMethods"
+        OrderDetails:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            boxName:
+              type: string
+            quantity:
+              type: integer
+              format: int32
+            unitPrice:
+              type: number
+            subtotal:
+              type: number
+            discountAmount:
+              type: number
+            boxStock:
+              type: integer
+              format: int32
+            order:
+              $ref: "#/components/schemas/Order"
+            box:
+              $ref: "#/components/schemas/Box"
+        PaymentMethods:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            name:
+              type: string
+            description:
+              type: string
+            userId:
+              type: integer
+              format: int64
+            orders:
+              type: array
+              items:
+                $ref: "#/components/schemas/Order"
+        Product:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            name:
+              type: string
+            description:
+              type: string
+            userId:
+              type: integer
+              format: int64
+            boxes:
+              type: array
+              items:
+                $ref: "#/components/schemas/Box"
+        ProviderSolicitations:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            solicitationStatus:
+              type: string
+              enum:
+                - GENERADA
+                - CONFIRMADA
+                - RECHAZADA
+            user:
+              $ref: "#/components/schemas/User"
+            description:
+              type: string
+        Review:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            isDeleted:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            rating:
+              type: integer
+              format: int32
+            status:
+              type: string
+              enum:
+                - WAITING_REVIEW
+                - REVIEWED
+            comment:
+              type: string
+            user:
+              $ref: "#/components/schemas/User"
+            box:
+              $ref: "#/components/schemas/Box"
+        User:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            username:
+              type: string
+            firstname:
+              type: string
+            lastname:
+              type: string
+            email:
+              type: string
+            password:
+              type: string
+            orders:
+              type: array
+              items:
+                $ref: "#/components/schemas/Order"
+            role:
+              type: string
+              enum:
+                - ADMIN
+                - USER
+                - PROVIDER
+            authorities:
+              type: array
+              items:
+                $ref: "#/components/schemas/GrantedAuthority"
+            enabled:
+              type: boolean
+            credentialsNonExpired:
+              type: boolean
+            accountNonExpired:
+              type: boolean
+            accountNonLocked:
+              type: boolean
+        UpdateProductRequest:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+            stock:
+              type: integer
+              format: int32
+            categoryId:
+              type: integer
+              format: int64
+            imageUrl:
+              type: string
+            price:
+              type: number
+        UpdatePaymentMethodsRequest:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+        UpdateOrderRequest:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+                - GENERADA
+                - PROCESO_PAGO
+                - CONFIRMADA
+                - RECHAZADA
+        DiscountUserDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            code:
+              type: string
+            percentage:
+              type: integer
+              format: int32
+        OrderDetailsDto:
+          type: object
+          properties:
+            boxName:
+              type: string
+            quantity:
+              type: integer
+              format: int32
+            unitPrice:
+              type: number
+            subtotal:
+              type: number
+            discountAmount:
+              type: number
+            boxStock:
+              type: integer
+              format: int32
+            box:
+              $ref: "#/components/schemas/BoxDto"
+        OrderUserDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            totalAmount:
+              type: number
+            status:
+              type: string
+            discountPercentage:
+              type: integer
+              format: int32
+            discountCode:
+              type: string
+            orderDetails:
+              type: array
+              items:
+                $ref: "#/components/schemas/OrderDetailsDto"
+            discount:
+              $ref: "#/components/schemas/DiscountUserDto"
+            paymentMethod:
+              $ref: "#/components/schemas/PaymentMethodsDto"
+        PaymentMethodsDto:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+            id:
+              type: integer
+              format: int64
+        UpdateDiscountRequest:
+          type: object
+          properties:
+            name:
+              type: string
+            percentage:
+              type: integer
+              format: int32
+            isActive:
+              type: boolean
+            startDate:
+              type: string
+              format: date-time
+            endDate:
+              type: string
+              format: date-time
+            code:
+              type: string
+            discountType:
+              type: string
+              enum:
+                - GENERAL
+                - CUPON
+        DiscountAdminDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            code:
+              type: string
+            percentage:
+              type: integer
+              format: int32
+            isActive:
+              type: boolean
+            startDate:
+              type: string
+              format: date-time
+            endDate:
+              type: string
+              format: date-time
+            discountType:
+              type: string
+              enum:
+                - GENERAL
+                - CUPON
+            orders:
+              type: array
+              items:
+                $ref: "#/components/schemas/Order"
+        UpdateCategoryRequest:
+          type: object
+          properties:
+            description:
+              type: string
+        UpdateBoxRequest:
+          type: object
+          properties:
+            categoryId:
+              type: integer
+              format: int64
+            name:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+            stock:
+              type: integer
+              format: int32
+        AuthRegisterRequest:
+          type: object
+          properties:
+            firstname:
+              type: string
+            lastname:
+              type: string
+            email:
+              type: string
+            password:
+              type: string
+            role:
+              type: string
+              enum:
+                - ADMIN
+                - USER
+                - PROVIDER
+        AuthAuthenticateResponse:
+          type: object
+          properties:
+            access_token:
+              type: string
+        AuthAuthenticateRequest:
+          type: object
+          properties:
+            email:
+              type: string
+            password:
+              type: string
+        CreateReviewRequest:
+          type: object
+          properties:
+            boxId:
+              type: integer
+              format: int64
+            rating:
+              type: integer
+              format: int32
+            comment:
+              type: string
+        CreateProviderSolicitationRequest:
+          type: object
+          properties:
+            description:
+              type: string
+        CreateProductRequest:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+        CreatePaymentMethodsRequest:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+        CreateOrderRequest:
+          type: object
+          properties:
+            paymentMethodId:
+              type: integer
+              format: int64
+            discountCode:
+              type: string
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/OrderItemRequest"
+        OrderItemRequest:
+          type: object
+          properties:
+            boxId:
+              type: integer
+              format: int64
+            quantity:
+              type: integer
+              format: int32
+        CreateDiscountRequest:
+          type: object
+          properties:
+            name:
+              type: string
+            percentage:
+              type: integer
+              format: int32
+            isActive:
+              type: boolean
+            startDate:
+              type: string
+              format: date-time
+            endDate:
+              type: string
+              format: date-time
+            code:
+              type: string
+            discountType:
+              type: string
+              enum:
+                - GENERAL
+                - CUPON
+        CreateCategoryRequest:
+          type: object
+          properties:
+            description:
+              type: string
+        CreateBoxRequest:
+          type: object
+          properties:
+            categoryId:
+              type: integer
+              format: int64
+            name:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+            stock:
+              type: integer
+              format: int32
+            productIds:
+              type: array
+              items:
+                type: integer
+                format: int64
+        OrderAdminDto:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            totalAmount:
+              type: number
+            status:
+              type: string
+            discountPercentage:
+              type: integer
+              format: int32
+            discountCode:
+              type: string
+            cardNumber:
+              type: string
+            cvc:
+              type: string
+            cardHolderName:
+              type: string
+            cardExpiration:
+              type: string
+            orderDetails:
+              type: array
+              items:
+                $ref: "#/components/schemas/OrderDetailsDto"
+            user:
+              $ref: "#/components/schemas/UserDto"
+            discount:
+              $ref: "#/components/schemas/DiscountAdminDto"
+            paymentMethod:
+              $ref: "#/components/schemas/PaymentMethodsDto"
+        ImageResponse:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            file:
+              type: string
+      securitySchemes:
+        Bearer Authentication:
+          type: http
+          description: Paste your JWT token here
+          scheme: bearer
+          bearerFormat: JWT
+  meta:
+    id: spc_71c357c01c0f487aa4ebf8050245bdca
+    created: 1776741962653
+    modified: 1776741962654
