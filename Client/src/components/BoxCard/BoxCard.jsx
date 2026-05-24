@@ -1,8 +1,11 @@
 import './BoxCard.css'
+import { useNavigate } from 'react-router-dom'
 
 function BoxCard({ box }) {
+    const navigate = useNavigate()
+
     return (
-        <div className="box-card">
+        <div className="box-card" onClick={() => navigate(`/box/${box.id}`)}>
 
             <div className="box-card-image">
                 <img src={box.image} alt={box.name} />
@@ -13,7 +16,9 @@ function BoxCard({ box }) {
                 <p className="box-card-description">{box.description}</p>
                 <div className="box-card-footer">
                     <span className="box-card-price">${box.price}</span>
-                    <button className="box-card-btn">+</button>
+                    <button className="box-card-btn" onClick={(e) => {
+                        e.stopPropagation()
+                    }}>+</button>
                 </div>
             </div>
 

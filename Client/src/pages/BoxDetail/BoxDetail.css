@@ -1,0 +1,137 @@
+.box-detail {
+    display: flex;
+    gap: 48px;
+    padding: 48px 64px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.box-detail-left {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.box-detail-image {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.box-detail-about h2,
+.box-detail-reviews h2 {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.box-detail-about p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.box-detail-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stars {
+    color: gold;
+    font-size: 1.1rem;
+}
+
+.rating-number {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.rating-count {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* DERECHA */
+.box-detail-right {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 8px;
+}
+
+.box-detail-category {
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.box-detail-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--neutral);
+}
+
+.box-detail-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.box-detail-price span {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #888;
+}
+
+.box-detail-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.btn-add-cart {
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-add-cart:hover {
+    opacity: 0.9;
+}
+
+.btn-wishlist {
+    background-color: white;
+    color: var(--neutral);
+    border: 1px solid #ddd;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.box-detail-shipping {
+    background-color: #e8f4f8;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.not-found {
+    text-align: center;
+    padding: 64px;
+    font-size: 1.2rem;
+}

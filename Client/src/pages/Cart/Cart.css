@@ -1,0 +1,165 @@
+.cart {
+    display: flex;
+    gap: 48px;
+    padding: 48px 64px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cart-left {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cart-left h1 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.cart-count {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+}
+
+.cart-item img {
+    width: 90px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.cart-item-info p {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.cart-item-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.cart-item-price {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #e00;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+/* ORDER SUMMARY */
+.cart-right {
+    flex: 0.8;
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: fit-content;
+}
+
+.cart-right h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.free {
+    color: green;
+    font-weight: 600;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    font-weight: 700;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.btn-checkout {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-checkout:hover {
+    opacity: 0.9;
+}
+
+.summary-promo {
+    margin-top: 8px;
+}
+
+.summary-promo p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.promo-input {
+    display: flex;
+    gap: 8px;
+}
+
+.promo-input input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    outline: none;
+}
+
+.promo-input button {
+    background-color: var(--neutral);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
