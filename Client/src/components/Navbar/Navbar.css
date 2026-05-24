@@ -1,0 +1,54 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid #eee;
+}
+
+.navbar-logo {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--primary);
+}
+
+.navbar-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+}
+
+.navbar-links li {
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.navbar-links li:first-child {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.btn-redeem {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.navbar-profile-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    cursor: pointer;
+}

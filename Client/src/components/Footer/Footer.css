@@ -1,0 +1,42 @@
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 32px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #eee;
+    margin-top: auto;
+}
+
+.footer-logo {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-brand p {
+    font-size: 0.85rem;
+    color: #666;
+    max-width: 300px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 24px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.footer-links span {
+    cursor: pointer;
+}
+
+.footer-links span:hover {
+    color: var(--primary);
+}
