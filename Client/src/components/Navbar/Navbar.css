@@ -1,54 +1,94 @@
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 32px;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid #eee;
 }
 
 .navbar-logo {
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--primary);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--primary);
 }
 
 .navbar-links {
-    display: flex;
-    gap: 24px;
-    list-style: none;
+  display: flex;
+  gap: 24px;
+  list-style: none;
 }
 
 .navbar-links li {
-    cursor: pointer;
-    font-size: 0.95rem;
+  cursor: pointer;
+  font-size: 0.95rem;
 }
 
 .navbar-links li:first-child {
-    color: var(--primary);
-    font-weight: 600;
+  color: var(--primary);
+  font-weight: 600;
 }
 
 .navbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .btn-redeem {
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .navbar-profile-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ddd;
-    cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  cursor: pointer;
+}
+
+.cart-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+
+  border-radius: 999px;
+
+  background: #111827;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cart-icon:hover {
+  transform: scale(1.05);
+  transition: 0.2s ease;
 }

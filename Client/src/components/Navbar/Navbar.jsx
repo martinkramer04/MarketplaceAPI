@@ -1,31 +1,47 @@
-import './Navbar.css'
-import ImgPerfilBBox from '../../assets/ImgPerfilBBox.png';
+import "./Navbar.css";
+import ImgPerfilBBox from "../../assets/ImgPerfilBBox.png";
+import { Link } from "react-router-dom";
+import { useCart } from "../../Context/useCart";
+
 function Navbar() {
-    return (
-        <nav className="navbar">
+  const { cartCount } = useCart();
 
-            <div className="navbar-logo">
-                BigBox
-            </div>
+  return (
+    <nav className="navbar">
+      <Link to="/">
+        <div className="navbar-logo">
+          <h1>BigBox</h1>
+        </div>
+      </Link>
 
-            <ul className="navbar-links">
-                <li>Explorar</li>
-                <li>Como funciona</li>
-                <li>Nosotros</li>
-            </ul>
+      <ul className="navbar-links">
+        <Link to="/explore">
+          <li>Explorar</li>
+        </Link>
+        <Link to="/como-funciona">
+          <li>¿Cómo funciona?</li>
+        </Link>
+        <Link to="/nosotros">
+          <li>Nosotros</li>
+        </Link>
+      </ul>
 
-            <div className="navbar-actions">
-                <button className="btn-redeem">Canjea tu regalo</button>
-                <span>🛒</span>
-                <img
-                    src={ImgPerfilBBox}
-                    alt="User Profile"
-                    className="navbar-profile-avatar"
-                />
-            </div>
-
-        </nav>
-    )
+      <div className="navbar-actions">
+        <button className="btn-redeem">Canjea tu regalo</button>
+        <Link to="/cart">
+          <div className="cart-icon">
+            🛒
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </div>
+        </Link>
+        <img
+          src={ImgPerfilBBox}
+          alt="User Profile"
+          className="navbar-profile-avatar"
+        />
+      </div>
+    </nav>
+  );
 }
 
-export default Navbar
+export default Navbar;
