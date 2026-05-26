@@ -34,11 +34,13 @@ function Navbar() {
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </div>
         </Link>
-        <img
-          src={ImgPerfilBBox}
-          alt="User Profile"
-          className="navbar-profile-avatar"
-        />
+        <Link to="/perfil">
+          <img
+            src={ImgPerfilBBox}
+            alt="User Profile"
+            className="navbar-profile-avatar"
+          />
+        </Link>
       </div>
     </nav>
   );

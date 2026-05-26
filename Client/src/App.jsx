@@ -5,6 +5,9 @@ import Home from "./pages/Home/Home";
 import BoxDetail from "./pages/BoxDetail/BoxDetail";
 import Cart from "./pages/Cart/Cart";
 import Explore from "./pages/Explore/Explore";
+import HowItWorks from './pages/HowItWorks/HowItWorks'
+import Us from './pages/Us/Us'
+import Profile from './pages/Profile/Profile'
 
 import ScrollToTop from "./Context/ScrollToTop";
 
@@ -19,6 +22,9 @@ function App() {
         <Route path="/box/:id" element={<BoxDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/como-funciona" element={<HowItWorks />} />
+        <Route path="/nosotros" element={<Us />} />
+        <Route path="/perfil" element={<Profile />} />
       </Routes>
       <Footer />
     </BrowserRouter>

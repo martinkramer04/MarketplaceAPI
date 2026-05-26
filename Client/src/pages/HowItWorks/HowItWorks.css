@@ -1,0 +1,105 @@
+.como-funciona {
+    min-height: 100vh;
+}
+
+.cf-hero {
+    background-color: var(--primary);
+    color: white;
+    text-align: center;
+    padding: 80px 32px;
+}
+
+.cf-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.cf-hero p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.cf-steps {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 64px 32px;
+    flex-wrap: wrap;
+}
+
+.cf-step {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    padding: 32px 24px;
+    max-width: 240px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cf-step-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    opacity: 0.2;
+}
+
+.cf-step h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--neutral);
+}
+
+.cf-step p {
+    font-size: 0.88rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+.cf-banner {
+    background-color: #f5f5f5;
+    text-align: center;
+    padding: 64px 32px;
+}
+
+.cf-banner h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.cf-banner p {
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.cf-redeem {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.cf-redeem input {
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    width: 300px;
+    outline: none;
+}
+
+.cf-redeem button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
