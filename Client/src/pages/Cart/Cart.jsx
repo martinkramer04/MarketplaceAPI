@@ -85,7 +85,7 @@ function Cart() {
           <span>${subtotal + 15}.00</span>
         </div>
 
-        <button className="btn-checkout" onClick={() => navigate("/checkout")}>
+        <button className="btn-checkout" onClick={() => navigate('/checkout/order-summary')}>
           Confirm Cart / Proceed to Checkout
         </button>
 

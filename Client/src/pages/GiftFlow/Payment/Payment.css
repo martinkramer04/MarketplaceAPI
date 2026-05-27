@@ -1,0 +1,175 @@
+.payment {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+    min-height: 100vh;
+}
+
+.payment-body {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.payment-left {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 12px;
+}
+
+.payment-method {
+    flex: 1;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.payment-method.selected {
+    border-color: var(--primary);
+    color: var(--primary);
+    background-color: #f0f0ff;
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.payment-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.payment-campo label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.payment-campo input {
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.payment-campo-row {
+    display: flex;
+    gap: 16px;
+}
+
+.payment-alternative {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.payment-security {
+    display: flex;
+    gap: 24px;
+    font-size: 0.82rem;
+    color: #888;
+}
+
+/* DERECHA */
+.payment-right {
+    flex: 0.8;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: fit-content;
+}
+
+.payment-right h3 {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.pay-summary-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.pay-summary-item img {
+    width: 56px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.pay-summary-item strong {
+    font-size: 0.9rem;
+}
+
+.pay-summary-item p {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.pay-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.pay-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+}
+
+.btn-confirm-pay {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-confirm-pay:hover {
+    opacity: 0.9;
+}
+
+.pay-terms {
+    font-size: 0.78rem;
+    color: #aaa;
+    text-align: center;
+}
+
+.free {
+    color: green;
+    font-weight: 600;
+}

@@ -1,0 +1,60 @@
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 0;
+    gap: 0;
+}
+
+.stepper-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stepper-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #aaa;
+    background: white;
+}
+
+.stepper-circle.active {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.stepper-circle.done {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: white;
+}
+
+.stepper-label {
+    font-size: 0.85rem;
+    color: #aaa;
+    white-space: nowrap;
+}
+
+.stepper-label.active {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.stepper-line {
+    width: 80px;
+    height: 2px;
+    background-color: #ddd;
+    margin: 0 8px;
+}
+
+.stepper-line.done {
+    background-color: var(--primary);
+}

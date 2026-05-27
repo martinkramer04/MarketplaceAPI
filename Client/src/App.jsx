@@ -9,7 +9,12 @@ import HowItWorks from './pages/HowItWorks/HowItWorks'
 import Us from './pages/Us/Us'
 import Profile from './pages/Profile/Profile'
 
+import OrderSummary from './pages/GiftFlow/OrderSummary/OrderSummary'
+import Payment from './pages/GiftFlow/Payment/Payment'
+import Confirmation from './pages/GiftFlow/Confirmation/Confirmation'
+
 import ScrollToTop from "./Context/ScrollToTop";
+
 
 function App() {
   return (
@@ -25,6 +30,9 @@ function App() {
         <Route path="/como-funciona" element={<HowItWorks />} />
         <Route path="/nosotros" element={<Us />} />
         <Route path="/perfil" element={<Profile />} />
+        <Route path="/checkout/order-summary" element={<OrderSummary />} />
+        <Route path="/checkout/payment" element={<Payment />} />
+        <Route path="/checkout/confirmation" element={<Confirmation />} />
       </Routes>
       <Footer />
     </BrowserRouter>

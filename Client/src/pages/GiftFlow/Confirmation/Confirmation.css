@@ -1,0 +1,129 @@
+.confirmation {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+    min-height: 100vh;
+}
+
+.confirmation-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+}
+
+.confirmation-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: var(--secondary);
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirmation-body h1 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.confirmation-sub {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.confirmation-card {
+    display: flex;
+    gap: 20px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: left;
+    width: 100%;
+}
+
+.confirmation-card img {
+    width: 140px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.confirmation-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.confirmation-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    background-color: var(--primary);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    width: fit-content;
+}
+
+.confirmation-card-info h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.confirmation-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.82rem;
+    color: #888;
+}
+
+.confirmation-voucher {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+}
+
+.confirmation-voucher span {
+    font-size: 0.75rem;
+    color: #aaa;
+    letter-spacing: 1px;
+}
+
+.confirmation-voucher strong {
+    font-size: 1.2rem;
+    color: var(--neutral);
+    letter-spacing: 2px;
+}
+
+.confirmation-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.btn-orders {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-continue-shopping {
+    background-color: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
