@@ -34,14 +34,21 @@
   gap: 16px;
 }
 
-.btn-redeem {
-  background-color: var(--primary);
-  color: white;
-  border: none;
+.btn-become-provider {
+  background-color: white;
+  color: var(--primary);
+  border: 2px solid var(--primary);
   padding: 8px 16px;
   border-radius: 6px;
-  cursor: pointer;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-become-provider:hover {
+  background-color: var(--primary);
+  color: white;
 }
 
 .navbar-profile-avatar {

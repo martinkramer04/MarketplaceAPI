@@ -27,7 +27,9 @@ function Navbar() {
       </ul>
 
       <div className="navbar-actions">
-        <button className="btn-redeem">Canjea tu regalo</button>
+        <Link to="/become-provider" className="btn-become-provider">
+          Hacete proveedor
+        </Link>
         <Link to="/cart">
           <div className="cart-icon">
             🛒
@@ -35,11 +37,7 @@ function Navbar() {
           </div>
         </Link>
         <Link to="/perfil">
-          <img
-            src={ImgPerfilBBox}
-            alt="User Profile"
-            className="navbar-profile-avatar"
-          />
+          <img src={ImgPerfilBBox} alt="User Profile" className="navbar-profile-avatar" />
         </Link>
       </div>
     </nav>

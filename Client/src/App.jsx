@@ -9,9 +9,10 @@ import HowItWorks from './pages/HowItWorks/HowItWorks'
 import Us from './pages/Us/Us'
 import Profile from './pages/Profile/Profile'
 
-import OrderSummary from './pages/GiftFlow/OrderSummary/OrderSummary'
-import Payment from './pages/GiftFlow/Payment/Payment'
-import Confirmation from './pages/GiftFlow/Confirmation/Confirmation'
+import OrderSummary from './pages/Checkout/OrderSummary/OrderSummary'
+import Payment from './pages/Checkout/Payment/Payment'
+import Confirmation from './pages/Checkout/Confirmation/Confirmation'
+import BecomeProvider from './pages/Provider/BecomeProvider/BecomeProvider'
 
 import ScrollToTop from "./Context/ScrollToTop";
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/checkout/order-summary" element={<OrderSummary />} />
         <Route path="/checkout/payment" element={<Payment />} />
         <Route path="/checkout/confirmation" element={<Confirmation />} />
+        <Route path="/become-provider" element={<BecomeProvider />} />
       </Routes>
       <Footer />
     </BrowserRouter>
