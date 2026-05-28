@@ -1,0 +1,110 @@
+.my-requests .tab-header {
+    margin-bottom: 28px;
+}
+
+.tab-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--p-primary-dark);
+}
+
+.tab-header p {
+    color: #666;
+    margin-top: 4px;
+}
+
+.requests-table-wrapper {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.requests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.requests-table thead {
+    background-color: var(--p-primary-light);
+}
+
+.requests-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--p-primary-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.requests-table td {
+    padding: 16px;
+    font-size: 0.9rem;
+    color: #444;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.requests-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.requests-table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.req-title {
+    font-weight: 600;
+    color: var(--p-primary-dark);
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-approved {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+.status-pending {
+    background-color: #FFF8E1;
+    color: #F57F17;
+}
+
+.status-rejected {
+    background-color: #FFEBEE;
+    color: #C62828;
+}
+
+.btn-complete {
+    background-color: var(--p-primary);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    white-space: nowrap;
+}
+
+.btn-complete:hover {
+    background-color: var(--p-primary-dark);
+}
+
+.req-no-action {
+    color: #ccc;
+}
+
+@media (max-width: 768px) {
+    .requests-table-wrapper {
+        overflow-x: auto;
+    }
+}

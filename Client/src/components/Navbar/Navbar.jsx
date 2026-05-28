@@ -36,6 +36,9 @@ function Navbar() {
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </div>
         </Link>
+        <Link to="/provider/dashboard" className="btn-become-provider">
+          Portal Proveedor
+        </Link>
         <Link to="/perfil">
           <img src={ImgPerfilBBox} alt="User Profile" className="navbar-profile-avatar" />
         </Link>

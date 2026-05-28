@@ -13,6 +13,7 @@ import OrderSummary from './pages/Checkout/OrderSummary/OrderSummary'
 import Payment from './pages/Checkout/Payment/Payment'
 import Confirmation from './pages/Checkout/Confirmation/Confirmation'
 import BecomeProvider from './pages/Provider/BecomeProvider/BecomeProvider'
+import ProviderDashboard from './pages/Provider/ProviderDashboard/ProviderDashboard'
 
 import ScrollToTop from "./Context/ScrollToTop";
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/checkout/payment" element={<Payment />} />
         <Route path="/checkout/confirmation" element={<Confirmation />} />
         <Route path="/become-provider" element={<BecomeProvider />} />
+        <Route path="/provider/dashboard" element={<ProviderDashboard />} />
       </Routes>
       <Footer />
     </BrowserRouter>

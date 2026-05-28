@@ -13,7 +13,6 @@ function Footer() {
             <div className="footer-links">
                 <span>Privacy Policy</span>
                 <span>Terms of Service</span>
-                <span>Become a Provider</span>
                 <span>Corporate Gifts</span>
             </div>
 

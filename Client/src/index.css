@@ -21,3 +21,13 @@ body {
 a {
   text-decoration: none !important;
 }
+
+.provider-theme {
+  --p-primary: #00695C;
+  --p-primary-light: #E0F2F1;
+  --p-primary-dark: #004D40;
+  --p-accent: #26A69A;
+  --p-sidebar-bg: #004D40;
+  --p-sidebar-text: #B2DFDB;
+  --p-sidebar-active: #00695C;
+}

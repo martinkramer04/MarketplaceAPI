@@ -1,0 +1,21 @@
+.provider-dashboard {
+    display: flex;
+    min-height: calc(100vh - 70px);
+    background-color: #F5F7F7;
+}
+
+.provider-main {
+    flex: 1;
+    padding: 36px 40px;
+    overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .provider-dashboard {
+        flex-direction: column;
+    }
+
+    .provider-main {
+        padding: 24px 16px;
+    }
+}
