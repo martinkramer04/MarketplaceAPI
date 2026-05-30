@@ -16,9 +16,6 @@ function BoxCard({ box }) {
                 <p className="box-card-description">{box.description}</p>
                 <div className="box-card-footer">
                     <span className="box-card-price">${box.price}</span>
-                    <button className="box-card-btn" onClick={(e) => {
-                        e.stopPropagation()
-                    }}>+</button>
                 </div>
             </div>
 
