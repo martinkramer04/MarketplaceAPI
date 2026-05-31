@@ -75,7 +75,7 @@
 
 .categories-grid {
   display: flex;
-  justify-content: column;
+  justify-content: center;
   gap: 48px;
 }
 
@@ -110,10 +110,11 @@
 }
 
 .boxes-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
   gap: 24px;
   justify-content: center;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
