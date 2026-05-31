@@ -4,19 +4,22 @@
 
 .explore-page {
   display: flex;
-  gap: 40px;
-  padding: 36px;
+  gap: 30px;
   background: #ffffff;
   color: #111827;
   font-family: Arial, sans-serif;
-  padding: 0px 15%;
   margin-top: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 20px;
 }
 
 .explore-sidebar {
-  width: 300px;
+  width: 260px;
   border-right: 1px solid #e5e7eb;
-  padding-right: 30px;
+  padding-right: 20px;
   flex-shrink: 0;
 }
 
@@ -86,6 +89,7 @@
 
 .explore-content {
   flex: 1;
+  min-width: 0;
 }
 
 .explore-topbar {
@@ -103,7 +107,7 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 24px;
 }
 
@@ -113,7 +117,7 @@
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  height: stretch;
+  height: 100%;
   overflow: hidden;
   background: #ffffff;
   transition: 0.2s ease;
@@ -152,8 +156,8 @@
 
 .product-image-title {
   position: absolute;
-  left: 28px;
-  bottom: 36px;
+  left: 20px;
+  bottom: 20px;
   color: white;
   font-size: 20px;
   font-weight: bold;
@@ -204,9 +208,10 @@
   margin-top: auto;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .explore-page {
     flex-direction: column;
+    padding: 15px;
   }
 
   .explore-sidebar {
@@ -214,16 +219,17 @@
     border-right: none;
     border-bottom: 1px solid #e5e7eb;
     padding-right: 0;
-    padding-bottom: 24px;
-  }
-
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
+    padding-bottom: 20px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .products-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .explore-topbar {
+    justify-content: center;
   }
 }
