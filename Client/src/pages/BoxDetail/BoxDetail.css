@@ -135,3 +135,36 @@
     padding: 64px;
     font-size: 1.2rem;
 }
+
+@media (max-width: 768px) {
+  .box-detail {
+    flex-direction: column;
+    gap: 32px;
+    padding: 24px 20px;
+  }
+
+  .box-detail-image {
+    height: 280px;
+  }
+
+  .box-detail-name,
+  .box-detail-price {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .box-detail {
+    padding: 16px 16px;
+    gap: 24px;
+  }
+
+  .box-detail-image {
+    height: 220px;
+  }
+
+  .box-detail-name,
+  .box-detail-price {
+    font-size: 1.4rem;
+  }
+}
