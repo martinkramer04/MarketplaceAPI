@@ -7,6 +7,7 @@ import ProposeBoxTab from './components/ProposeBoxTab/ProposeBoxTab'
 import ActiveBoxesTab from './components/ActiveBoxesTab/ActiveBoxesTab'
 import CompleteDetailsTab from './components/CompleteDetailsTab/CompleteDetailsTab'
 import NavbarProvider from '../../../components/Navbar/NavbarProvider'
+import ProposeBoxForm from './components/ProposeBoxForm/ProposeBoxForm'
 
 function ProviderDashboard() {
     const [activeTab, setActiveTab] = useState('overview')
@@ -40,7 +41,7 @@ function ProviderDashboard() {
             case 'my-requests':
                 return <MyRequestsTab onCompleteDetails={handleCompleteDetails} />
             case 'propose-box':
-                return <ProposeBoxTab onSuccess={() => setActiveTab('my-requests')} />
+                return <ProposeBoxForm onSuccess={() => setActiveTab('my-requests')} />
             case 'complete-details':
                 return <CompleteDetailsTab request={selectedRequest} onBack={() => setActiveTab('my-requests')} />
             case 'active-boxes':

@@ -37,7 +37,7 @@ function ActiveBoxesTab() {
 
             <div className="ab-table-wrapper">
                 <div className="ab-table-toolbar">
-                    <input type="text" placeholder="🔍 Buscar cajas..." className="ab-search" />
+                    <input type="text" placeholder="Buscar cajas..." className="ab-search" />
                 </div>
 
                 <table className="ab-table">

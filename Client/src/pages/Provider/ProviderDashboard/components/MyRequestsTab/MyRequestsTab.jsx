@@ -33,7 +33,7 @@ const statusConfig = {
     rejected: { label: 'Rechazado', className: 'status-rejected' },
 }
 
-function MyRequestsTab({ onCompleteDetails }) {
+function MyRequestsTab() {
     return (
         <div className="my-requests">
             <div className="tab-header">
@@ -50,7 +50,6 @@ function MyRequestsTab({ onCompleteDetails }) {
                             <th>Precio Est.</th>
                             <th>Fecha</th>
                             <th>Estado</th>
-                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,18 +65,6 @@ function MyRequestsTab({ onCompleteDetails }) {
                                         <span className={`status-badge ${status.className}`}>
                                             {status.label}
                                         </span>
-                                    </td>
-                                    <td>
-                                        {req.status === 'approved' ? (
-                                            <button
-                                                className="btn-complete"
-                                                onClick={() => onCompleteDetails(req)}
-                                            >
-                                                Completar Detalles →
-                                            </button>
-                                        ) : (
-                                            <span className="req-no-action">—</span>
-                                        )}
                                     </td>
                                 </tr>
                             )
