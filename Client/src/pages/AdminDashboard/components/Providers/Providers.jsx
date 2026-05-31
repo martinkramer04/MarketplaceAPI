@@ -1,25 +1,29 @@
-import './Proveedores.css'
+import './Providers.css'
 import { useState } from 'react'
+import ProveedorDetalle from '../ProviderDetail/ProviderDetail'
+import mockProveedores from '../../../../data/Providers'
 
-const mockProveedores = [
-    { id: 1, nombre: 'La Bodega Club', rubro: 'Gastronomía', cajas: 15, estado: 'active', ciudad: 'Mendoza' },
-    { id: 2, nombre: 'Zen Escapes', rubro: 'Bienestar', cajas: 12, estado: 'active', ciudad: 'Bariloche' },
-    { id: 3, nombre: 'Artisan Collective', rubro: 'Gastronomía', cajas: 8, estado: 'active', ciudad: 'Buenos Aires' },
-    { id: 4, nombre: 'AdventureX', rubro: 'Aventura', cajas: 3, estado: 'active', ciudad: 'Córdoba' },
-    { id: 5, nombre: 'Coastal Crafts', rubro: 'Bienestar', cajas: 0, estado: 'pending', ciudad: 'Mar del Plata' },
-]
 
-function Proveedores() {
+function Providers() {
     const [search, setSearch] = useState('')
+    const [selectedProveedor, setSelectedProveedor] = useState(null)
 
     const filtered = mockProveedores.filter((p) =>
         p.nombre.toLowerCase().includes(search.toLowerCase()) ||
         p.rubro.toLowerCase().includes(search.toLowerCase())
     )
 
+    if (selectedProveedor) {
+        return (
+            <ProveedorDetalle
+                proveedor={selectedProveedor}
+                onBack={() => setSelectedProveedor(null)}
+            />
+        )
+    }
+
     return (
         <div className="proveedores">
-
             <div className="admin-tab-header">
                 <h1>Proveedores</h1>
                 <p>Listado y gestión de empresas prestadoras de servicios en BigBox.</p>
@@ -64,16 +68,20 @@ function Proveedores() {
                                     </span>
                                 </td>
                                 <td>
-                                    <button className="btn-prov-detail">Ver detalle →</button>
+                                    <button
+                                        className="btn-prov-detail"
+                                        onClick={() => setSelectedProveedor(p)}
+                                    >
+                                        Ver detalle →
+                                    </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
-
         </div>
     )
 }
 
-export default Proveedores
+export default Providers

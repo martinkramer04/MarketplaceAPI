@@ -1,4 +1,4 @@
-import './VistaGeneral.css'
+import './GeneralView.css'
 
 const kpis = [
     { label: 'Ventas Totales', value: '$1.482.900', delta: '+12%', icon: '💰', positive: true },
@@ -18,7 +18,7 @@ const systemHealth = [
     { label: 'Storage Capacity', value: 62, unit: '%' },
 ]
 
-function VistaGeneral() {
+function GeneralView() {
     return (
         <div className="vista-general">
 
@@ -92,4 +92,4 @@ function VistaGeneral() {
     )
 }
 
-export default VistaGeneral
+export default GeneralView

@@ -1,7 +1,7 @@
-import './ConfiguracionSistema.css'
+import './SystemConfiguration.css'
 import { useState } from 'react'
 
-function ConfiguracionSistema() {
+function SystemConfiguration() {
     const [config, setConfig] = useState({
         platformName: 'BigBox',
         maintenanceMode: false,
@@ -127,4 +127,4 @@ function ConfiguracionSistema() {
     )
 }
 
-export default ConfiguracionSistema
+export default SystemConfiguration

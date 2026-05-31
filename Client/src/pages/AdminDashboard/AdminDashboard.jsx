@@ -2,10 +2,10 @@ import { useState } from 'react'
 import './AdminDashboard.css'
 import NavbarProvider from '../../components/Navbar/NavbarProvider'
 import AdminSidebar from './components/AdminSidebar/AdminSidebar';
-import VistaGeneral from './components/VistaGeneral/VistaGeneral';
-import PropuestasCajas from './components/PropuestasCajas/PropuestasCajas';
-import Proveedores from './components/Proveedores/Proveedores';
-import ConfiguracionSistema from './components/ConfiguracionSistema/ConfiguracionSistema';
+import VistaGeneral from './components/GeneralView/GeneralView';
+import PropuestasCajas from './components/BoxesSolicitations/BoxesSolicitations';
+import Proveedores from './components/Providers/Providers';
+import ConfiguracionSistema from './components/SystemConfiguration/SystemConfiguration';
 
 function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('vistaGeneral')

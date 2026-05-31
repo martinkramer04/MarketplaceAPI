@@ -1,0 +1,237 @@
+.prov-detalle {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.pd-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-back-admin {
+    background: white;
+    border: 1px solid var(--a-border);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--a-text);
+    white-space: nowrap;
+}
+
+.btn-back-admin:hover {
+    border-color: var(--a-accent);
+    color: var(--a-accent);
+}
+
+.pd-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--a-text);
+    margin-bottom: 6px;
+}
+
+.pd-body {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.pd-left {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pd-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pd-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pd-card h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--a-text);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--a-border);
+}
+
+.pd-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.pd-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pd-info-item span {
+    font-size: 0.78rem;
+    color: var(--a-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pd-info-item strong {
+    font-size: 0.9rem;
+    color: var(--a-text);
+}
+
+.pd-description {
+    font-size: 0.9rem;
+    color: var(--a-text-muted);
+    line-height: 1.6;
+}
+
+/* CAJAS */
+.pd-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    color: var(--a-text-muted);
+    font-size: 0.9rem;
+}
+
+.pd-empty span {
+    font-size: 2rem;
+}
+
+.pd-cajas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pd-caja-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--a-bg);
+    border-radius: 8px;
+}
+
+.pd-caja-thumb {
+    width: 48px;
+    height: 40px;
+    border-radius: 6px;
+    background-color: #ddd;
+    flex-shrink: 0;
+}
+
+.pd-caja-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pd-caja-info strong {
+    font-size: 0.88rem;
+    color: var(--a-text);
+}
+
+.pd-caja-info span {
+    font-size: 0.78rem;
+    color: var(--a-text-muted);
+}
+
+.pd-caja-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.pd-caja-activations {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--a-accent);
+}
+
+/* ACCIONES */
+.pd-actions-card {
+    gap: 12px;
+}
+
+.pd-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-approve-prov {
+    background-color: #2E7D32;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+}
+
+.btn-suspend-prov {
+    background-color: white;
+    color: var(--a-accent);
+    border: 1px solid var(--a-accent);
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+}
+
+.btn-suspend-prov:hover {
+    background-color: var(--a-accent);
+    color: white;
+}
+
+.btn-contact-prov {
+    background-color: white;
+    color: var(--a-primary);
+    border: 1px solid var(--a-border);
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+}
+
+.btn-contact-prov:hover {
+    border-color: var(--a-primary);
+}
+
+@media (max-width: 768px) {
+    .pd-body {
+        flex-direction: column;
+    }
+
+    .pd-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,4 +1,4 @@
-import './PropuestasCajas.css'
+import './BoxesSolicitations.css'
 import { useState, useEffect } from 'react'
 
 const mockProposals = [
@@ -9,12 +9,11 @@ const mockProposals = [
     { id: 5, proveedor: 'La Bodega Club', titulo: 'Wine Pairing Masterclass', categoria: 'Gastronomía', precio: 120, cajasPublicadas: 15, estado: 'pending' },
 ]
 
-function PropuestasCajas() {
+function BoxesSolicitations() {
     const [proposals, setProposals] = useState([])
     const [activeProposal, setActiveProposal] = useState(null)
 
     useEffect(() => {
-        // Algoritmo de priorización: más cajas publicadas → aparece primero
         const sorted = [...mockProposals].sort(
             (a, b) => b.cajasPublicadas - a.cajasPublicadas
         )
@@ -94,7 +93,6 @@ function PropuestasCajas() {
                     </table>
                 </div>
 
-                {/* PANEL LATERAL DE DETALLE */}
                 {activeProposal && (
                     <div className="propuesta-detail">
                         <div className="propuesta-detail-header">
@@ -141,4 +139,4 @@ function PropuestasCajas() {
     )
 }
 
-export default PropuestasCajas
+export default BoxesSolicitations
