@@ -1,0 +1,151 @@
+.config-sistema {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.config-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.config-card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.config-card h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--a-text);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--a-border);
+}
+
+.config-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.config-campo label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--a-text-muted);
+}
+
+.config-campo input {
+    padding: 10px 14px;
+    border: 1px solid var(--a-border);
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    color: var(--a-text);
+}
+
+.config-campo input:focus {
+    border-color: var(--a-accent);
+}
+
+.config-toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--a-border);
+}
+
+.config-toggle-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.config-toggle-item strong {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--a-text);
+}
+
+.config-toggle-item p {
+    font-size: 0.8rem;
+    color: var(--a-text-muted);
+    margin-top: 2px;
+}
+
+/* TOGGLE SWITCH */
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #ccc;
+    border-radius: 24px;
+    transition: 0.3s;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle input:checked+.toggle-slider {
+    background-color: var(--a-accent);
+}
+
+.toggle input:checked+.toggle-slider::before {
+    transform: translateX(20px);
+}
+
+.config-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-save-config {
+    background-color: var(--a-accent);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-save-config:hover {
+    background-color: var(--a-primary-dark);
+}
+
+@media (max-width: 768px) {
+    .config-body {
+        grid-template-columns: 1fr;
+    }
+}

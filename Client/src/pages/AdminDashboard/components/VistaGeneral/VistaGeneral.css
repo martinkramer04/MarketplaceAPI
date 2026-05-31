@@ -1,0 +1,182 @@
+.vista-general {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.vg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.vg-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--a-text);
+}
+
+.vg-header p {
+    color: var(--a-text-muted);
+    margin-top: 4px;
+    font-size: 0.9rem;
+}
+
+.vg-date {
+    font-size: 0.85rem;
+    color: var(--a-text-muted);
+    background: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--a-border);
+}
+
+.vg-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.vg-kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    border-left: 4px solid var(--a-accent);
+}
+
+.vg-kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vg-kpi-icon {
+    font-size: 1.4rem;
+}
+
+.vg-kpi-delta {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.vg-kpi-delta.positive {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+.vg-kpi-delta.negative {
+    background-color: #FFEBEE;
+    color: #C62828;
+}
+
+.vg-kpi-value {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--a-text);
+}
+
+.vg-kpi-label {
+    font-size: 0.82rem;
+    color: var(--a-text-muted);
+}
+
+.vg-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 16px;
+}
+
+.vg-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.vg-card h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--a-text);
+}
+
+.vg-health-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vg-health-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--a-text-muted);
+}
+
+.vg-health-value {
+    font-weight: 600;
+    color: var(--a-text);
+}
+
+.vg-health-bar {
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.vg-health-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s;
+}
+
+.vg-logs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vg-log-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--a-border);
+}
+
+.vg-log-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.vg-log-time {
+    font-weight: 700;
+    color: var(--a-accent);
+    white-space: nowrap;
+    font-size: 0.8rem;
+}
+
+.vg-log-text {
+    color: var(--a-text-muted);
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .vg-kpis {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .vg-bottom {
+        grid-template-columns: 1fr;
+    }
+}

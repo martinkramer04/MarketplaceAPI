@@ -1,0 +1,266 @@
+.propuestas {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.admin-tab-header {
+    margin-bottom: 4px;
+}
+
+.admin-tab-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--a-text);
+}
+
+.admin-tab-header p {
+    color: var(--a-text-muted);
+    margin-top: 4px;
+    font-size: 0.88rem;
+}
+
+.propuestas-body {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.propuestas-table-wrapper {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+}
+
+.propuestas-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.propuestas-table thead {
+    background-color: var(--a-primary);
+}
+
+.propuestas-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.propuestas-table td {
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    color: var(--a-text);
+    border-bottom: 1px solid var(--a-border);
+}
+
+.propuestas-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.propuestas-table tbody tr {
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.propuestas-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.propuestas-table tbody tr.row-selected {
+    background-color: #fdf3f3;
+}
+
+.prop-proveedor {
+    font-weight: 600;
+    color: var(--a-primary);
+}
+
+.cajas-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.cajas-badge.high {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+.cajas-badge.mid {
+    background-color: #FFF8E1;
+    color: #F57F17;
+}
+
+.cajas-badge.low {
+    background-color: #F4F6F7;
+    color: #7F8C8D;
+}
+
+.admin-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.badge-pending {
+    background-color: #FFF8E1;
+    color: #F57F17;
+}
+
+.badge-approved {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+.badge-rejected {
+    background-color: #FFEBEE;
+    color: #C62828;
+}
+
+.prop-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-approve {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-approve:hover {
+    background-color: #2E7D32;
+    color: white;
+}
+
+.btn-reject {
+    background-color: #FFEBEE;
+    color: #C62828;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-reject:hover {
+    background-color: #C62828;
+    color: white;
+}
+
+/* PANEL DETALLE */
+.propuesta-detail {
+    width: 280px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.propuesta-detail-header {
+    background-color: var(--a-primary);
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.propuesta-detail-header h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: white;
+}
+
+.btn-close-detail {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.propuesta-detail-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pd-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--a-border);
+}
+
+.pd-row:last-child {
+    border-bottom: none;
+}
+
+.pd-row span {
+    color: var(--a-text-muted);
+}
+
+.pd-row strong {
+    color: var(--a-text);
+}
+
+.priority-high {
+    color: #2E7D32;
+}
+
+.priority-low {
+    color: #7F8C8D;
+}
+
+.propuesta-detail-actions {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 1px solid var(--a-border);
+}
+
+.btn-approve-full {
+    background-color: #2E7D32;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.88rem;
+}
+
+.btn-reject-full {
+    background-color: white;
+    color: #C62828;
+    border: 1px solid #C62828;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.88rem;
+}

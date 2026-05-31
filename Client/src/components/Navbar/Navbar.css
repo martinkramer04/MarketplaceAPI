@@ -142,3 +142,20 @@
     display: none;
   }
 }
+
+.btn-admin-temp {
+  background-color: white;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-admin-temp:hover {
+  background-color: var(--primary);
+  color: white;
+}

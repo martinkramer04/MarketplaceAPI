@@ -1,6 +1,12 @@
 import './Footer.css'
-
+import { useLocation } from 'react-router-dom'
 function Footer() {
+    const location = useLocation()
+
+    const isHidden = location.pathname.startsWith('/admin') ||
+        location.pathname.startsWith('/provider')
+
+    if (isHidden) return null
     return (
         <footer className="footer">
 

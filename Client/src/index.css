@@ -31,3 +31,18 @@ a {
   --p-sidebar-text: #B2DFDB;
   --p-sidebar-active: #00695C;
 }
+
+.admin-theme {
+  --a-primary: #2C3E50;
+  --a-primary-dark: #1a252f;
+  --a-accent: #922B21;
+  --a-accent-light: #FADBD8;
+  --a-sidebar-bg: #1a252f;
+  --a-sidebar-text: #95A5A6;
+  --a-sidebar-active: #2C3E50;
+  --a-surface: #FFFFFF;
+  --a-bg: #F4F6F7;
+  --a-border: #E5E8E8;
+  --a-text: #2C3E50;
+  --a-text-muted: #7F8C8D;
+}

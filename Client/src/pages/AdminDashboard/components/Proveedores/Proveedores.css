@@ -1,0 +1,109 @@
+.proveedores {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.prov-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.prov-search {
+    padding: 10px 14px;
+    border: 1px solid var(--a-border);
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    width: 280px;
+    background: white;
+}
+
+.prov-search:focus {
+    border-color: var(--a-accent);
+}
+
+.prov-summary {
+    display: flex;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: var(--a-text-muted);
+}
+
+.prov-summary span {
+    background: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--a-border);
+}
+
+.prov-table-wrapper {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+}
+
+.prov-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.prov-table thead {
+    background-color: var(--a-primary);
+}
+
+.prov-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.prov-table td {
+    padding: 16px;
+    font-size: 0.88rem;
+    color: var(--a-text);
+    border-bottom: 1px solid var(--a-border);
+}
+
+.prov-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.prov-table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.prov-nombre {
+    font-weight: 600;
+    color: var(--a-primary);
+}
+
+.prov-cajas {
+    font-weight: 700;
+    color: var(--a-accent);
+}
+
+.btn-prov-detail {
+    background: white;
+    border: 1px solid var(--a-accent);
+    color: var(--a-accent);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-prov-detail:hover {
+    background-color: var(--a-accent);
+    color: white;
+}
