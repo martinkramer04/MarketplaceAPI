@@ -30,14 +30,14 @@ function Navbar() {
         <Link to="/become-provider" className="btn-become-provider">
           Hacete proveedor
         </Link>
+        <Link to="/provider/dashboard" className="btn-become-provider">
+          Portal Proveedor
+        </Link>
         <Link to="/cart">
           <div className="cart-icon">
             🛒
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </div>
-        </Link>
-        <Link to="/provider/dashboard" className="btn-become-provider">
-          Portal Proveedor
         </Link>
         <Link to="/perfil">
           <img src={ImgPerfilBBox} alt="User Profile" className="navbar-profile-avatar" />
