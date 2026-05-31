@@ -28,15 +28,6 @@ function ProviderSidebar({ activeTab, onNavigate }) {
                 ))}
             </nav>
 
-            <div className="sidebar-footer">
-                <div className="sidebar-user">
-                    <div className="sidebar-avatar">PP</div>
-                    <div>
-                        <p className="sidebar-user-name">Premium Partner</p>
-                        <p className="sidebar-user-id">ID: PRV-0042</p>
-                    </div>
-                </div>
-            </div>
         </aside>
     )
 }
