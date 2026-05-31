@@ -227,12 +227,10 @@
     font-size: 1.8rem;
   }
 
-  /* Ocultamos el texto de los pasos para que el stepper respire y entre bien */
   .bp-step-item span {
     display: none;
   }
 
-  /* Acortamos las líneas conectoras para pantallas medianas */
   .bp-step-line {
     width: 40px;
     margin: 0 4px;
@@ -252,25 +250,22 @@
     font-size: 1.5rem;
   }
 
-  /* Reducimos las líneas al mínimo para que entre hasta en el celular más chico */
   .bp-step-line {
     width: 24px;
   }
 
-  /* Pasamos las filas de inputs de dos columnas a una sola columna */
   .bp-campo-row {
     flex-direction: column;
     gap: 20px;
   }
 
-  /* Los botones ocupan todo el ancho para mejorar la experiencia mobile (UX) */
   .bp-form-actions {
-    flex-direction: column-reverse; /* El botón de "Volver" queda abajo del principal */
+    flex-direction: column-reverse;
     gap: 12px;
   }
 
   .bp-form-actions button {
     width: 100%;
-    padding: 14px; /* Un poco más grande para el dedo */
+    padding: 14px; 
   }
 }
