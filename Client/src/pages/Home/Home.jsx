@@ -4,10 +4,10 @@ import boxes from "../../data/Boxes";
 import { Link } from "react-router-dom";
 
 const categories = [
-  { label: "Gastronomy", icon: "🍽️", param: "gastronomy" },
-  { label: "Adventure", icon: "🧭", param: "adventure" },
-  { label: "Wellness", icon: "🧘", param: "wellness" },
-  { label: "Stays", icon: "🏠", param: "stays" },
+  { label: "Gastronomia", icon: "🍽️", param: "gastronomia" },
+  { label: "Aventura", icon: "🧭", param: "aventura" },
+  { label: "Bienestar", icon: "🧘", param: "bienestar" },
+  { label: "Estadias", icon: "🏠", param: "estadias" },
 ];
 
 function Home() {
@@ -16,22 +16,22 @@ function Home() {
       {/* HERO */}
       <section className="hero">
         <div className="hero-content">
-          <h1>Find the perfect experience</h1>
+          <h1>Encontrá la experiencia perfecta</h1>
           <p>
-            Curated adventures, culinary journeys, and serene escapes designed
-            for those who value memories over things.
+            Experiencias, viajes culinarios y escapes diseñados
+            para quienes valoran los recuerdos por sobre las cosas.
           </p>
           <div className="hero-search">
-            <input type="text" placeholder="What are you looking for?" />
-            <input type="text" placeholder="📍 Location" />
-            <button>Search</button>
+            <input type="text" placeholder="¿Que estás buscando?" />
+            <input type="text" placeholder="Ubicación" />
+            <button>Buscar</button>
           </div>
         </div>
       </section>
 
       {/* CATEGORIAS */}
       <section className="categories">
-        <h2>Explore by Interest</h2>
+        <h2>Descubrí nuestras experiencias</h2>
         <div className="categories-grid">
           {categories.map((cat) => (
             <Link key={cat.label} to={`/explore?category=${cat.param}`}>
@@ -46,7 +46,7 @@ function Home() {
 
       {/* CAJAS */}
       <section className="boxes-section">
-        <h2>Our Experiences</h2>
+        <h2>Nuestras Experiencias</h2>
         <div className="boxes-grid">
           {boxes.map((box) => (
             <BoxCard key={box.id} box={box} />
