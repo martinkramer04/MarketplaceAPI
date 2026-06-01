@@ -38,7 +38,7 @@ function BoxDetail() {
 
       {/* COLUMNA DERECHA */}
       <div className="box-detail-right">
-        <span className="box-detail-category">● PREMIUM SELECTION</span>
+        <span className="box-detail-category">● SELECCION PREMIUM</span>
         <h1 className="box-detail-name">{box.name}</h1>
         <p className="box-detail-price">
           ${box.price} <span>per box</span>
@@ -46,12 +46,10 @@ function BoxDetail() {
 
         <div className="box-detail-actions">
           <button className="btn-add-cart" onClick={() => addToCart(box)}>
-            Add Box to Cart
+            Agregar caja al carrito
           </button>
-          <button className="btn-wishlist">♡ Add to wishlist</button>
           <div className="box-detail-shipping">
-            ✓ Free digital delivery or premium gift box shipping available at
-            checkout
+            ✓ Envío digital gratuito o envío en caja de regalo premium disponible al finalizar la compra.
           </div>
         </div>
       </div>
