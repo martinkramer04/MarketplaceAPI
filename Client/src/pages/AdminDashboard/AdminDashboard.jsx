@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './AdminDashboard.css'
-import NavbarProvider from '../../components/Navbar/NavbarProvider'
+
 import AdminSidebar from './components/AdminSidebar/AdminSidebar';
 import VistaGeneral from './components/GeneralView/GeneralView';
 import PropuestasCajas from './components/BoxesSolicitations/BoxesSolicitations';
@@ -21,14 +21,12 @@ function AdminDashboard() {
     }
 
     return (
-        <div className="admin-theme admin-dashboard-wrapper">
-            <NavbarProvider isAdmin={true} />
-            <div className="admin-dashboard">
-                <AdminSidebar activeTab={activeTab} onNavigate={setActiveTab} />
-                <main className="admin-main">
-                    {renderTab()}
-                </main>
-            </div>
+
+        <div className="admin-theme admin-dashboard">
+            <AdminSidebar activeTab={activeTab} onNavigate={setActiveTab} />
+            <main className="admin-main">
+                {renderTab()}
+            </main>
         </div>
     )
 }

@@ -15,16 +15,23 @@ import Confirmation from './pages/Checkout/Confirmation/Confirmation'
 import BecomeProvider from './pages/Provider/BecomeProvider/BecomeProvider'
 import ProviderDashboard from './pages/Provider/ProviderDashboard/ProviderDashboard'
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard'
+import NavbarProvider from "./components/Navbar/NavbarProvider";
+import { useLocation } from "react-router-dom";
 
 import ScrollToTop from "./Context/ScrollToTop";
 
 
-function App() {
-  return (
-    <BrowserRouter>
-      <Navbar />
-      <ScrollToTop />
+function AppLayout() {
+  const location = useLocation();
+  const isProvider = location.pathname.startsWith('/provider');
+  const isAdmin = location.pathname.startsWith('/admin');
 
+  return (
+    <>
+      {!isProvider && !isAdmin && <Navbar />}
+      {isProvider && <NavbarProvider isAdmin={false} />}
+      {isAdmin && <NavbarProvider isAdmin={true} />}
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/box/:id" element={<BoxDetail />} />
@@ -41,6 +48,14 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
       <Footer />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
     </BrowserRouter>
   );
 }

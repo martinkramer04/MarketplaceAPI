@@ -2,15 +2,10 @@ import "./Navbar.css";
 import ImgPerfilBBox from "../../assets/ImgPerfilBBox.png";
 import { Link } from "react-router-dom";
 import { useCart } from "../../Context/useCart";
-import { useLocation } from 'react-router-dom'
 
 function Navbar() {
   const { cartCount } = useCart();
-  const location = useLocation();
-  const isHidden = location.pathname.startsWith('/admin') ||
-    location.pathname.startsWith('/provider')
 
-  if (isHidden) return null
 
   return (
     <nav className="navbar">
