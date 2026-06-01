@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './OrderSummary.css'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../../../Context/useCart'
@@ -6,17 +7,17 @@ import Stepper from '../../../components/Stepper/Stepper'
 function OrderSummary() {
     const navigate = useNavigate()
     const { cartItems } = useCart()
+    const [delivery, setDelivery] = useState('digital')
 
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    const deliveryFee = delivery === 'physical' ? 9.99 : 0
+    const total = subtotal + deliveryFee
 
     return (
         <div className="order-summary">
-
             <Stepper currentStep={1} />
-
             <div className="order-summary-body">
 
-                {/* IZQUIERDA */}
                 <div className="order-summary-left">
                     {cartItems.map((item) => (
                         <div key={item.id} className="os-item">
@@ -36,14 +37,21 @@ function OrderSummary() {
                     <div className="os-delivery">
                         <h3>Choose Your Delivery Method</h3>
                         <div className="os-delivery-options">
-                            <div className="os-delivery-option selected">
+                            {/* onClick y className dinámico en ambas opciones */}
+                            <div
+                                className={`os-delivery-option ${delivery === 'digital' ? 'selected' : ''}`}
+                                onClick={() => setDelivery('digital')}
+                            >
                                 <span>✉️</span>
                                 <div>
                                     <strong>Digital e-Box</strong>
                                     <p>Sent instantly to your inbox. Eco-friendly and fast.</p>
                                 </div>
                             </div>
-                            <div className="os-delivery-option">
+                            <div
+                                className={`os-delivery-option ${delivery === 'physical' ? 'selected' : ''}`}
+                                onClick={() => setDelivery('physical')}
+                            >
                                 <span>📦</span>
                                 <div>
                                     <strong>Luxury Gift Box</strong>
@@ -54,7 +62,6 @@ function OrderSummary() {
                     </div>
                 </div>
 
-                {/* DERECHA */}
                 <div className="order-summary-right">
                     <h3>Order Summary</h3>
                     {cartItems.map((item) => (
@@ -65,11 +72,14 @@ function OrderSummary() {
                     ))}
                     <div className="os-summary-row">
                         <span>Delivery Fee</span>
-                        <span className="free">Free</span>
+                        {/* dinámico según selección */}
+                        <span className={deliveryFee === 0 ? 'free' : ''}>
+                            {deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}
+                        </span>
                     </div>
                     <div className="os-summary-total">
                         <span>Total</span>
-                        <span>${subtotal}.00</span>
+                        <span>${total.toFixed(2)}</span>
                     </div>
                     <button
                         className="btn-continue"
