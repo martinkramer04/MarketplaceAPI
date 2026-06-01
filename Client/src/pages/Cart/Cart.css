@@ -131,40 +131,6 @@
   opacity: 0.9;
 }
 
-.summary-promo {
-  margin-top: 8px;
-}
-
-.summary-promo p {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.promo-input {
-  display: flex;
-  gap: 8px;
-}
-
-.promo-input input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  outline: none;
-}
-
-.promo-input button {
-  background-color: var(--neutral);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: "Plus Jakarta Sans", sans-serif;
-}
-
 .cart-actions {
   display: flex;
   align-items: center;
