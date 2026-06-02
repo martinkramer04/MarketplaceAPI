@@ -224,7 +224,6 @@ export default function Explore() {
               <article className="product-card" key={product.title}>
                 <div className="product-image-container">
                   <img src={product.image} alt={product.title} />
-                  <button className="favorite-button">♡</button>
                   <div className="product-image-title">
                     Box <br /> {product.title}
                   </div>

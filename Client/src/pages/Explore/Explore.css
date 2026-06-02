@@ -146,17 +146,6 @@
   filter: brightness(0.75);
 }
 
-.favorite-button {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  border: none;
-  background: transparent;
-  color: white;
-  font-size: 28px;
-  cursor: pointer;
-}
-
 .product-image-title {
   position: absolute;
   left: 20px;
