@@ -4,10 +4,10 @@ import boxes from "../../data/Boxes";
 import { Link } from "react-router-dom";
 
 const categories = [
-  { label: "Gastronomia", icon: "🍽️", param: "gastronomia" },
-  { label: "Aventura", icon: "🧭", param: "aventura" },
-  { label: "Bienestar", icon: "🧘", param: "bienestar" },
-  { label: "Estadias", icon: "🏠", param: "estadias" },
+  { label: "Gastronomia", icon: "🍽️", id: 2 },
+  { label: "Aventura", icon: "🧭", id: 5 },
+  { label: "Bienestar", icon: "🧘", id: 3 },
+  { label: "Estadias", icon: "🏠", id: 6 },
 ];
 
 function Home() {
@@ -18,8 +18,8 @@ function Home() {
         <div className="hero-content">
           <h1>Encontrá la experiencia perfecta</h1>
           <p>
-            Experiencias, viajes culinarios y escapes diseñados
-            para quienes valoran los recuerdos por sobre las cosas.
+            Experiencias, viajes culinarios y escapes diseñados para quienes
+            valoran los recuerdos por sobre las cosas.
           </p>
           <div className="hero-search">
             <input type="text" placeholder="¿Que estás buscando?" />
@@ -34,7 +34,7 @@ function Home() {
         <h2>Descubrí nuestras experiencias</h2>
         <div className="categories-grid">
           {categories.map((cat) => (
-            <Link key={cat.label} to={`/explore?category=${cat.param}`}>
+            <Link key={cat.label} to={`/explore?category=${cat.id}`}>
               <div className="category-item">
                 <span className="category-icon">{cat.icon}</span>
                 <span>{cat.label}</span>

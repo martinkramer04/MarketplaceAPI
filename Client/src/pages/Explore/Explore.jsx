@@ -1,24 +1,24 @@
 import { useState } from "react";
 import "./explore.css";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const categories = [
-  { name: "Desayunos, Almuerzos y Tapeos", count: 11 },
-  { name: "Experiencias Gastronómicas", count: 10 },
-  { name: "Estar Bien", count: 9 },
-  { name: "Ocasiones", count: 9 },
-  { name: "Aventura", count: 7 },
-  { name: "Estadías", count: 7 },
-  { name: "Mix", count: 6 },
-  { name: "Cursos y Talleres", count: 2 },
-  { name: "Delivery y Take Away", count: 2 },
-  { name: "Entretenimiento", count: 1 },
+  { id: 1, name: "Desayunos, Almuerzos y Tapeos", count: 11 },
+  { id: 2, name: "Experiencias Gastronómicas", count: 10 },
+  { id: 3, name: "Estar Bien", count: 9 },
+  { id: 4, name: "Ocasiones", count: 9 },
+  { id: 5, name: "Aventura", count: 7 },
+  { id: 6, name: "Estadías", count: 7 },
+  { id: 7, name: "Mix", count: 6 },
+  { id: 8, name: "Cursos y Talleres", count: 2 },
+  { id: 9, name: "Delivery y Take Away", count: 2 },
+  { id: 10, name: "Entretenimiento", count: 1 },
 ];
 
 const products = [
   {
     title: "Grande Cuisine",
-    category: "Experiencias Gastronómicas",
+    category: 2,
     rating: 4.7,
     options: 68,
     people: 2,
@@ -30,7 +30,7 @@ const products = [
   },
   {
     title: "Experiencia Gourmet",
-    category: "Experiencias Gastronómicas",
+    category: 2,
     rating: 4.7,
     options: 94,
     people: 2,
@@ -42,7 +42,7 @@ const products = [
   },
   {
     title: "De Autor",
-    category: "Experiencias Gastronómicas",
+    category: 2,
     rating: 4.9,
     options: 33,
     people: 2,
@@ -54,7 +54,7 @@ const products = [
   },
   {
     title: "Clásicos y Bodegones",
-    category: "Experiencias Gastronómicas",
+    category: 2,
     rating: 4.5,
     options: 25,
     people: 2,
@@ -66,7 +66,7 @@ const products = [
   },
   {
     title: "Premiados",
-    category: "Experiencias Gastronómicas",
+    category: 2,
     rating: 4.8,
     options: 22,
     people: 2,
@@ -78,7 +78,7 @@ const products = [
   },
   {
     title: "Sabores del Mundo",
-    category: "Experiencias Gastronómicas",
+    category: 2,
     rating: 4.6,
     options: 45,
     people: 2,
@@ -90,7 +90,7 @@ const products = [
   },
   {
     title: "Brunch Especial",
-    category: "Desayunos, Almuerzos y Tapeos",
+    category: 1,
     rating: 4.4,
     options: 18,
     people: 2,
@@ -100,12 +100,54 @@ const products = [
     description:
       "Una experiencia ideal para disfrutar desayunos, brunchs y tapeos.",
   },
+  {
+    title: "Aventura Urbana",
+    category: 5,
+    rating: 4.7,
+    options: 12,
+    people: 2,
+    price: 78000,
+    image:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+    description:
+      "Una experiencia ideal para quienes buscan emociones y nuevas aventuras.",
+  },
+  {
+    title: "Escapada Relax",
+    category: 3,
+    rating: 4.9,
+    options: 20,
+    people: 2,
+    price: 150000,
+    image:
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
+    description:
+      "Una experiencia ideal para quienes buscan relajarse y desconectar.",
+  },
+  {
+    title: "Estadía Boutique",
+    category: 6,
+    rating: 4.8,
+    options: 15,
+    people: 2,
+    price: 120000,
+    image:
+      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=80",
+    description:
+      "Una experiencia ideal para quienes buscan relajarse y desconectar.",
+  },
 ];
 
 export default function Explore() {
-  const [selectedCategory, setSelectedCategory] = useState(
-    "Experiencias Gastronómicas",
-  );
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get("category");
+  const validatedCategory =
+    categoryParam && categories.some((c) => c.id == categoryParam)
+      ? categoryParam
+      : null;
+
+  const [selectedCategory, setSelectedCategory] = useState(validatedCategory);
+
   const [sortBy, setSortBy] = useState("relevance");
 
   const formatPrice = (value) => {
@@ -119,7 +161,7 @@ export default function Explore() {
   const filteredProducts = products
     .filter((product) => {
       if (!selectedCategory) return true;
-      return product.category === selectedCategory;
+      return product.category == selectedCategory;
     })
     .sort((a, b) => {
       if (sortBy === "priceAsc") return a.price - b.price;
@@ -138,7 +180,9 @@ export default function Explore() {
 
         {selectedCategory && (
           <div className="filter-chip">
-            <span>{selectedCategory}</span>
+            <span>
+              {categories.find((c) => c.id == selectedCategory)?.name}
+            </span>
             <button onClick={clearFilters}>×</button>
           </div>
         )}
@@ -152,8 +196,8 @@ export default function Explore() {
                 <input
                   type="radio"
                   name="category"
-                  checked={selectedCategory === category.name}
-                  onChange={() => setSelectedCategory(category.name)}
+                  checked={selectedCategory == category.id}
+                  onChange={() => setSelectedCategory(category.id)}
                 />
                 {category.name}
               </span>

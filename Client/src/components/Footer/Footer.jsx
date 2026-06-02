@@ -1,29 +1,37 @@
-import './Footer.css'
-import { useLocation } from 'react-router-dom'
+import "./Footer.css";
+import { Link, useLocation } from "react-router-dom";
 function Footer() {
-    const location = useLocation()
+  const location = useLocation();
 
-    const isHidden = location.pathname.startsWith('/admin') ||
-        location.pathname.startsWith('/provider')
+  const isHidden =
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/provider");
 
-    if (isHidden) return null
-    return (
-        <footer className="footer">
+  if (isHidden) return null;
+  return (
+    <footer className="footer">
+      <div className="footer-brand">
+        <span className="footer-logo">BigBox</span>
+        <p>
+          Redefining the art of gifting with curated life events and premium
+          culinary experiences.
+        </p>
+        <p>© 2026 BigBox Marketplace. All rights reserved.</p>
+      </div>
 
-            <div className="footer-brand">
-                <span className="footer-logo">BigBox</span>
-                <p>Redefining the art of gifting with curated life events and premium culinary experiences.</p>
-                <p>© 2026 BigBox Marketplace. All rights reserved.</p>
-            </div>
-
-            <div className="footer-links">
-                <span>Privacy Policy</span>
-                <span>Terms of Service</span>
-                <span>Corporate Gifts</span>
-            </div>
-
-        </footer>
-    )
+      <div className="footer-links">
+        <span>
+          <Link to="/nosotros">Privacy Policy</Link>
+        </span>
+        <span>
+          <Link to="/nosotros">Terms of Service</Link>
+        </span>
+        <span>
+          <Link to="/nosotros">Corporate Gifts</Link>
+        </span>
+      </div>
+    </footer>
+  );
 }
 
-export default Footer
+export default Footer;
