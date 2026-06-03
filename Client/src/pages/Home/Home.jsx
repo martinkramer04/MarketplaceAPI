@@ -21,11 +21,6 @@ function Home() {
             Experiencias, viajes culinarios y escapes diseñados para quienes
             valoran los recuerdos por sobre las cosas.
           </p>
-          <div className="hero-search">
-            <input type="text" placeholder="¿Que estás buscando?" />
-            <input type="text" placeholder="Ubicación" />
-            <button>Buscar</button>
-          </div>
         </div>
       </section>
 

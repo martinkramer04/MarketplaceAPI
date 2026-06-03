@@ -14,8 +14,8 @@ const quickLogs = [
 ]
 
 const systemHealth = [
-    { label: 'API Response Time', value: 104, unit: 'ms' },
-    { label: 'Storage Capacity', value: 62, unit: '%' },
+    { label: 'Tiempo de respuesta de API', value: 104, unit: 'ms' },
+    { label: 'Capacidad de almacenamiento', value: 62, unit: '%' },
 ]
 
 function GeneralView() {

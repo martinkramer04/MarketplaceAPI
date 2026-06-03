@@ -107,3 +107,9 @@
     background-color: var(--a-accent);
     color: white;
 }
+
+.badge-suspended {
+    background-color: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffcc80;
+}

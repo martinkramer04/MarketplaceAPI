@@ -25,7 +25,7 @@ function Payment() {
                             className={`payment-method ${paymentMethod === 'card' ? 'selected' : ''}`}
                             onClick={() => setPaymentMethod('card')}
                         >
-                            💳 Credit/Debit Card
+                            💳 Tarjeta de credito/debito
                         </div>
                         <div
                             className={`payment-method ${paymentMethod === 'mercadopago' ? 'selected' : ''}`}
@@ -37,24 +37,24 @@ function Payment() {
                             className={`payment-method ${paymentMethod === 'transfer' ? 'selected' : ''}`}
                             onClick={() => setPaymentMethod('transfer')}
                         >
-                            🏦 Bank Transfer
+                            🏦 Tranferencia Bancaria
                         </div>
                     </div>
 
                     {paymentMethod === 'card' && (
                         <div className="payment-form">
                             <div className="payment-campo">
-                                <label>Cardholder Name</label>
-                                <input type="text" placeholder="Name as it appears on card" />
+                                <label>Nombre del titular</label>
+                                <input type="text" placeholder="Mismo nombre que el que se encuentra en la tarjeta" />
                             </div>
                             <div className="payment-campo">
-                                <label>Card Number</label>
+                                <label>Numero de la tarjeta</label>
                                 <input type="text" placeholder="0000 0000 0000 0000" />
                             </div>
                             <div className="payment-campo-row">
                                 <div className="payment-campo">
                                     <label>Expiry Date</label>
-                                    <input type="text" placeholder="MM/YY" />
+                                    <input type="text" placeholder="MM/AA" />
                                 </div>
                                 <div className="payment-campo">
                                     <label>CVV</label>
@@ -62,8 +62,8 @@ function Payment() {
                                 </div>
                             </div>
                             <div className="payment-campo">
-                                <label>Billing Address</label>
-                                <input type="text" placeholder="Same as shipping" />
+                                <label>Direccion</label>
+                                <input type="text" placeholder="Mismo que el envio" />
                             </div>
                         </div>
                     )}
@@ -81,17 +81,11 @@ function Payment() {
                             <p>Una vez acreditada la transferencia recibirás la confirmación por email.</p>
                         </div>
                     )}
-
-                    <div className="payment-security">
-                        <span>🔒 SSL Encrypted</span>
-                        <span>🛡 Secure Payment</span>
-                        <span>✅ 100% Satisfaction</span>
-                    </div>
                 </div>
 
                 {/* DERECHA */}
                 <div className="payment-right">
-                    <h3>Order Summary</h3>
+                    <h3>Resumen del pedido</h3>
                     {cartItems.map((item) => (
                         <div key={item.id} className="pay-summary-row">
                             <div className="pay-summary-item">
@@ -108,11 +102,12 @@ function Payment() {
                         <span>${subtotal}.00</span>
                     </div>
                     <div className="pay-row">
-                        <span>Service Fee</span>
+                        <span>
+                            Tarifa de servicio</span>
                         <span className="free">Free</span>
                     </div>
                     <div className="pay-row">
-                        <span>Tax</span>
+                        <span>Impuestos</span>
                         <span>$0.00</span>
                     </div>
                     <div className="pay-total">
@@ -123,10 +118,11 @@ function Payment() {
                         className="btn-confirm-pay"
                         onClick={() => navigate('/checkout/confirmation')}
                     >
-                        Confirm & Pay ${subtotal}.00 →
+                        Confirma y paga ${subtotal}.00 →
                     </button>
                     <p className="pay-terms">
-                        By clicking "Confirm & Pay" you agree to BigBox Terms of Service and Privacy Policy.
+
+                        Al hacer clic en "Confirmar y pagar", acepta los Términos de servicio y la Política de privacidad de BigBox.
                     </p>
                 </div>
 

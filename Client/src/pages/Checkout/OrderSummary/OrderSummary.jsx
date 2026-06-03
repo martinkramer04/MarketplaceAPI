@@ -63,7 +63,7 @@ function OrderSummary() {
                         <div key={item.id} className="os-item">
                             <img src={item.image} alt={item.name} />
                             <div className="os-item-info">
-                                <span className="os-item-badge">BEST SELLER</span>
+                                <span className="os-item-badge">Más vendido</span>
                                 <h2>{item.name}</h2>
                                 <p>{item.description}</p>
                                 <div className="os-item-meta">
@@ -75,7 +75,7 @@ function OrderSummary() {
                     ))}
 
                     <div className="os-delivery">
-                        <h3>Choose Your Delivery Method</h3>
+                        <h3>Elige tu método de entrega</h3>
                         <div className="os-delivery-options">
                             <div
                                 className={`os-delivery-option ${delivery === 'digital' ? 'selected' : ''}`}
@@ -84,7 +84,7 @@ function OrderSummary() {
                                 <span>✉️</span>
                                 <div>
                                     <strong>Digital e-Box</strong>
-                                    <p>Sent instantly to your inbox. Eco-friendly and fast.</p>
+                                    <p>Reciba su pedido al instante en su bandeja de entrada. Ecológico y rápido.</p>
                                 </div>
                             </div>
                             <div
@@ -94,7 +94,7 @@ function OrderSummary() {
                                 <span>📦</span>
                                 <div>
                                     <strong>Luxury Gift Box</strong>
-                                    <p>Premium physical box via FedEx. (+$9.99)</p>
+                                    <p>Caja física premium a través de FedEx.(+$9.99)</p>
                                 </div>
                             </div>
                         </div>
@@ -103,21 +103,21 @@ function OrderSummary() {
 
                 {/* DERECHA */}
                 <div className="order-summary-right">
-                    <h3>Order Summary</h3>
+                    <h3>Resumen del pedido</h3>
 
                     {/* Cupón — va primero, arriba del desglose */}
                     <div className="os-coupon">
-                        <p className="os-coupon-label">Promo Code</p>
+                        <p className="os-coupon-label">Código de promoción</p>
                         {!appliedCoupon ? (
                             <div className="os-coupon-input">
                                 <input
                                     type="text"
-                                    placeholder="Enter code"
+                                    placeholder="Ingrese el codigo"
                                     value={couponCode}
                                     onChange={(e) => setCouponCode(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleApplyCoupon()}
                                 />
-                                <button onClick={handleApplyCoupon}>Apply</button>
+                                <button onClick={handleApplyCoupon}>Aplicar</button>
                             </div>
                         ) : (
                             <div className="os-coupon-applied">
@@ -139,7 +139,7 @@ function OrderSummary() {
                         </div>
                     ))}
                     <div className="os-summary-row">
-                        <span>Delivery Fee</span>
+                        <span>Tarifa de entrega</span>
                         <span className={deliveryFee === 0 ? 'free' : ''}>
                             {deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}
                         </span>
@@ -160,11 +160,11 @@ function OrderSummary() {
                         className="btn-continue"
                         onClick={() => navigate('/checkout/payment')}
                     >
-                        Continue to Payment →
+                        Continuar con el pago →
                     </button>
                     <div className="os-guarantees">
-                        <span>📅 24-Month Quality Guarantee</span>
-                        <span>🔄 Free exchanges for 30 days</span>
+                        <span>📅 Garantía de calidad de 24 meses</span>
+                        <span>🔄 Intercambios gratuitos por 30 días</span>
                     </div>
                 </div>
 

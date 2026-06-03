@@ -1,25 +1,31 @@
 import './ProviderDetail.css'
 
-function ProviderDetail({ proveedor, onBack }) {
+function ProviderDetail({ proveedor, onBack, onSuspend, onApprove }) {
+
+    const isSuspended = proveedor.estado === 'suspended'
+    const isPending = proveedor.estado === 'pending'
+
     return (
         <div className="prov-detalle">
 
-            {/* HEADER */}
             <div className="pd-header">
                 <button className="btn-back-admin" onClick={onBack}>← Volver</button>
                 <div>
                     <h1>{proveedor.nombre}</h1>
-                    <span className={`admin-badge ${proveedor.estado === 'active' ? 'badge-approved' : 'badge-pending'}`}>
-                        {proveedor.estado === 'active' ? '● Activo' : '● Pendiente de aprobación'}
+                    <span className={`admin-badge ${proveedor.estado === 'active' ? 'badge-approved' :
+                            proveedor.estado === 'suspended' ? 'badge-suspended' :
+                                'badge-pending'
+                        }`}>
+                        {proveedor.estado === 'active' ? '● Activo' :
+                            proveedor.estado === 'suspended' ? '● Suspendido' :
+                                '● Pendiente de aprobación'}
                     </span>
                 </div>
             </div>
 
             <div className="pd-body">
 
-                {/* COLUMNA IZQUIERDA - Datos del formulario */}
                 <div className="pd-left">
-
                     <div className="pd-card">
                         <h2>Datos de la Empresa</h2>
                         <div className="pd-info-grid">
@@ -58,15 +64,11 @@ function ProviderDetail({ proveedor, onBack }) {
                         <h2>Descripción del Negocio</h2>
                         <p className="pd-description">{proveedor.description}</p>
                     </div>
-
                 </div>
 
-                {/* COLUMNA DERECHA - Cajas publicadas */}
                 <div className="pd-right">
-
                     <div className="pd-card">
                         <h2>Cajas Publicadas ({proveedor.cajasPublicadas.length})</h2>
-
                         {proveedor.cajasPublicadas.length === 0 ? (
                             <div className="pd-empty">
                                 <span>📦</span>
@@ -91,21 +93,34 @@ function ProviderDetail({ proveedor, onBack }) {
                         )}
                     </div>
 
-                    {/* ACCIONES ADMIN */}
+                    {/* ACCIONES — cambian según el estado actual */}
                     <div className="pd-card pd-actions-card">
                         <h2>Acciones</h2>
                         <div className="pd-actions">
-                            {proveedor.estado === 'pending' && (
-                                <button className="btn-approve-prov">
+                            {isPending && (
+                                <button
+                                    className="btn-approve-prov"
+                                    onClick={() => onApprove(proveedor.id)}
+                                >
                                     ✓ Aprobar Proveedor
                                 </button>
                             )}
-                            <button className="btn-suspend-prov">
-                                ⊘ Suspender Cuenta
-                            </button>
-                            <button className="btn-contact-prov">
-                                ✉ Contactar Proveedor
-                            </button>
+                            {isSuspended ? (
+                                // Si ya está suspendido, ofrecemos reactivar
+                                <button
+                                    className="btn-approve-prov"
+                                    onClick={() => onApprove(proveedor.id)}
+                                >
+                                    ✓ Reactivar Cuenta
+                                </button>
+                            ) : (
+                                <button
+                                    className="btn-suspend-prov"
+                                    onClick={() => onSuspend(proveedor.id)}
+                                >
+                                    ⊘ Suspender Cuenta
+                                </button>
+                            )}
                         </div>
                     </div>
 

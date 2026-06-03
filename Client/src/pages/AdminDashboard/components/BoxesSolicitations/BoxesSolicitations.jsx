@@ -2,11 +2,11 @@ import './BoxesSolicitations.css'
 import { useState, useEffect } from 'react'
 
 const mockProposals = [
-    { id: 1, proveedor: 'Artisan Collective', titulo: 'Urban Cooking Class', categoria: 'Gastronomía', precio: 89, cajasPublicadas: 8, estado: 'pending' },
-    { id: 2, proveedor: 'Zen Escapes', titulo: 'Mindful Mountain Retreat', categoria: 'Bienestar', precio: 210, cajasPublicadas: 12, estado: 'pending' },
-    { id: 3, proveedor: 'AdventureX', titulo: 'Extreme Karting Weekend', categoria: 'Aventura', precio: 180, cajasPublicadas: 3, estado: 'pending' },
-    { id: 4, proveedor: 'Coastal Crafts', titulo: 'Surf & Pottery Retreat', categoria: 'Bienestar', precio: 150, cajasPublicadas: 0, estado: 'pending' },
-    { id: 5, proveedor: 'La Bodega Club', titulo: 'Wine Pairing Masterclass', categoria: 'Gastronomía', precio: 120, cajasPublicadas: 15, estado: 'pending' },
+    { id: 1, proveedor: 'Artisan Collective', titulo: 'Clase de Cocina Urbana', categoria: 'Gastronomía', precio: 89, cajasPublicadas: 8, estado: 'pending' },
+    { id: 2, proveedor: 'Zen Escapes', titulo: 'Retiro de Mindfulness en la Montaña', categoria: 'Bienestar', precio: 210, cajasPublicadas: 12, estado: 'pending' },
+    { id: 3, proveedor: 'AdventureX', titulo: 'Fin de Semana de Karting Extremo', categoria: 'Aventura', precio: 180, cajasPublicadas: 3, estado: 'pending' },
+    { id: 4, proveedor: 'Coastal Crafts', titulo: 'Retiro de Surf y Cerámica', categoria: 'Bienestar', precio: 150, cajasPublicadas: 0, estado: 'pending' },
+    { id: 5, proveedor: 'La Bodega Club', titulo: 'Clase Magistral de Maridaje de Vinos', categoria: 'Gastronomía', precio: 120, cajasPublicadas: 15, estado: 'pending' },
 ]
 
 function BoxesSolicitations() {

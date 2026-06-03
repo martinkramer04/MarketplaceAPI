@@ -1,23 +1,44 @@
 import './Providers.css'
 import { useState } from 'react'
-import ProveedorDetalle from '../ProviderDetail/ProviderDetail'
+import ProviderDetail from '../ProviderDetail/ProviderDetail'
 import mockProveedores from '../../../../data/Providers'
 
-
 function Providers() {
+    // El estado vive acá para que los cambios se reflejen en la tabla
+    const [proveedores, setProveedores] = useState(mockProveedores)
     const [search, setSearch] = useState('')
     const [selectedProveedor, setSelectedProveedor] = useState(null)
 
-    const filtered = mockProveedores.filter((p) =>
+    const filtered = proveedores.filter((p) =>
         p.nombre.toLowerCase().includes(search.toLowerCase()) ||
         p.rubro.toLowerCase().includes(search.toLowerCase())
     )
 
+    // Función que actualiza el estado en el array y en el proveedor seleccionado
+    const handleSuspend = (id) => {
+        const updated = proveedores.map((p) =>
+            p.id === id ? { ...p, estado: 'suspended' } : p
+        )
+        setProveedores(updated)
+        // Actualizamos también el proveedor que se está viendo en el detalle
+        setSelectedProveedor((prev) => prev ? { ...prev, estado: 'suspended' } : prev)
+    }
+
+    const handleApprove = (id) => {
+        const updated = proveedores.map((p) =>
+            p.id === id ? { ...p, estado: 'active' } : p
+        )
+        setProveedores(updated)
+        setSelectedProveedor((prev) => prev ? { ...prev, estado: 'active' } : prev)
+    }
+
     if (selectedProveedor) {
         return (
-            <ProveedorDetalle
+            <ProviderDetail
                 proveedor={selectedProveedor}
                 onBack={() => setSelectedProveedor(null)}
+                onSuspend={handleSuspend}
+                onApprove={handleApprove}
             />
         )
     }
@@ -38,8 +59,9 @@ function Providers() {
                     className="prov-search"
                 />
                 <div className="prov-summary">
-                    <span>{mockProveedores.filter(p => p.estado === 'active').length} activos</span>
-                    <span>{mockProveedores.filter(p => p.estado === 'pending').length} pendientes</span>
+                    <span>{proveedores.filter(p => p.estado === 'active').length} activos</span>
+                    <span>{proveedores.filter(p => p.estado === 'pending').length} pendientes</span>
+                    <span>{proveedores.filter(p => p.estado === 'suspended').length} suspendidos</span>
                 </div>
             </div>
 
@@ -63,8 +85,13 @@ function Providers() {
                                 <td>{p.ciudad}</td>
                                 <td className="prov-cajas">{p.cajas}</td>
                                 <td>
-                                    <span className={`admin-badge ${p.estado === 'active' ? 'badge-approved' : 'badge-pending'}`}>
-                                        {p.estado === 'active' ? '● Activo' : '● Pendiente'}
+                                    <span className={`admin-badge ${p.estado === 'active' ? 'badge-approved' :
+                                            p.estado === 'suspended' ? 'badge-suspended' :
+                                                'badge-pending'
+                                        }`}>
+                                        {p.estado === 'active' ? '● Activo' :
+                                            p.estado === 'suspended' ? '● Suspendido' :
+                                                '● Pendiente'}
                                     </span>
                                 </td>
                                 <td>

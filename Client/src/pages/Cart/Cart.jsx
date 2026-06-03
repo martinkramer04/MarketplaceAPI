@@ -12,7 +12,7 @@ function Cart() {
     <div className="cart">
       <div className="cart-left">
         <h1>Carrito</h1>
-        <span className="cart-count">{cartItems.length} items selected</span>
+        <span className="cart-count">{cartItems.length} items seleccionados</span>
 
         {cartItems.length === 0 ? (
           <p>No hay productos en el carrito.</p>
@@ -40,17 +40,17 @@ function Cart() {
       </div>
 
       <div className="cart-right">
-        <h2>Order Summary</h2>
+        <h2>Resumen del pedido</h2>
         <div className="summary-row">
           <span>Subtotal</span>
           <span>${subtotal}.00</span>
         </div>
         <div className="summary-row">
-          <span>Shipping</span>
-          <span className="free">FREE</span>
+          <span>Envío</span>
+          <span className="free">GRATIS</span>
         </div>
         <div className="summary-row">
-          <span>Gift Wrapping</span>
+          <span>Envoltura de regalos</span>
           <span>$15.00</span>
         </div>
         <div className="summary-total">
@@ -58,7 +58,7 @@ function Cart() {
           <span>${subtotal + 15}.00</span>
         </div>
         <button className="btn-checkout" onClick={() => navigate('/checkout/order-summary')}>
-          Confirm Cart / Proceed to Checkout
+          Confirmar carrito / Proceder al checkout
         </button>
       </div>
     </div>

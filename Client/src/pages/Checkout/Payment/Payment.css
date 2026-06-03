@@ -84,12 +84,7 @@
     font-size: 0.9rem;
 }
 
-.payment-security {
-    display: flex;
-    gap: 24px;
-    font-size: 0.82rem;
-    color: #888;
-}
+
 
 /* DERECHA */
 .payment-right {
@@ -175,50 +170,50 @@
 }
 
 @media (max-width: 992px) {
-  .payment-body {
-    flex-direction: column;
-    gap: 32px;
-  }
+    .payment-body {
+        flex-direction: column;
+        gap: 32px;
+    }
 
-  .payment-left,
-  .payment-right {
-    width: 100%;
-    flex: none;
-  }
+    .payment-left,
+    .payment-right {
+        width: 100%;
+        flex: none;
+    }
 }
 
 @media (max-width: 768px) {
-  .payment {
-    padding: 16px 20px 48px;
-  }
+    .payment {
+        padding: 16px 20px 48px;
+    }
 
-  .payment-methods {
-    flex-direction: column;
-    gap: 10px;
-  }
+    .payment-methods {
+        flex-direction: column;
+        gap: 10px;
+    }
 
-  .payment-method {
-    width: 100%;
-  }
+    .payment-method {
+        width: 100%;
+    }
 
-  .payment-security {
-    flex-direction: column;
-    gap: 12px;
-  }
+    .payment-security {
+        flex-direction: column;
+        gap: 12px;
+    }
 }
 
 @media (max-width: 480px) {
-  .payment {
-    padding: 12px 16px 32px;
-  }
+    .payment {
+        padding: 12px 16px 32px;
+    }
 
-  .payment-campo-row {
-    flex-direction: column;
-    gap: 16px;
-  }
+    .payment-campo-row {
+        flex-direction: column;
+        gap: 16px;
+    }
 
-  .btn-confirm-pay {
-    width: 100%;
-    padding: 16px;
-  }
+    .btn-confirm-pay {
+        width: 100%;
+        padding: 16px;
+    }
 }

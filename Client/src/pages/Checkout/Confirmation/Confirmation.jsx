@@ -22,23 +22,24 @@ function Confirmation() {
             <div className="confirmation-body">
 
                 <div className="confirmation-icon">✓</div>
-                <h1>Your gift is on its way!</h1>
+                <h1>¡Tu regalo está en camino!</h1>
                 <p className="confirmation-sub">
-                    We've sent a confirmation email with all your gift details.
+
+                    Le hemos enviado un correo electrónico de confirmación con todos los detalles de su regalo.
                 </p>
 
                 {cartItems.map((item) => (
                     <div key={item.id} className="confirmation-card">
                         <img src={item.image} alt={item.name} />
                         <div className="confirmation-card-info">
-                            <span className="confirmation-badge">Digital Gift Ready</span>
+                            <span className="confirmation-badge">Regalo Digital Listo!</span>
                             <h2>{item.name}</h2>
                             <div className="confirmation-meta">
-                                <span>📅 Valid for 24 months</span>
-                                <span>👥 For 2 People</span>
+                                <span>📅 Valido por 24 meses</span>
+                                <span>👥 Para 2 personas</span>
                             </div>
                             <div className="confirmation-voucher">
-                                <span>VOUCHER CODE</span>
+                                <span>VOUCHER</span>
                                 <strong>{voucherCode}</strong>
                             </div>
                         </div>
@@ -47,10 +48,10 @@ function Confirmation() {
 
                 <div className="confirmation-actions">
                     <button className="btn-orders" onClick={() => navigate('/perfil')}>
-                        View My Orders
+                        Ver Mis Pedidos
                     </button>
                     <button className="btn-continue-shopping" onClick={handleContinue}>
-                        Continue Shopping
+                        Continuar Comprando
                     </button>
                 </div>
 
