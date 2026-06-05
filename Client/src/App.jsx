@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import React from "react";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
@@ -18,31 +18,34 @@ import ProviderDashboard from './pages/Provider/ProviderDashboard/ProviderDashbo
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard'
 import NavbarProvider from "./components/Navbar/NavbarProvider";
 import Login from "./components/Login/Login"
+import Register from "./pages/Register/Register";
 
 import ScrollToTop from "./Context/ScrollToTop";
 
 function AppLayout() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
+  
   const isProvider = location.pathname.startsWith('/provider');
   const isAdmin = location.pathname.startsWith('/admin');
   const isLoginPath = location.pathname === '/login';
+  const isRegisterPath = location.pathname === '/register';
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-  };
+  const session = sessionStorage.getItem('user_session');
+
+  if (!session && !isLoginPath && !isRegisterPath) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <>
-      {!isProvider && !isAdmin && !isLoginPath && <Navbar />}
+      {!isProvider && !isAdmin && !isLoginPath && !isRegisterPath && <Navbar />}
       {isProvider && <NavbarProvider isAdmin={false} />}
       {isAdmin && <NavbarProvider isAdmin={true} />}
       <ScrollToTop />
       <Routes>
-        <Route 
-          path="/" 
-          element={isLoggedIn ? <Home /> : <Navigate to="/login" replace />} 
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/box/:id" element={<BoxDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/explore" element={<Explore />} />
@@ -53,21 +56,10 @@ function AppLayout() {
         <Route path="/checkout/payment" element={<Payment />} />
         <Route path="/checkout/confirmation" element={<Confirmation />} />
         <Route path="/become-provider" element={<BecomeProvider />} />
-        
-        <Route 
-          path="/login" 
-          element={isLoggedIn ? <Navigate to="/" replace /> : <Login onLoginSuccess={handleLoginSuccess} />} 
-        />
-        <Route 
-          path="/provider/dashboard" 
-          element={isLoggedIn ? <ProviderDashboard /> : <Navigate to="/login" replace />} 
-        />
-        <Route 
-          path="/admin/dashboard" 
-          element={isLoggedIn ? <AdminDashboard /> : <Navigate to="/login" replace />} 
-        />
+        <Route path="/provider/dashboard" element={<ProviderDashboard />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
-      {!isLoginPath && <Footer />}
+      {!isLoginPath && !isRegisterPath && <Footer />}
     </>
   );
 }

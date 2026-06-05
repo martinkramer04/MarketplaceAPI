@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Login.css';
+import './Register.css';
 
-function Login() {
+
+function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
+    name: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
 
   const handleChange = (e) => {
@@ -16,8 +19,11 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    sessionStorage.setItem('user_session', 'active');
-    navigate('/');
+    if (form.password !== form.confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+    navigate('/login');
   };
 
   return (
@@ -28,12 +34,25 @@ function Login() {
           <div className="login-logo">
             BigBox<span>.</span>
           </div>
-          <h1>Ingreso a la Plataforma</h1>
-          <p>Gestioná tus experiencias, propuestas y métricas en un solo lugar.</p>
+          <h1>Crear Cuenta</h1>
+          <p>Unite a la red de regalos de experiencias más grande de la región.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
           
+          <div className="login-campo">
+            <label htmlFor="name">Nombre Completo</label>
+            <input 
+              type="text" 
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Juan Pérez"
+              required 
+            />
+          </div>
+
           <div className="login-campo">
             <label htmlFor="email">Correo Electrónico</label>
             <input 
@@ -48,6 +67,7 @@ function Login() {
           </div>
 
           <div className="login-campo">
+            <label htmlFor="password">Contraseña</label>
             <input 
               type="password" 
               id="password"
@@ -59,14 +79,27 @@ function Login() {
             />
           </div>
 
+          <div className="login-campo">
+            <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+            <input 
+              type="password" 
+              id="confirmPassword"
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              placeholder="••••••••"
+              required 
+            />
+          </div>
+
           <button type="submit" className="btn-login-submit">
-            Iniciar Sesión →
+            Registrarse →
           </button>
 
         </form>
 
         <div className="login-footer">
-          <p>¿No tenés una cuenta? <Link to="/register">Registrate acá</Link></p>
+          <p>¿Ya tenés una cuenta? <Link to="/login">Iniciá sesión</Link></p>
         </div>
 
       </div>
@@ -74,4 +107,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
