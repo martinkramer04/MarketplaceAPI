@@ -28,7 +28,7 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-card">
-        
+
         <div className="login-header">
           <div className="login-logo">
             BigBox<span>.</span>
@@ -38,38 +38,37 @@ function Login() {
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
-          
+
           <div className="login-campo">
             <label htmlFor="email">Correo Electrónico</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               id="email"
               name="email"
               value={form.email}
               onChange={handleChange}
               placeholder="ejemplo@correo.com"
-              required 
+              required
             />
           </div>
 
           <div className="login-campo">
             <div className="login-label-row">
               <label htmlFor="password">Contraseña</label>
-              <a href="#recuperar" className="login-forgot">¿La olvidaste?</a>
             </div>
             <div className="login-password-wrapper">
-              <input 
-                type={showPassword ? "text" : "password"} 
+              <input
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={form.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                required 
+                required
               />
-              <button 
-                type="button" 
-                className="login-toggle-password" 
+              <button
+                type="button"
+                className="login-toggle-password"
                 onClick={togglePasswordVisibility}
                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
