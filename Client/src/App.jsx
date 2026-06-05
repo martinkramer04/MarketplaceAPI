@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
@@ -16,24 +17,32 @@ import BecomeProvider from './pages/Provider/BecomeProvider/BecomeProvider'
 import ProviderDashboard from './pages/Provider/ProviderDashboard/ProviderDashboard'
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard'
 import NavbarProvider from "./components/Navbar/NavbarProvider";
-import { useLocation } from "react-router-dom";
+import Login from "./components/Login/Login"
 
 import ScrollToTop from "./Context/ScrollToTop";
 
-
 function AppLayout() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
   const isProvider = location.pathname.startsWith('/provider');
   const isAdmin = location.pathname.startsWith('/admin');
+  const isLoginPath = location.pathname === '/login';
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+  };
 
   return (
     <>
-      {!isProvider && !isAdmin && <Navbar />}
+      {!isProvider && !isAdmin && !isLoginPath && <Navbar />}
       {isProvider && <NavbarProvider isAdmin={false} />}
       {isAdmin && <NavbarProvider isAdmin={true} />}
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route 
+          path="/" 
+          element={isLoggedIn ? <Home /> : <Navigate to="/login" replace />} 
+        />
         <Route path="/box/:id" element={<BoxDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/explore" element={<Explore />} />
@@ -44,10 +53,21 @@ function AppLayout() {
         <Route path="/checkout/payment" element={<Payment />} />
         <Route path="/checkout/confirmation" element={<Confirmation />} />
         <Route path="/become-provider" element={<BecomeProvider />} />
-        <Route path="/provider/dashboard" element={<ProviderDashboard />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        
+        <Route 
+          path="/login" 
+          element={isLoggedIn ? <Navigate to="/" replace /> : <Login onLoginSuccess={handleLoginSuccess} />} 
+        />
+        <Route 
+          path="/provider/dashboard" 
+          element={isLoggedIn ? <ProviderDashboard /> : <Navigate to="/login" replace />} 
+        />
+        <Route 
+          path="/admin/dashboard" 
+          element={isLoggedIn ? <AdminDashboard /> : <Navigate to="/login" replace />} 
+        />
       </Routes>
-      <Footer />
+      {!isLoginPath && <Footer />}
     </>
   );
 }
