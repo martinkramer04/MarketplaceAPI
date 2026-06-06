@@ -133,7 +133,7 @@ function Register() {
           </div>
 
           <button type="submit" className="btn-register-submit">
-            Registrarse →
+            Registrarse 
           </button>
 
         </form>

@@ -87,7 +87,7 @@ function Login() {
           </div>
 
           <button type="submit" className="btn-login-submit">
-            Iniciar Sesión →
+            Iniciar Sesión
           </button>
 
         </form>
