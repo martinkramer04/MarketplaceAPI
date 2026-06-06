@@ -1,5 +1,5 @@
+import { useState } from 'react'
 import './ActiveBoxesTab.css'
-import EditBoxForm from '../EditBoxForm/EditBoxForm'
 
 const mockActiveBoxes = [
     {
@@ -50,6 +50,29 @@ const mockActiveBoxes = [
 ]
 
 function ActiveBoxesTab({ onEditBox }) {
+    const [boxes, setBoxes] = useState(mockActiveBoxes)
+    const [boxToDelete, setBoxToDelete] = useState(null)
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+
+    const handleDeleteClick = (box) => {
+        if (box.status !== 'published') return 
+        setBoxToDelete(box)
+        setShowConfirmModal(true)
+    }
+
+    const handleConfirmDelete = () => {
+        if (boxToDelete) {
+            setBoxes(boxes.filter((b) => b.id !== boxToDelete.id))
+            setShowConfirmModal(false)
+            setBoxToDelete(null)
+        }
+    }
+
+    const handleCancelDelete = () => {
+        setShowConfirmModal(false)
+        setBoxToDelete(null)
+    }
+
     return (
         <div className="active-boxes">
             <div className="tab-header">
@@ -73,47 +96,83 @@ function ActiveBoxesTab({ onEditBox }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {mockActiveBoxes.map((box) => (
-                            <tr key={box.id}>
-                                <td>
-                                    <div className="ab-box-info">
-                                        <div className="ab-box-thumb" />
-                                        <div>
-                                            <strong>{box.name}</strong>
-                                            <p>{box.sku}</p>
+                        {boxes.map((box) => {
+                            const isActive = box.status === 'published'
+                            return (
+                                <tr key={box.id}>
+                                    <td>
+                                        <div className="ab-box-info">
+                                            <div className="ab-box-thumb" />
+                                            <div>
+                                                <strong>{box.name}</strong>
+                                                <p>{box.sku}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="ab-categories">
-                                        {box.categories.map((cat) => (
-                                            <span key={cat} className="ab-cat-tag">{cat}</span>
-                                        ))}
-                                    </div>
-                                </td>
-                                <td className="ab-activations">{box.activations.toLocaleString()}</td>
-                                <td>
-                                    <span className={`status-badge ${box.status === 'published' ? 'status-approved' : 'status-pending'}`}>
-                                        {box.status === 'published' ? '● Publicado' : '● Borrador'}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button 
-                                        className="btn-edit-box" 
-                                        onClick={() => onEditBox && onEditBox(box)}
-                                    >
-                                        Editar →
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    <td>
+                                        <div className="ab-categories">
+                                            {box.categories.map((cat) => (
+                                                <span key={cat} className="ab-cat-tag">{cat}</span>
+                                            ))}
+                                        </div>
+                                    </td>
+                                    <td className="ab-activations">{box.activations.toLocaleString()}</td>
+                                    <td>
+                                        <span className={`status-badge ${isActive ? 'status-approved' : 'status-pending'}`}>
+                                            {isActive ? '● Publicado' : '● Borrador'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="ab-actions-container">
+                                            <button 
+                                                className="btn-edit-box" 
+                                                onClick={() => onEditBox && onEditBox(box)}
+                                            >
+                                                Editar →
+                                            </button>
+                                            
+                                            <button
+                                                onClick={() => handleDeleteClick(box)}
+                                                disabled={!isActive}
+                                                className={`btn-delete-box ${isActive ? 'active' : 'disabled'}`}
+                                                title={isActive ? "Eliminar caja" : "Solo se pueden eliminar cajas activas"}
+                                            >
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
 
                 <div className="ab-table-footer">
-                    Mostrando {mockActiveBoxes.length} cajas
+                    Mostrando {boxes.length} cajas
                 </div>
             </div>
+
+            {showConfirmModal && (
+                <div className="modal-overlay">
+                    <div className="modal-container">
+                        <div className="modal-icon-wrapper">
+                            <span className="modal-icon">⚠️</span>
+                        </div>
+                        <h3 className="modal-title">¿Eliminar esta caja?</h3>
+                        <p className="modal-text">
+                            Estás a punto de eliminar <strong>"{boxToDelete?.name}"</strong>. Esta acción no se puede deshacer.
+                        </p>
+                        <div className="modal-actions">
+                            <button onClick={handleCancelDelete} className="btn-modal-cancel">
+                                Cancelar
+                            </button>
+                            <button onClick={handleConfirmDelete} className="btn-modal-confirm">
+                                Sí, eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
