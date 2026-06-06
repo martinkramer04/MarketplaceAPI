@@ -28,7 +28,7 @@ const mockRequests = [
 ]
 
 const statusConfig = {
-    approved: { label: 'Aprobado — Paso 1', className: 'status-approved' },
+    approved: { label: 'Aprobado', className: 'status-approved' },
     pending: { label: 'Pendiente de Revisión', className: 'status-pending' },
     rejected: { label: 'Rechazado', className: 'status-rejected' },
 }
