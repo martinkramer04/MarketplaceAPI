@@ -180,21 +180,21 @@
     padding: 16px;
     background-color: #ffffff;
   }
-  
+
   .login-card {
     border: none;
     box-shadow: none;
     padding: 24px 8px;
   }
-  
+
   .login-logo {
     font-size: 1.8rem;
   }
-  
+
   .login-campo input {
     padding: 16px;
   }
-  
+
   .btn-login-submit {
     padding: 16px;
   }
@@ -250,4 +250,13 @@
 
 .login-toggle-password svg {
   display: block;
+}
+
+.login-error {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  border-left: 4px solid #c62828;
 }

@@ -33,7 +33,7 @@ import com.uade.tpo.marketplace.entity.dto.Image.ImageResponse;
 import com.uade.tpo.marketplace.repository.UserRepository;
 import com.uade.tpo.marketplace.service.BoxService;
 import com.uade.tpo.marketplace.service.ImageService;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import io.jsonwebtoken.io.SerialException;
 
 @CrossOrigin(origins = "http://localhost:5173")

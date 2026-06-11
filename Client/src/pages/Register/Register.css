@@ -135,21 +135,21 @@
     padding: 16px;
     background: #ffffff;
   }
-  
+
   .register-card {
     border: none;
     box-shadow: none;
     padding: 20px 8px;
   }
-  
+
   .register-logo {
     font-size: 1.8rem;
   }
-  
+
   .register-campo input {
     padding: 15px;
   }
-  
+
   .btn-register-submit {
     padding: 15px;
   }
@@ -204,4 +204,22 @@
 
 .register-toggle-password svg {
   display: block;
+}
+
+.register-error {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  border-left: 4px solid #c62828;
+}
+
+.register-campo-row {
+  display: flex;
+  gap: 16px;
+}
+
+.register-campo-row .register-campo {
+  flex: 1;
 }

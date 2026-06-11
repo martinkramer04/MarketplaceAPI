@@ -22,7 +22,7 @@ import com.uade.tpo.marketplace.entity.dto.Category.CreateCategoryRequest;
 import com.uade.tpo.marketplace.entity.dto.Category.UpdateCategoryRequest;
 import com.uade.tpo.marketplace.entity.dto.Product.ProductDto;
 import com.uade.tpo.marketplace.service.CategoryService;
-import org.springframework.web.bind.annotation.CrossOrigin;import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController

@@ -24,10 +24,7 @@ public class ProviderSolicitationsService implements
     private ProviderSolicitationsRepository solicitationsRepository;
 
     @Autowired
-    // private ProviderRepository providerRepository;
     private UserRepository userRepository;
-
-    @Autowired
 
     @Override
     public List<ProviderSolicitations> getAll() {
@@ -49,27 +46,32 @@ public class ProviderSolicitationsService implements
 
     @Override
     public Optional<ProviderSolicitations> create(CreateProviderSolicitationRequest entity) {
-        if (entity == null) {
-            return Optional.empty();
-        }
-        User currentUser = (User) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-
-        ProviderSolicitations solicitation = new ProviderSolicitations();
-        solicitation.setUser(currentUser);
-        solicitation.setDescription(entity.getDescription());
-        solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA);
-        solicitation.setCreatedAt(LocalDateTime.now());
-
-        try {
-            solicitationsRepository.save(solicitation);
-        } catch (Exception e) {
-            throw new RuntimeException("Error creating solicitation: " + e.getMessage());
-        }
-
-        return Optional.of(solicitation);
+    if (entity == null) {
+        return Optional.empty();
     }
+
+    // 1. Instanciamos el objeto de la entidad primero
+    ProviderSolicitations solicitation = new ProviderSolicitations();
+
+    // 2. Obtenemos el username de forma segura desde el contexto de Spring Security
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+User user = userRepository.findByEmail(email)
+    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    // 4. Asignamos los datos correspondientes a la nueva solicitud
+    solicitation.setUser(user); 
+    solicitation.setDescription(entity.getDescription());
+    solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA);
+    solicitation.setCreatedAt(LocalDateTime.now());
+
+    try {
+        solicitationsRepository.save(solicitation);
+    } catch (Exception e) {
+        throw new RuntimeException("Error creating solicitation: " + e.getMessage());
+    }
+
+    return Optional.of(solicitation);
+}
 
     @Override
     public Optional<ProviderSolicitations> update(UpdateProviderSolicitationRequest entity, Long id) {

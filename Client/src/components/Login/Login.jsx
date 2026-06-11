@@ -5,6 +5,8 @@ import './Login.css';
 function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     email: '',
     password: ''
@@ -16,10 +18,37 @@ function Login() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    sessionStorage.setItem('user_session', 'active');
-    navigate('/');
-  };
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
+
+    fetch('http://localhost:4002/auth/authenticate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // El backend espera email y password
+      body: JSON.stringify({
+        email: form.email,
+        password: form.password
+      })
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Credenciales incorrectas')
+        return res.json()
+      })
+      .then(data => {
+        // El App.jsx busca 'user_session' para proteger las rutas
+        sessionStorage.setItem('user_session', 'active')
+        // Guardamos también el token para los fetch protegidos
+        sessionStorage.setItem('access_token', data.access_token)
+        setLoading(false)
+        navigate('/')
+      })
+      .catch(err => {
+        console.error('Error en login:', err)
+        setError('Email o contraseña incorrectos. Intentá de nuevo.')
+        setLoading(false)
+      })
+  }
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -86,8 +115,15 @@ function Login() {
             </div>
           </div>
 
-          <button type="submit" className="btn-login-submit">
-            Iniciar Sesión
+          {/* Mensaje de error si las credenciales son incorrectas */}
+          {error && <p className="login-error">{error}</p>}
+
+          <button
+            type="submit"
+            className="btn-login-submit"
+            disabled={loading}
+          >
+            {loading ? 'Ingresando...' : 'Iniciar Sesión'}
           </button>
 
         </form>

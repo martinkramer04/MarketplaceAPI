@@ -1,8 +1,7 @@
 import "./Home.css";
 import BoxCard from "../../components/BoxCard/BoxCard";
-import boxes from "../../data/Boxes";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 // Íconos y orden de las 4 categorías principales del Home
 const categoriasPrincipales = [
@@ -10,43 +9,88 @@ const categoriasPrincipales = [
   { name: 'Aventura', icon: '🧭' },
   { name: 'Entretenimiento', icon: '🎭' },
   { name: 'Estadías', icon: '🏨' },
-]
+];
 
 function Home() {
-  const navigate = useNavigate()
-  const [categories, setCategories] = useState([])
-  const [loadingCats, setLoadingCats] = useState(true)
-  const [errorCats, setErrorCats] = useState(null)
+  const navigate = useNavigate();
 
+  // Estados para Categorías
+  const [categories, setCategories] = useState([]);
+  const [loadingCats, setLoadingCats] = useState(true);
+  const [errorCats, setErrorCats] = useState(null);
+
+  // Estados para Cajas (Boxes)
+  const [boxes, setBoxes] = useState([]);
+  const [loadingBoxes, setLoadingBoxes] = useState(true);
+  const [errorBoxes, setErrorBoxes] = useState(null);
+
+  // === EFFECT 1: CARGAR CATEGORÍAS ===
   useEffect(() => {
     fetch('http://localhost:4002/api/categories')
       .then(res => {
-        if (!res.ok) throw new Error(`Error ${res.status}`)
-        return res.json()
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+        return res.json();
       })
       .then(data => {
-        // Filtramos solo las 4 principales y les asignamos su ícono
         const filtradas = categoriasPrincipales
           .map(principal => {
-            const encontrada = data.find(cat => cat.name === principal.name)
-            return encontrada ? { ...encontrada, icon: principal.icon } : null
+            const encontrada = data.find(cat => cat.name === principal.name);
+            return encontrada ? { ...encontrada, icon: principal.icon } : null;
           })
-          .filter(cat => cat !== null)
+          .filter(cat => cat !== null);
 
-        setCategories(filtradas)
-        setLoadingCats(false)
+        setCategories(filtradas);
+        setLoadingCats(false);
       })
       .catch(err => {
-        console.error('Error al cargar categorías:', err)
-        setErrorCats('No se pudieron cargar las categorías.')
-        setLoadingCats(false)
-      })
-  }, [])
+        console.error('Error al cargar categorías:', err);
+        setErrorCats('No se pudieron cargar las categorías.');
+        setLoadingCats(false);
+      });
+  }, []);
 
-  // Al hacer click navega al Explore con la categoría preseleccionada
+  // === EFFECT 2: CARGAR CAJAS ===
+  useEffect(() => {
+    fetch('http://localhost:4002/api/boxes')
+      .then((response) => {
+        if (!response.ok) throw new Error('No se pudieron cargar las cajas de experiencias.');
+        return response.json();
+      })
+      .then((data) => {
+        const adaptedBoxes = data.map((box) => {
+          // Extraemos la URL de la imagen de forma ultra segura resolviendo variaciones
+          const primeraImagen = box.images && box.images.length > 0 ? box.images[0] : null;
+          const urlDetectada = primeraImagen
+            ? (primeraImagen.image || primeraImagen.url || primeraImagen.imageUrl)
+            : 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400';
+
+          return {
+            id: box.id,
+            name: box.name,
+            description: box.description,
+            price: box.price,
+            stock: box.stock,
+            category: box.category,
+            // Multi-fallback de propiedades de imagen para blindar el componente BoxCard
+            image: urlDetectada,
+            imageUrl: urlDetectada,
+            images: box.images || []
+          };
+        });
+
+        setBoxes(adaptedBoxes);
+        setLoadingBoxes(false);
+      })
+      .catch((err) => {
+        console.error('Error al cargar cajas:', err);
+        setErrorBoxes(err.message);
+        setLoadingBoxes(false);
+      });
+  }, []);
+
   const handleCategoryClick = (categoryId) => {
-    navigate(`/explore?category=${categoryId}`)
-  }
+    navigate(`/explore?category=${categoryId}`);
+  };
 
   return (
     <div className="home">
@@ -65,9 +109,8 @@ function Home() {
       <section className="categories">
         <h2>Descubrí nuestras experiencias</h2>
         <div className="categories-grid">
-
-          {loadingCats && <p>Cargando categorías...</p>}
-          {errorCats && <p>{errorCats}</p>}
+          {loadingCats && <p className="loading-text">Cargando categorías...</p>}
+          {errorCats && <p className="error-text">{errorCats}</p>}
 
           {!loadingCats && !errorCats && categories.map((cat) => (
             <div
@@ -79,7 +122,6 @@ function Home() {
               <span>{cat.name}</span>
             </div>
           ))}
-
         </div>
       </section>
 
@@ -87,9 +129,18 @@ function Home() {
       <section className="boxes-section">
         <h2>Nuestras Experiencias</h2>
         <div className="boxes-grid">
-          {boxes.map((box) => (
-            <BoxCard key={box.id} box={box} />
-          ))}
+          {loadingBoxes && <div className="loading">Cargando experiencias...</div>}
+          {errorBoxes && <div className="error-message">{errorBoxes}</div>}
+
+          {!loadingBoxes && !errorBoxes && (
+            boxes.length > 0 ? (
+              boxes.map((box) => (
+                <BoxCard key={box.id} box={box} />
+              ))
+            ) : (
+              <p>No hay experiencias disponibles en este momento.</p>
+            )
+          )}
         </div>
       </section>
     </div>

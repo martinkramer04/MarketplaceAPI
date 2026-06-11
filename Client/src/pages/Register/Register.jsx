@@ -6,8 +6,11 @@ function Register() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
-    nombre: '',
+    firstname: '',
+    lastname: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -19,19 +22,49 @@ function Register() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    setError(null)
+
     if (form.password !== form.confirmPassword) {
-      alert("Las contraseñas no coinciden");
-      return;
+      setError('Las contraseñas no coinciden.')
+      return
     }
-    sessionStorage.setItem('user_session', 'active');
-    navigate('/');
-  };
+
+    setLoading(true)
+
+    fetch('http://localhost:4002/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // El backend espera firstname, lastname, email, password y role
+      body: JSON.stringify({
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        password: form.password,
+        role: 'USER'  // siempre USER al registrarse desde el frontend
+      })
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Error en el registro')
+        return res.json()
+      })
+      .then(data => {
+        sessionStorage.setItem('user_session', 'active')
+        sessionStorage.setItem('access_token', data.access_token)
+        setLoading(false)
+        navigate('/')
+      })
+      .catch(err => {
+        console.error('Error en registro:', err)
+        setError('No se pudo completar el registro. El email puede estar en uso.')
+        setLoading(false)
+      })
+  }
 
   return (
     <div className="register-container">
       <div className="register-card">
-        
+
         <div className="register-header">
           <div className="register-logo">
             BigBox<span>.</span>
@@ -41,48 +74,63 @@ function Register() {
         </div>
 
         <form onSubmit={handleSubmit} className="register-form">
-          
-          <div className="register-campo">
-            <label htmlFor="nombre">Nombre Completo</label>
-            <input 
-              type="text" 
-              id="nombre"
-              name="nombre"
-              value={form.nombre}
-              onChange={handleChange}
-              placeholder="Juan Pérez"
-              required 
-            />
+
+          {/* El backend pide firstname y lastname por separado */}
+          <div className="register-campo-row">
+            <div className="register-campo">
+              <label htmlFor="firstname">Nombre</label>
+              <input
+                type="text"
+                id="firstname"
+                name="firstname"
+                value={form.firstname}
+                onChange={handleChange}
+                placeholder="Juan"
+                required
+              />
+            </div>
+            <div className="register-campo">
+              <label htmlFor="lastname">Apellido</label>
+              <input
+                type="text"
+                id="lastname"
+                name="lastname"
+                value={form.lastname}
+                onChange={handleChange}
+                placeholder="Pérez"
+                required
+              />
+            </div>
           </div>
 
           <div className="register-campo">
             <label htmlFor="email">Correo Electrónico</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               id="email"
               name="email"
               value={form.email}
               onChange={handleChange}
               placeholder="ejemplo@correo.com"
-              required 
+              required
             />
           </div>
 
           <div className="register-campo">
             <label htmlFor="password">Contraseña</label>
             <div className="register-password-wrapper">
-              <input 
-                type={showPassword ? "text" : "password"} 
+              <input
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={form.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                required 
+                required
               />
-              <button 
-                type="button" 
-                className="register-toggle-password" 
+              <button
+                type="button"
+                className="register-toggle-password"
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
@@ -103,18 +151,18 @@ function Register() {
           <div className="register-campo">
             <label htmlFor="confirmPassword">Confirmar Contraseña</label>
             <div className="register-password-wrapper">
-              <input 
-                type={showConfirmPassword ? "text" : "password"} 
+              <input
+                type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 name="confirmPassword"
                 value={form.confirmPassword}
                 onChange={handleChange}
                 placeholder="••••••••"
-                required 
+                required
               />
-              <button 
-                type="button" 
-                className="register-toggle-password" 
+              <button
+                type="button"
+                className="register-toggle-password"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 aria-label={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
@@ -132,8 +180,14 @@ function Register() {
             </div>
           </div>
 
-          <button type="submit" className="btn-register-submit">
-            Registrarse 
+          {error && <p className="register-error">{error}</p>}
+
+          <button
+            type="submit"
+            className="btn-register-submit"
+            disabled={loading}
+          >
+            {loading ? 'Registrando...' : 'Registrarse'}
           </button>
 
         </form>

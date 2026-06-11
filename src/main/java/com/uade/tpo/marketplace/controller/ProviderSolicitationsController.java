@@ -20,9 +20,12 @@ import com.uade.tpo.marketplace.entity.enums.SolicitationStatusEnum;
 import com.uade.tpo.marketplace.entity.dto.Provider.CreateProviderSolicitationRequest;
 import com.uade.tpo.marketplace.entity.dto.Provider.UpdateProviderSolicitationRequest;
 import com.uade.tpo.marketplace.service.ProviderSolicitationsService;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 @RestController
 @RequestMapping("/api/provider-solicitations")
+@CrossOrigin(origins = "http://localhost:5173") 
 public class ProviderSolicitationsController {
 
     @Autowired
