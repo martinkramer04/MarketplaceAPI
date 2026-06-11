@@ -80,6 +80,8 @@ public class SecurityConfig {
                 "/api/boxes/display-image",
                 "/api/categories",
                 "/api/categories/{categoryId}",
+                "/api/products",
+                "/api/boxes",
         };
     }
 
@@ -111,8 +113,6 @@ public class SecurityConfig {
     private String[] adminGetEndpoints() {
         return new String[] {
                 "/api/orders/{id}",
-                "/api/boxes",
-                "/api/products",
                 "/api/products/{productId}",
                 "/api/provider-solicitations", // admin only
                 "/api/provider-solicitations/status/{status}", // admin only

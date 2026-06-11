@@ -1,16 +1,53 @@
 import "./Home.css";
 import BoxCard from "../../components/BoxCard/BoxCard";
 import boxes from "../../data/Boxes";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react'
 
-const categories = [
-  { label: "Gastronomia", icon: "🍽️", id: 2 },
-  { label: "Aventura", icon: "🧭", id: 5 },
-  { label: "Bienestar", icon: "🧘", id: 3 },
-  { label: "Estadias", icon: "🏠", id: 6 },
-];
+// Íconos y orden de las 4 categorías principales del Home
+const categoriasPrincipales = [
+  { name: 'Experiencias Gastronómicas', icon: '🍽️' },
+  { name: 'Aventura', icon: '🧭' },
+  { name: 'Entretenimiento', icon: '🎭' },
+  { name: 'Estadías', icon: '🏨' },
+]
 
 function Home() {
+  const navigate = useNavigate()
+  const [categories, setCategories] = useState([])
+  const [loadingCats, setLoadingCats] = useState(true)
+  const [errorCats, setErrorCats] = useState(null)
+
+  useEffect(() => {
+    fetch('http://localhost:4002/api/categories')
+      .then(res => {
+        if (!res.ok) throw new Error(`Error ${res.status}`)
+        return res.json()
+      })
+      .then(data => {
+        // Filtramos solo las 4 principales y les asignamos su ícono
+        const filtradas = categoriasPrincipales
+          .map(principal => {
+            const encontrada = data.find(cat => cat.name === principal.name)
+            return encontrada ? { ...encontrada, icon: principal.icon } : null
+          })
+          .filter(cat => cat !== null)
+
+        setCategories(filtradas)
+        setLoadingCats(false)
+      })
+      .catch(err => {
+        console.error('Error al cargar categorías:', err)
+        setErrorCats('No se pudieron cargar las categorías.')
+        setLoadingCats(false)
+      })
+  }, [])
+
+  // Al hacer click navega al Explore con la categoría preseleccionada
+  const handleCategoryClick = (categoryId) => {
+    navigate(`/explore?category=${categoryId}`)
+  }
+
   return (
     <div className="home">
       {/* HERO */}
@@ -28,14 +65,21 @@ function Home() {
       <section className="categories">
         <h2>Descubrí nuestras experiencias</h2>
         <div className="categories-grid">
-          {categories.map((cat) => (
-            <Link key={cat.label} to={`/explore?category=${cat.id}`}>
-              <div className="category-item">
-                <span className="category-icon">{cat.icon}</span>
-                <span>{cat.label}</span>
-              </div>
-            </Link>
+
+          {loadingCats && <p>Cargando categorías...</p>}
+          {errorCats && <p>{errorCats}</p>}
+
+          {!loadingCats && !errorCats && categories.map((cat) => (
+            <div
+              key={cat.id}
+              className="category-item"
+              onClick={() => handleCategoryClick(cat.id)}
+            >
+              <span className="category-icon">{cat.icon}</span>
+              <span>{cat.name}</span>
+            </div>
           ))}
+
         </div>
       </section>
 

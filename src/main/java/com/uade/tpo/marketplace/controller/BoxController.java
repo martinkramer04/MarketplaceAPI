@@ -36,6 +36,7 @@ import com.uade.tpo.marketplace.service.ImageService;
 
 import io.jsonwebtoken.io.SerialException;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/boxes")
 public class BoxController {

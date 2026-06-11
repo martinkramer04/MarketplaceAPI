@@ -1,177 +1,87 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./explore.css";
 import { Link, useSearchParams } from "react-router-dom";
 
-const categories = [
-  { id: 1, name: "Desayunos, Almuerzos y Tapeos", count: 11 },
-  { id: 2, name: "Experiencias Gastronómicas", count: 10 },
-  { id: 3, name: "Estar Bien", count: 9 },
-  { id: 4, name: "Ocasiones", count: 9 },
-  { id: 5, name: "Aventura", count: 7 },
-  { id: 6, name: "Estadías", count: 7 },
-  { id: 7, name: "Mix", count: 6 },
-  { id: 8, name: "Cursos y Talleres", count: 2 },
-  { id: 9, name: "Delivery y Take Away", count: 2 },
-  { id: 10, name: "Entretenimiento", count: 1 },
-];
-
-const products = [
-  {
-    title: "Grande Cuisine",
-    category: 2,
-    rating: 4.7,
-    options: 68,
-    people: 2,
-    price: 134000,
-    image:
-      "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Esta Bigbox, para dos personas, ofrece la posibilidad de elegir una experiencia única.",
-  },
-  {
-    title: "Experiencia Gourmet",
-    category: 2,
-    rating: 4.7,
-    options: 94,
-    people: 2,
-    price: 104000,
-    image:
-      "https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Esta Bigbox ofrece la posibilidad de disfrutar una propuesta gastronómica premium.",
-  },
-  {
-    title: "De Autor",
-    category: 2,
-    rating: 4.9,
-    options: 33,
-    people: 2,
-    price: 174000,
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Regalá experiencias únicas con menús de autor especialmente seleccionados.",
-  },
-  {
-    title: "Clásicos y Bodegones",
-    category: 2,
-    rating: 4.5,
-    options: 25,
-    people: 2,
-    price: 89000,
-    image:
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Esta Bigbox ofrece la posibilidad de elegir entre los mejores clásicos.",
-  },
-  {
-    title: "Premiados",
-    category: 2,
-    rating: 4.8,
-    options: 22,
-    people: 2,
-    price: 219000,
-    image:
-      "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Regalá experiencias únicas en restaurantes reconocidos y premiados.",
-  },
-  {
-    title: "Sabores del Mundo",
-    category: 2,
-    rating: 4.6,
-    options: 45,
-    people: 2,
-    price: 82000,
-    image:
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Descubrí propuestas gastronómicas inspiradas en distintas culturas.",
-  },
-  {
-    title: "Brunch Especial",
-    category: 1,
-    rating: 4.4,
-    options: 18,
-    people: 2,
-    price: 65000,
-    image:
-      "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Una experiencia ideal para disfrutar desayunos, brunchs y tapeos.",
-  },
-  {
-    title: "Aventura Urbana",
-    category: 5,
-    rating: 4.7,
-    options: 12,
-    people: 2,
-    price: 78000,
-    image:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Una experiencia ideal para quienes buscan emociones y nuevas aventuras.",
-  },
-  {
-    title: "Escapada Relax",
-    category: 3,
-    rating: 4.9,
-    options: 20,
-    people: 2,
-    price: 150000,
-    image:
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Una experiencia ideal para quienes buscan relajarse y desconectar.",
-  },
-  {
-    title: "Estadía Boutique",
-    category: 6,
-    rating: 4.8,
-    options: 15,
-    people: 2,
-    price: 120000,
-    image:
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=80",
-    description:
-      "Una experiencia ideal para quienes buscan relajarse y desconectar.",
-  },
-];
-
 export default function Explore() {
   const [searchParams] = useSearchParams();
-  const categoryParam = searchParams.get("category");
-  const validatedCategory =
-    categoryParam && categories.some((c) => c.id == categoryParam)
-      ? categoryParam
-      : null;
 
-  const [selectedCategory, setSelectedCategory] = useState(validatedCategory);
+  // ── Estados de categorías ──────────────────────────────
+  const [categories, setCategories] = useState([]);
+  const [loadingCats, setLoadingCats] = useState(true);
 
+  // ── Estados de Cajas (Boxes) ───────────────────────────
+  const [boxes, setBoxes] = useState([]);
+  const [loadingBoxes, setLoadingBoxes] = useState(true);
+  const [errorBoxes, setErrorBoxes] = useState(null);
+
+  // ── Filtros ────────────────────────────────────────────
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [sortBy, setSortBy] = useState("relevance");
 
-  const formatPrice = (value) => {
-    return "$ " + value.toLocaleString("es-AR");
-  };
+  // ── Fetch categorías ───────────────────────────────────
+  useEffect(() => {
+    fetch('http://localhost:4002/api/categories')
+      .then(res => {
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        setCategories(data);
+        setLoadingCats(false);
 
-  const clearFilters = () => {
-    setSelectedCategory(null);
-  };
+        const categoryParam = searchParams.get("category");
+        const existe = data.some(c => c.id == categoryParam);
+        if (categoryParam && existe) {
+          setSelectedCategory(categoryParam);
+        }
+      })
+      .catch(err => {
+        console.error('Error al cargar categorías:', err);
+        setLoadingCats(false);
+      });
+  }, [searchParams]);
 
-  const filteredProducts = products
-    .filter((product) => {
+  // ── Fetch Cajas (Boxes) desde el Backend ────────────────
+  useEffect(() => {
+    fetch('http://localhost:4002/api/boxes') // 👈 Ajustá la ruta según tu BoxController
+      .then(res => {
+        if (!res.ok) throw new Error(`Error ${res.status}. Revisá los permisos en tu SecurityConfig.`);
+        return res.json();
+      })
+      .then(data => {
+        setBoxes(data);
+        setLoadingBoxes(false);
+        setErrorBoxes(null);
+      })
+      .catch(err => {
+        console.error('Error al cargar las cajas:', err);
+        setErrorBoxes('No se pudieron cargar las cajas de experiencias.');
+        setLoadingBoxes(false);
+      });
+  }, []);
+
+  // ── Helpers ────────────────────────────────────────────
+  const formatPrice = (value) => "$ " + (value ? value.toLocaleString("es-AR") : "0");
+
+  const clearFilters = () => setSelectedCategory(null);
+
+  // ── Filtrado y ordenamiento según tu BoxDto ────────────
+  const filteredBoxes = boxes
+    .filter(box => {
       if (!selectedCategory) return true;
-      return product.category == selectedCategory;
+      // 💡 Accedemos al ID del objeto category anidado que nos manda tu BoxDto
+      return box.category && box.category.id == selectedCategory;
     })
     .sort((a, b) => {
-      if (sortBy === "priceAsc") return a.price - b.price;
-      if (sortBy === "priceDesc") return b.price - a.price;
-      if (sortBy === "ratingDesc") return b.rating - a.rating;
-      return 0;
+      if (sortBy === "priceAsc") return (a.price || 0) - (b.price || 0);
+      if (sortBy === "priceDesc") return (b.price || 0) - (a.price || 0);
+      return 0; // Removí ratingDesc porque tu BoxDto no lo incluye en sus atributos actuales
     });
 
   return (
     <main className="explore-page">
+
+      {/* SIDEBAR */}
       <aside className="explore-sidebar">
         <div className="filter-header">
           <strong>Filtrar por:</strong>
@@ -181,7 +91,7 @@ export default function Explore() {
         {selectedCategory && (
           <div className="filter-chip">
             <span>
-              {categories.find((c) => c.id == selectedCategory)?.name}
+              {categories.find(c => c.id == selectedCategory)?.name}
             </span>
             <button onClick={clearFilters}>×</button>
           </div>
@@ -190,8 +100,9 @@ export default function Explore() {
         <div className="category-title">Categorías</div>
 
         <div className="categories-list">
-          {categories.map((category) => (
-            <label className="category-item" key={category.name}>
+          {loadingCats && <p>Cargando categorías...</p>}
+          {!loadingCats && categories.map(category => (
+            <label className="category-item" key={category.id}>
               <span className="category-left">
                 <input
                   type="radio"
@@ -201,58 +112,73 @@ export default function Explore() {
                 />
                 {category.name}
               </span>
-
-              <span className="category-count">{category.count}</span>
             </label>
           ))}
         </div>
       </aside>
 
+      {/* CONTENIDO */}
       <section className="explore-content">
         <div className="explore-topbar">
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
             <option value="relevance">Ordenar por Más relevantes</option>
             <option value="priceAsc">Menor precio</option>
             <option value="priceDesc">Mayor precio</option>
-            <option value="ratingDesc">Mejor rating</option>
           </select>
         </div>
 
         <div className="products-grid">
-          {filteredProducts.map((product) => (
-            <Link to="/box/1" className="product-card-link" key={product.title}>
-              <article className="product-card" key={product.title}>
-                <div className="product-image-container">
-                  <img src={product.image} alt={product.title} />
-                  <div className="product-image-title">
-                    Box <br /> {product.title}
+          {loadingBoxes && <p>Cargando cajas de experiencias...</p>}
+          {errorBoxes && <p className="error-msg">{errorBoxes}</p>}
+
+          {!loadingBoxes && !errorBoxes && filteredBoxes.map((box, index) => {
+            // 💡 Tomamos la primera imagen de la lista de ImageDto si existe, o ponemos un fallback
+            const portadaUrl = box.images && box.images.length > 0
+              ? box.images[0].image
+              : "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80";
+
+            // 💡 Contamos las opciones de la caja según el tamaño de la lista de ProductDto
+            const cantidadOpciones = box.products ? box.products.length : 0;
+
+            return (
+              <Link
+                to={`/box/${box.id}`}
+                className="product-card-link"
+                key={box.id || index}
+              >
+                <article className="product-card">
+                  <div className="product-image-container">
+                    <img src={portadaUrl} alt={box.name} />
+                    <div className="product-image-title">
+                      Box <br /> {box.name}
+                    </div>
                   </div>
-                </div>
 
-                <div className="product-body">
-                  <div className="product-title-row">
-                    <h3>{product.title}</h3>
-                    <span className="product-rating">★ {product.rating}</span>
+                  <div className="product-body">
+                    <div className="product-title-row">
+                      <h3>{box.name}</h3>
+                    </div>
+
+                    <p className="product-description">{box.description}</p>
+
+                    <p className="product-info">♡ Contiene {cantidadOpciones} opciones</p>
+                    <p className="product-info">♧ Stock disponible: {box.stock || 0}</p>
+
+                    <div className="product-price">
+                      {formatPrice(box.price)}
+                    </div>
                   </div>
+                </article>
+              </Link>
+            );
+          })}
 
-                  <p className="product-description">{product.description}</p>
-
-                  <p className="product-info">
-                    ♡ Contiene {product.options} opciones
-                  </p>
-                  <p className="product-info">
-                    ♧ Para {product.people} personas
-                  </p>
-
-                  <div className="product-price">
-                    {formatPrice(product.price)}
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))}
+          {!loadingBoxes && !errorBoxes && filteredBoxes.length === 0 && (
+            <p className="no-results">No hay cajas disponibles para esta categoría.</p>
+          )}
         </div>
       </section>
+
     </main>
   );
 }
