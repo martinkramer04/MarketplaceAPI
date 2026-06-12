@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
  
 import com.uade.tpo.marketplace.entity.Box;
+import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
  
 @Repository
 public interface BoxRepository extends JpaRepository<Box, Long> {
@@ -16,4 +17,5 @@ public interface BoxRepository extends JpaRepository<Box, Long> {
 
     List<Box> findByUserId(Long userId);    
     List<Box> findByIsDeletedFalseAndStockGreaterThan(Integer stock);
+    List<Box> findByStatus(BoxStatusEnum status);
 }

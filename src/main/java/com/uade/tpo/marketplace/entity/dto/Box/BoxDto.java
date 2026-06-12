@@ -22,6 +22,7 @@ public class BoxDto {
     private String description;
     private BigDecimal price;
     private Integer stock;
+    private String status;
     private CategoryDto category;
     private List<ImageDto> images;
     private List<ProductDto> products;
@@ -33,6 +34,7 @@ public class BoxDto {
         dto.setDescription(box.getDescription());
         dto.setPrice(box.getPrice());
         dto.setStock(box.getStock());
+        dto.setStatus(box.getStatus().name());
         dto.setImages(
                 box.getImages().stream()
                         .map(ImageDto::convertToDto)

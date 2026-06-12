@@ -111,7 +111,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         return new String[] {
                 "/api/paymentMethods",
                 "/api/discounts",
-                "/api/boxes",
                 "/api/boxes/add-image",
                 "/api/categories",
                 "/api/products",
@@ -136,7 +135,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         return new String[] {
                 "/api/orders/{id}",
                 "/api/products/{productId}", 
-                "/api/provider-solicitations/status/{status}", // admin only
+                "/api/provider-solicitations/status/{status}", 
+                "/api/boxes/status/{status}",
         };
     }
 
@@ -151,7 +151,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     // POST: PROVIDER only
     private String[] providerPostEndpoints() {
         return new String[] {
-                
+                "/api/boxes",
         };
     }
 

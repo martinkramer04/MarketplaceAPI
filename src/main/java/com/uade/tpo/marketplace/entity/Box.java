@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -33,6 +36,10 @@ public class Box extends BaseEntity {
 
     @Column
     private Integer stock;
+    
+    @Enumerated(EnumType.STRING)
+    @Column
+    private BoxStatusEnum status = BoxStatusEnum.PENDING;
 
     @ManyToMany
     @JoinTable(name = "box_products", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))

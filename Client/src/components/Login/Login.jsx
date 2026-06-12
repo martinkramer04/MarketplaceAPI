@@ -22,10 +22,10 @@ function Login() {
     setError(null)
     setLoading(true)
 
+    // 1. Primer Fetch: Autenticación
     fetch('http://localhost:4002/auth/authenticate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      // El backend espera email y password
       body: JSON.stringify({
         email: form.email,
         password: form.password
@@ -36,19 +36,43 @@ function Login() {
         return res.json()
       })
       .then(data => {
-        // El App.jsx busca 'user_session' para proteger las rutas
-        sessionStorage.setItem('user_session', 'active')
-        // Guardamos también el token para los fetch protegidos
-        sessionStorage.setItem('access_token', data.access_token)
-        setLoading(false)
-        navigate('/')
+        // 💡 CORRECCIÓN CLAVE: Leemos .accessToken o .access_token para que coincida con tu AuthService de Java
+        const token = data.accessToken || data.access_token;
+
+        if (!token) throw new Error('Token no recibido del servidor');
+
+        // Guardamos las credenciales en la sesión
+        sessionStorage.setItem('access_token', token);
+        sessionStorage.setItem('user_session', 'active');
+
+        // 2. Segundo Fetch: Obtenemos el perfil completo para saber el ROL
+        return fetch('http://localhost:4002/auth/me', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('No se pudo verificar el perfil del usuario');
+        return res.json();
+      })
+      .then(user => {
+        setLoading(false);
+
+        // Redirección inteligente por Rol
+        if (user.role === 'PROVIDER' || user.role === 'provider') {
+          navigate('/provider-portal'); // O la ruta de tu panel de proveedor
+        } else {
+          navigate('/'); // Clientes y admins al Home
+        }
       })
       .catch(err => {
-        console.error('Error en login:', err)
-        setError('Email o contraseña incorrectos. Intentá de nuevo.')
-        setLoading(false)
-      })
-  }
+        console.error('Error en login:', err);
+        setError('Email o contraseña incorrectos. Intentá de nuevo.');
+        setLoading(false);
+      });
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

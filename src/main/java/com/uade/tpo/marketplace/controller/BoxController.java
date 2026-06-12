@@ -30,6 +30,7 @@ import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Image.AddImageBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Image.ImageResponse;
+import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
 import com.uade.tpo.marketplace.repository.UserRepository;
 import com.uade.tpo.marketplace.service.BoxService;
 import com.uade.tpo.marketplace.service.ImageService;
@@ -127,4 +128,10 @@ public class BoxController {
                 .encodeToString(image.getImage().getBytes(1, (int) image.getImage().length()));
         return ResponseEntity.ok().body(ImageResponse.builder().file(encodedString).id(id).build());
     }
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<BoxDto>> getByStatus(@PathVariable BoxStatusEnum status) {
+        return ResponseEntity.ok(boxService.getByStatus(status).stream()
+            .map(BoxDto::convertToDto)
+            .toList());
+}
 }

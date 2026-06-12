@@ -1,31 +1,62 @@
 import './BoxesSolicitations.css'
 import { useState, useEffect } from 'react'
 
-const mockProposals = [
-    { id: 1, proveedor: 'Artisan Collective', titulo: 'Clase de Cocina Urbana', categoria: 'Gastronomía', precio: 89, cajasPublicadas: 8, estado: 'pending' },
-    { id: 2, proveedor: 'Zen Escapes', titulo: 'Retiro de Mindfulness en la Montaña', categoria: 'Bienestar', precio: 210, cajasPublicadas: 12, estado: 'pending' },
-    { id: 3, proveedor: 'AdventureX', titulo: 'Fin de Semana de Karting Extremo', categoria: 'Aventura', precio: 180, cajasPublicadas: 3, estado: 'pending' },
-    { id: 4, proveedor: 'Coastal Crafts', titulo: 'Retiro de Surf y Cerámica', categoria: 'Bienestar', precio: 150, cajasPublicadas: 0, estado: 'pending' },
-    { id: 5, proveedor: 'La Bodega Club', titulo: 'Clase Magistral de Maridaje de Vinos', categoria: 'Gastronomía', precio: 120, cajasPublicadas: 15, estado: 'pending' },
-]
-
 function BoxesSolicitations() {
     const [proposals, setProposals] = useState([])
     const [activeProposal, setActiveProposal] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    const token = sessionStorage.getItem('access_token')
 
     useEffect(() => {
-        const sorted = [...mockProposals].sort(
-            (a, b) => b.cajasPublicadas - a.cajasPublicadas
-        )
-        setProposals(sorted)
+        fetch('http://localhost:4002/api/boxes/status/PENDING', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Error al cargar propuestas')
+                return res.json()
+            })
+            .then(data => {
+                setProposals(data)
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error(err)
+                setError('No se pudieron cargar las propuestas.')
+                setLoading(false)
+            })
     }, [])
 
     const handleAction = (id, action) => {
-        setProposals((prev) =>
-            prev.map((p) => p.id === id ? { ...p, estado: action } : p)
-        )
-        setActiveProposal(null)
+        const status = action === 'approved' ? 'APPROVED' : 'REJECTED'
+
+        fetch(`http://localhost:4002/api/boxes/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ status })
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Error al actualizar propuesta')
+                return res.json()
+            })
+            .then(() => {
+                setProposals(prev =>
+                    prev.map(p => p.id === id ? { ...p, status: status } : p)
+                )
+                setActiveProposal(null)
+            })
+            .catch(err => console.error(err))
     }
+
+    if (loading) return <p>Cargando propuestas...</p>
+    if (error) return <p>{error}</p>
 
     return (
         <div className="propuestas">
@@ -40,16 +71,13 @@ function BoxesSolicitations() {
 
             <div className="propuestas-body">
 
-                {/* TABLA */}
                 <div className="propuestas-table-wrapper">
                     <table className="propuestas-table">
                         <thead>
                             <tr>
-                                <th>Proveedor</th>
                                 <th>Propuesta</th>
                                 <th>Categoría</th>
                                 <th>Precio Est.</th>
-                                <th>Cajas Activas</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
@@ -59,24 +87,18 @@ function BoxesSolicitations() {
                                 <tr
                                     key={p.id}
                                     className={activeProposal?.id === p.id ? 'row-selected' : ''}
-                                    onClick={() => p.estado === 'pending' && setActiveProposal(p)}
+                                    onClick={() => p.status === 'PENDING' && setActiveProposal(p)}
                                 >
-                                    <td className="prop-proveedor">{p.proveedor}</td>
-                                    <td>{p.titulo}</td>
-                                    <td>{p.categoria}</td>
-                                    <td>${p.precio}</td>
+                                    <td>{p.name}</td>
+                                    <td>{p.category?.name}</td>
+                                    <td>${p.price}</td>
                                     <td>
-                                        <span className={`cajas-badge ${p.cajasPublicadas > 5 ? 'high' : p.cajasPublicadas > 0 ? 'mid' : 'low'}`}>
-                                            {p.cajasPublicadas} cajas
-                                        </span>
+                                        {p.status === 'PENDING' && <span className="admin-badge badge-pending">Pendiente</span>}
+                                        {p.status === 'APPROVED' && <span className="admin-badge badge-approved">✓ Aprobado</span>}
+                                        {p.status === 'REJECTED' && <span className="admin-badge badge-rejected">✗ Rechazado</span>}
                                     </td>
                                     <td>
-                                        {p.estado === 'pending' && <span className="admin-badge badge-pending">Pendiente</span>}
-                                        {p.estado === 'approved' && <span className="admin-badge badge-approved">✓ Aprobado</span>}
-                                        {p.estado === 'rejected' && <span className="admin-badge badge-rejected">✗ Rechazado</span>}
-                                    </td>
-                                    <td>
-                                        {p.estado === 'pending' && (
+                                        {p.status === 'PENDING' && (
                                             <div className="prop-actions" onClick={(e) => e.stopPropagation()}>
                                                 <button className="btn-approve" onClick={() => handleAction(p.id, 'approved')}>
                                                     ✓ Aprobar
@@ -96,31 +118,21 @@ function BoxesSolicitations() {
                 {activeProposal && (
                     <div className="propuesta-detail">
                         <div className="propuesta-detail-header">
-                            <h3>{activeProposal.titulo}</h3>
+                            <h3>{activeProposal.name}</h3>
                             <button className="btn-close-detail" onClick={() => setActiveProposal(null)}>✕</button>
                         </div>
                         <div className="propuesta-detail-body">
                             <div className="pd-row">
-                                <span>Proveedor</span>
-                                <strong>{activeProposal.proveedor}</strong>
-                            </div>
-                            <div className="pd-row">
                                 <span>Categoría</span>
-                                <strong>{activeProposal.categoria}</strong>
+                                <strong>{activeProposal.category?.name}</strong>
                             </div>
                             <div className="pd-row">
                                 <span>Precio Est.</span>
-                                <strong>${activeProposal.precio}</strong>
+                                <strong>${activeProposal.price}</strong>
                             </div>
                             <div className="pd-row">
-                                <span>Cajas Publicadas</span>
-                                <strong>{activeProposal.cajasPublicadas}</strong>
-                            </div>
-                            <div className="pd-row">
-                                <span>Prioridad</span>
-                                <strong className={activeProposal.cajasPublicadas > 5 ? 'priority-high' : 'priority-low'}>
-                                    {activeProposal.cajasPublicadas > 5 ? '🔼 Alta' : '🔽 Baja'}
-                                </strong>
+                                <span>Descripción</span>
+                                <strong>{activeProposal.description}</strong>
                             </div>
                         </div>
                         <div className="propuesta-detail-actions">

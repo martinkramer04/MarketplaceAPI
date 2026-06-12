@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import './ProposeBoxForm.css';
+import React, { useState, useEffect } from 'react';
 
 function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
   const [form, setForm] = useState({
@@ -12,6 +12,14 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
     cancellationPolicy: '',
     termsAccepted: false
   });
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    fetch('http://localhost:4002/api/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error('Error cargando categorías:', err))
+  }, [])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -19,77 +27,104 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
     setForm((prev) => ({ ...prev, [name]: finalValue }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (onSubmitPropuesta) {
-      onSubmitPropuesta(form);
-    } else {
-      console.log('Formulario unificado enviado:', form);
-      alert('¡Propuesta completa enviada! El administrador revisará y publicará tu caja.');
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const token = sessionStorage.getItem('access_token')
+
+    const payload = {
+      name: form.title,
+      description: form.shortDescription,
+      price: parseFloat(form.price),
+      stock: 0,
+      categoryId: parseInt(form.category),
     }
-  };
+
+    fetch('http://localhost:4002/api/boxes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Error al enviar propuesta')
+        return res.json()
+      })
+      .then(() => {
+        alert('¡Propuesta enviada! El administrador la revisará.')
+        if (onCancel) onCancel()
+      })
+      .catch(err => {
+        console.error(err)
+        alert('Error al enviar la propuesta. Verificá que estés logueado.')
+      })
+  }
 
   return (
     <div className="propose-box-container">
-      
+
       <div className="pb-header">
         <h1>Proponer Nueva Caja</h1>
         <p>Cargá toda la información básica, descriptiva e imágenes de la experiencia para enviarla a publicación oficial.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="pb-unified-form">
-        
+
         <div className="pb-form-card step-one-section">
           <div className="pb-campo">
             <label htmlFor="title">Título / Concepto de la Caja *</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               id="title"
               name="title"
               value={form.title}
               onChange={handleChange}
               placeholder="Ej: Escapada Romántica en las Sierras"
-              required 
+              required
             />
           </div>
 
           <div className="pb-campo-row">
             <div className="pb-campo">
               <label htmlFor="category">Categoría Destino *</label>
-              <select 
-                id="category" 
+              <select
+                id="category"
                 name="category"
-                value={form.category} 
-                onChange={handleChange} 
+                value={form.category}
+                onChange={handleChange}
                 required
               >
                 <option value="">Seleccioná una categoría</option>
-                <option value="spa">SPA</option>
-                <option value="adventure">Aventura</option>
-                <option value="dining">Gastronomía</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.description}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="pb-campo">
               <label htmlFor="price">Precio Estimado de Venta (ARS) *</label>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 id="price"
                 name="price"
                 value={form.price}
                 onChange={handleChange}
                 placeholder="Ej: 120000"
-                required 
+                required
               />
             </div>
           </div>
 
           <div className="pb-campo">
             <label htmlFor="shortDescription">Descripción breve *</label>
-            <textarea 
+            <textarea
               id="shortDescription"
               name="shortDescription"
-              rows={3} 
+              rows={3}
               value={form.shortDescription}
               onChange={handleChange}
               placeholder="Describí brevemente la experiencia: qué incluye, para quién es ideal, qué hace única a tu propuesta..."
@@ -101,7 +136,7 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
         <div className="cd-body">
 
           <div className="cd-left">
-            
+
             <div className="cd-section">
               <h2>Imágenes de Alta Resolución</h2>
               <p className="cd-hint">Mínimo 3000px de ancho. Formatos: JPG, PNG.</p>
@@ -147,7 +182,7 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
                   </div>
                   <span className="cd-sp-check">✓</span>
                 </div>
-                
+
                 <div className="cd-subprovider-item">
                   <div className="cd-sp-avatar">BT</div>
                   <div>
@@ -212,9 +247,9 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
           <button type="button" onClick={onCancel} className="btn-pb-cancel">
             Cancelar
           </button>
-          <button 
-            type="submit" 
-            className="btn-submit-final" 
+          <button
+            type="submit"
+            className="btn-submit-final"
             disabled={!form.termsAccepted}
           >
             Enviar Propuesta Final ✓

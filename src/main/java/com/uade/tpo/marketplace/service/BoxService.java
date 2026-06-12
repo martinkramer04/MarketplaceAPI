@@ -15,6 +15,7 @@ import com.uade.tpo.marketplace.entity.Product;
 import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
+import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
 import com.uade.tpo.marketplace.repository.BoxRepository;
 import com.uade.tpo.marketplace.repository.CategoryRepository;
 
@@ -77,6 +78,7 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
         box.setPrice(entity.getPrice());
         box.setStock(entity.getStock());
         box.setUser(currentUser);
+        box.setStatus(BoxStatusEnum.PENDING);
 
         box.setProducts(entity.getProductIds() != null
                 ? Arrays.stream(entity.getProductIds())
@@ -125,6 +127,9 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
         if (entity.getStock() != null) {
             box.setStock(entity.getStock());
         }
+        if (entity.getStatus() != null) {
+            box.setStatus(entity.getStatus()); 
+        }
         box.setUpdatedAt(LocalDateTime.now());
 
         try {
@@ -152,5 +157,8 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
         }
 
         return true;
+    }
+    public List<Box> getByStatus(BoxStatusEnum status) {
+        return boxRepository.findByStatus(status);
     }
 }
