@@ -47,7 +47,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers("/auth/**").permitAll()
                     // 🟢 PASO LIBRE A LOS PREFLIGHTS OPTIONS DEL NAVEGADOR
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    
+                    .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
                     .requestMatchers(HttpMethod.GET, publicGetEndpoints()).permitAll()
                     .requestMatchers(HttpMethod.GET, adminGetEndpoints()).hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, providerAdminGetEndpoints()).hasAnyRole("PROVIDER", "ADMIN")
