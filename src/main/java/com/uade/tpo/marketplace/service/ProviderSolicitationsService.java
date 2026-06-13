@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.uade.tpo.marketplace.entity.ProviderSolicitations;
 import com.uade.tpo.marketplace.entity.User;
@@ -44,33 +46,21 @@ public class ProviderSolicitationsService implements
         return solicitationsRepository.findBySolicitationStatus(status);
     }
 
-    @Override
-    public Optional<ProviderSolicitations> create(CreateProviderSolicitationRequest entity) {
-    if (entity == null) {
-        return Optional.empty();
+   @PostMapping
+public ResponseEntity<?> create(@RequestBody CreateProviderSolicitationRequest request) {
+    Optional<ProviderSolicitations> result = solicitationsService.create(request);
+    
+    if (result.isPresent()) {
+        // Devolvemos solo los campos necesarios, sin referencias circulares
+        ProviderSolicitations s = result.get();
+        return ResponseEntity.status(201).body(Map.of(
+            "id", s.getId(),
+            "description", s.getDescription(),
+            "solicitationStatus", s.getSolicitationStatus(),
+            "createdAt", s.getCreatedAt()
+        ));
     }
-
-    // 1. Instanciamos el objeto de la entidad primero
-    ProviderSolicitations solicitation = new ProviderSolicitations();
-
-    // 2. Obtenemos el username de forma segura desde el contexto de Spring Security
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
-User user = userRepository.findByEmail(email)
-    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-    // 4. Asignamos los datos correspondientes a la nueva solicitud
-    solicitation.setUser(user); 
-    solicitation.setDescription(entity.getDescription());
-    solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA);
-    solicitation.setCreatedAt(LocalDateTime.now());
-
-    try {
-        solicitationsRepository.save(solicitation);
-    } catch (Exception e) {
-        throw new RuntimeException("Error creating solicitation: " + e.getMessage());
-    }
-
-    return Optional.of(solicitation);
+    return ResponseEntity.badRequest().build();
 }
 
     @Override

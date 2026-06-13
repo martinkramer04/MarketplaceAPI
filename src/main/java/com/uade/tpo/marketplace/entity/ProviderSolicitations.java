@@ -2,6 +2,7 @@ package com.uade.tpo.marketplace.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uade.tpo.marketplace.entity.enums.SolicitationStatusEnum;
 
 import jakarta.persistence.Column;
@@ -26,6 +27,7 @@ public class ProviderSolicitations extends BaseEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore 
     private User user;
 
     @Column

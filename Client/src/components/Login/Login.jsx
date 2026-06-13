@@ -48,7 +48,7 @@ function Login() {
         if (!token) throw new Error('Token no recibido del servidor');
 
         // Guardamos las credenciales en la sesión
-        localStorage.setItem('access_token', token);
+        localStorage.setItem('access_token', token.trim());
         localStorage.setItem('user_session', 'active');
 
         // 2. Segundo Fetch: Obtenemos el perfil completo para saber el ROL

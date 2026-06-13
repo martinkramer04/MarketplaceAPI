@@ -32,6 +32,13 @@ function BecomeProvider() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
+    const token = localStorage.getItem('access_token')?.trim()
+    console.log('Token que se manda:', token)
+    if (!token) {
+        setError('Necesitás iniciar sesión para enviar una solicitud.')
+        setLoading(false)
+        return
+    }
 
     // === CONEXIÓN CON EL BACKEND ===
     // === CONEXIÓN CON EL BACKEND REFACTORIZADA ===
@@ -39,56 +46,63 @@ function BecomeProvider() {
         setLoading(true);
         setError(null);
 
-        // 💡 Armamos el payload adaptado ESTRICTAMENTE a tu CreateProviderSolicitationRequest de Java
-        // Si tu DTO solo tiene 'description', consolidamos un texto lindo con toda la info para que no se pierda nada en la base de datos
+        // El token tiene que leerse DENTRO del handleSubmit
+        const token = localStorage.getItem('access_token')?.trim()
+        console.log('Token en handleSubmit:', token)
+        console.log('Header que se manda:', `Bearer ${token}`)
+
+        if (!token) {
+            setError('Necesitás iniciar sesión para enviar una solicitud.')
+            setLoading(false)
+            return
+        }
+
         const textoConsolidado = `
-      NUEVA SOLICITUD DE PROVEEDOR
-      ---------------------------------
-      Empresa: ${formData.businessName}
-      Responsable: ${formData.ownerName}
-      Email: ${formData.email} | Teléfono: ${formData.phone}
-      Web: ${formData.website || 'No especifica'}
-      
-      RUBRO Y UBICACIÓN
-      ---------------------------------
-      Categoría: ${formData.category}
-      Ciudad/Provincia: ${formData.location}
-      Dirección: ${formData.address || 'No especifica'}
-      Descripción del Negocio: ${formData.description}
-      
-      PROPUESTA DE EXPERIENCIA
-      ---------------------------------
-      Experiencia: ${formData.experienceName}
-      Detalle: ${formData.experienceDescription}
-      Precios: ARS $${formData.minPrice} - ARS $${formData.maxPrice || 'No especifica'}
-      Capacidad: ${formData.capacity || 'No especifica'} personas | Duración: ${formData.duration || 'No especifica'}
+        NUEVA SOLICITUD DE PROVEEDOR
+        ---------------------------------
+        Empresa: ${formData.businessName}
+        Responsable: ${formData.ownerName}
+        Email: ${formData.email} | Teléfono: ${formData.phone}
+        Web: ${formData.website || 'No especifica'}
+
+        RUBRO Y UBICACIÓN
+        ---------------------------------
+        Categoría: ${formData.category}
+        Ciudad/Provincia: ${formData.location}
+        Dirección: ${formData.address || 'No especifica'}
+        Descripción del Negocio: ${formData.description}
+
+        PROPUESTA DE EXPERIENCIA
+        ---------------------------------
+        Experiencia: ${formData.experienceName}
+        Detalle: ${formData.experienceDescription}
+        Precios: ARS $${formData.minPrice} - ARS $${formData.maxPrice || 'No especifica'}
+        Capacidad: ${formData.capacity || 'No especifica'} personas | Duración: ${formData.duration || 'No especifica'}
     `.trim();
 
-        const payload = {
-            description: textoConsolidado // 👈 Le mandamos la propiedad exacta que espera tu DTO
-        };
+        const payload = { description: textoConsolidado };
 
         fetch('http://localhost:4002/api/provider-solicitations', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`  // ← usamos el token con .trim() ya aplicado
             },
             body: JSON.stringify(payload)
         })
             .then((res) => {
-                if (!res.ok) {
-                    throw new Error('No se pudo registrar la solicitud. Verificá los permisos del backend.');
-                }
+                console.log('Status:', res.status)
+                if (!res.ok) throw new Error(`Error ${res.status}`)
                 return res.json();
             })
             .then((data) => {
-                console.log('Solicitud guardada con éxito:', data);
+                console.log('Solicitud guardada:', data);
                 setLoading(false);
-                setStep(4); // Pantalla de éxito
+                setStep(4);
             })
             .catch((err) => {
-                console.error('Error en fetch:', err);
-                setError('Error al conectar con el servidor. Revisá la configuración de seguridad (403).');
+                console.error('Error completo:', err.message)
+                setError(`Error: ${err.message}`)
                 setLoading(false);
             });
     };

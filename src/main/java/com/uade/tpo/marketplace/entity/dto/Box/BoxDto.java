@@ -34,7 +34,7 @@ public class BoxDto {
         dto.setDescription(box.getDescription());
         dto.setPrice(box.getPrice());
         dto.setStock(box.getStock());
-        dto.setStatus(box.getStatus().name());
+        dto.setStatus(box.getStatus() != null ? box.getStatus().name() : null);
         dto.setImages(
                 box.getImages().stream()
                         .map(ImageDto::convertToDto)

@@ -6,10 +6,53 @@ import Stepper from '../../../components/Stepper/Stepper'
 
 function Payment() {
     const navigate = useNavigate()
-    const { cartItems } = useCart()
+    const { cartItems, clearCart } = useCart()
     const [paymentMethod, setPaymentMethod] = useState('card')
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
 
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+
+    const handleConfirmPayment = () => {
+        setError(null)
+        setLoading(true)
+
+        const token = localStorage.getItem('access_token')
+
+        // Armamos el body según lo que espera el backend
+        const orderBody = {
+            discountCode: null,
+            paymentMethodId: 1,
+            items: cartItems.map(item => ({
+                boxId: item.id,
+                quantity: item.quantity
+            }))
+        }
+
+        fetch('http://localhost:4002/api/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(orderBody)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error(`Error ${res.status}`)
+                return res.json()
+            })
+            .then(orderData => {
+                setLoading(false)
+                clearCart()
+                // Mandamos la orden creada a Confirmation via state
+                navigate('/checkout/confirmation', { state: { order: orderData } })
+            })
+            .catch(err => {
+                console.error('Error al crear la orden:', err)
+                setError('No se pudo procesar el pago. Intentá de nuevo.')
+                setLoading(false)
+            })
+    }
 
     return (
         <div className="payment">
@@ -25,7 +68,7 @@ function Payment() {
                             className={`payment-method ${paymentMethod === 'card' ? 'selected' : ''}`}
                             onClick={() => setPaymentMethod('card')}
                         >
-                            💳 Tarjeta de credito/debito
+                            💳 Tarjeta de crédito/débito
                         </div>
                         <div
                             className={`payment-method ${paymentMethod === 'mercadopago' ? 'selected' : ''}`}
@@ -37,7 +80,7 @@ function Payment() {
                             className={`payment-method ${paymentMethod === 'transfer' ? 'selected' : ''}`}
                             onClick={() => setPaymentMethod('transfer')}
                         >
-                            🏦 Tranferencia Bancaria
+                            🏦 Transferencia Bancaria
                         </div>
                     </div>
 
@@ -48,12 +91,12 @@ function Payment() {
                                 <input type="text" placeholder="Mismo nombre que el que se encuentra en la tarjeta" />
                             </div>
                             <div className="payment-campo">
-                                <label>Numero de la tarjeta</label>
+                                <label>Número de la tarjeta</label>
                                 <input type="text" placeholder="0000 0000 0000 0000" />
                             </div>
                             <div className="payment-campo-row">
                                 <div className="payment-campo">
-                                    <label>Expiry Date</label>
+                                    <label>Fecha de vencimiento</label>
                                     <input type="text" placeholder="MM/AA" />
                                 </div>
                                 <div className="payment-campo">
@@ -62,8 +105,8 @@ function Payment() {
                                 </div>
                             </div>
                             <div className="payment-campo">
-                                <label>Direccion</label>
-                                <input type="text" placeholder="Mismo que el envio" />
+                                <label>Dirección</label>
+                                <input type="text" placeholder="Mismo que el envío" />
                             </div>
                         </div>
                     )}
@@ -79,6 +122,12 @@ function Payment() {
                             <p>CBU: 0000003100012345678901</p>
                             <p>Alias: BIGBOX.PAGOS</p>
                             <p>Una vez acreditada la transferencia recibirás la confirmación por email.</p>
+                        </div>
+                    )}
+
+                    {error && (
+                        <div className="payment-error">
+                            {error}
                         </div>
                     )}
                 </div>
@@ -102,8 +151,7 @@ function Payment() {
                         <span>${subtotal}.00</span>
                     </div>
                     <div className="pay-row">
-                        <span>
-                            Tarifa de servicio</span>
+                        <span>Tarifa de servicio</span>
                         <span className="free">Free</span>
                     </div>
                     <div className="pay-row">
@@ -116,13 +164,13 @@ function Payment() {
                     </div>
                     <button
                         className="btn-confirm-pay"
-                        onClick={() => navigate('/checkout/confirmation')}
+                        onClick={handleConfirmPayment}
+                        disabled={loading}
                     >
-                        Confirma y paga ${subtotal}.00 →
+                        {loading ? 'Procesando...' : `Confirmar y pagar $${subtotal}.00 →`}
                     </button>
                     <p className="pay-terms">
-
-                        Al hacer clic en "Confirmar y pagar", acepta los Términos de servicio y la Política de privacidad de BigBox.
+                        Al hacer clic en "Confirmar y pagar", aceptás los Términos de servicio y la Política de privacidad de BigBox.
                     </p>
                 </div>
 

@@ -129,45 +129,62 @@
 }
 
 @media (max-width: 768px) {
-  .confirmation {
-    padding: 32px 20px 48px;
-  }
+    .confirmation {
+        padding: 32px 20px 48px;
+    }
 
-  .confirmation-card {
-    flex-direction: column;
-    gap: 16px;
-  }
+    .confirmation-card {
+        flex-direction: column;
+        gap: 16px;
+    }
 
-  .confirmation-card img {
-    width: 100%;
-    height: 160px;
-  }
+    .confirmation-card img {
+        width: 100%;
+        height: 160px;
+    }
 }
 
 @media (max-width: 480px) {
-  .confirmation {
-    padding: 24px 16px 32px;
-  }
+    .confirmation {
+        padding: 24px 16px 32px;
+    }
 
-  .confirmation-body h1 {
-    font-size: 1.6rem;
-  }
+    .confirmation-body h1 {
+        font-size: 1.6rem;
+    }
 
-  .confirmation-meta {
-    flex-direction: column;
-    gap: 8px;
-  }
+    .confirmation-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
 
-  .confirmation-actions {
-    flex-direction: column;
+    .confirmation-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .confirmation-actions button,
+    .confirmation-actions a {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}
+
+.confirmation-order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    gap: 12px;
-  }
+    max-width: 500px;
+    background: #f5f5f5;
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+}
 
-  .confirmation-actions button,
-  .confirmation-actions a {
-    width: 100%;
-    text-align: center;
-    box-sizing: border-box;
-  }
+.confirmation-order-total strong {
+    font-size: 1.3rem;
+    color: var(--primary);
 }

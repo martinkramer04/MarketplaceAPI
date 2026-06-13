@@ -217,3 +217,13 @@
         padding: 16px;
     }
 }
+
+.payment-error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    border-left: 4px solid #c62828;
+    margin-top: 16px;
+}

@@ -134,9 +134,8 @@ export default function Explore() {
           {!loadingBoxes && !errorBoxes && filteredBoxes.map((box, index) => {
             // 💡 Tomamos la primera imagen de la lista de ImageDto si existe, o ponemos un fallback
             const portadaUrl = box.images && box.images.length > 0
-              ? box.images[0].image
+              ? box.images[0].base64Image
               : "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80";
-
             // 💡 Contamos las opciones de la caja según el tamaño de la lista de ProductDto
             const cantidadOpciones = box.products ? box.products.length : 0;
 
