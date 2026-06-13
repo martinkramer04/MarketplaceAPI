@@ -10,6 +10,8 @@ import com.uade.tpo.marketplace.config.JwtService;
 import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.repository.UserRepository;
 
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -54,5 +56,52 @@ public class AuthService {
                                 .accessToken(jwtToken)
                                 .build();
     }
-    
+
+    public Map<String, Object> getCurrentUser(String email) {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return Map.of(
+                "id", user.getId(),
+                "firstname", user.getFirstname(),
+                "lastname", user.getLastname(),
+                "email", user.getEmail(),
+                "role", user.getRole()
+        );
+    }
+
+    public Map<String, Object> updateProfile(String currentEmail, UpdateProfileRequest request) {
+        User user = repository.findByEmail(currentEmail)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (request.getFirstname() != null && !request.getFirstname().isBlank()) {
+            user.setFirstname(request.getFirstname());
+        }
+        if (request.getLastname() != null && !request.getLastname().isBlank()) {
+            user.setLastname(request.getLastname());
+        }
+        if (request.getEmail() != null && !request.getEmail().isBlank() && !request.getEmail().equals(currentEmail)) {
+            if (repository.findByEmail(request.getEmail()).isPresent()) {
+                throw new RuntimeException("Email already in use");
+            }
+            user.setEmail(request.getEmail());
+        }
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        repository.save(user);
+        // Email may have changed, so we always issue a fresh token
+        String newToken = jwtService.generateToken(user);
+
+        return Map.of(
+                "id", user.getId(),
+                "firstname", user.getFirstname(),
+                "lastname", user.getLastname(),
+                "email", user.getEmail(),
+                "role", user.getRole(),
+                "access_token", newToken
+        );
+    }
+
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
+import api from '../../api/axiosConfig';
 
 function Register() {
   const navigate = useNavigate();
@@ -32,33 +33,24 @@ function Register() {
 
     setLoading(true)
 
-    fetch('http://localhost:4002/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      // El backend espera firstname, lastname, email, password y role
-      body: JSON.stringify({
-        firstname: form.firstname,
-        lastname: form.lastname,
-        email: form.email,
-        password: form.password,
-        role: 'USER'  // siempre USER al registrarse desde el frontend
-      })
+    api.post('/auth/register', {
+      firstname: form.firstname,
+      lastname: form.lastname,
+      email: form.email,
+      password: form.password,
+      role: 'USER',
     })
       .then(res => {
-        if (!res.ok) throw new Error('Error en el registro')
-        return res.json()
-      })
-      .then(data => {
-        localStorage.setItem('user_session', 'active')
-        localStorage.setItem('access_token', data.access_token)
-        setLoading(false)
-        navigate('/')
+        localStorage.setItem('user_session', 'active');
+        localStorage.setItem('access_token', res.data.access_token);
+        setLoading(false);
+        navigate('/');
       })
       .catch(err => {
-        console.error('Error en registro:', err)
-        setError('No se pudo completar el registro. El email puede estar en uso.')
-        setLoading(false)
-      })
+        console.error('Error en registro:', err);
+        setError('No se pudo completar el registro. El email puede estar en uso.');
+        setLoading(false);
+      });
   }
 
   return (

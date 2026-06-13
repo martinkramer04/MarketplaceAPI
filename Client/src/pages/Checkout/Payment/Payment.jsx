@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../../../Context/useCart'
 import Stepper from '../../../components/Stepper/Stepper'
+import api from '../../../api/axiosConfig'
 
 function Payment() {
     const navigate = useNavigate()
@@ -17,9 +18,6 @@ function Payment() {
         setError(null)
         setLoading(true)
 
-        const token = localStorage.getItem('access_token')
-
-        // Armamos el body según lo que espera el backend
         const orderBody = {
             discountCode: null,
             paymentMethodId: 1,
@@ -29,23 +27,11 @@ function Payment() {
             }))
         }
 
-        fetch('http://localhost:4002/api/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(orderBody)
-        })
+        api.post('/api/orders', orderBody)
             .then(res => {
-                if (!res.ok) throw new Error(`Error ${res.status}`)
-                return res.json()
-            })
-            .then(orderData => {
                 setLoading(false)
                 clearCart()
-                // Mandamos la orden creada a Confirmation via state
-                navigate('/checkout/confirmation', { state: { order: orderData } })
+                navigate('/checkout/confirmation', { state: { order: res.data } })
             })
             .catch(err => {
                 console.error('Error al crear la orden:', err)

@@ -1,5 +1,6 @@
 import './BoxesSolicitations.css'
 import { useState, useEffect } from 'react'
+import api from '../../../../api/axiosConfig'
 
 function BoxesSolicitations() {
     const [proposals, setProposals] = useState([])
@@ -7,21 +8,10 @@ function BoxesSolicitations() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
-    const token = localStorage.getItem('access_token')
-
     useEffect(() => {
-        fetch('http://localhost:4002/api/boxes/status/PENDING', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        api.get('/api/boxes/status/PENDING')
             .then(res => {
-                if (!res.ok) throw new Error('Error al cargar propuestas')
-                return res.json()
-            })
-            .then(data => {
-                setProposals(data)
+                setProposals(res.data)
                 setLoading(false)
             })
             .catch(err => {
@@ -34,18 +24,7 @@ function BoxesSolicitations() {
     const handleAction = (id, action) => {
         const status = action === 'approved' ? 'APPROVED' : 'REJECTED'
 
-        fetch(`http://localhost:4002/api/boxes/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ status })
-        })
-            .then(res => {
-                if (!res.ok) throw new Error('Error al actualizar propuesta')
-                return res.json()
-            })
+        api.put(`/api/boxes/${id}`, { status })
             .then(() => {
                 setProposals(prev =>
                     prev.map(p => p.id === id ? { ...p, status: status } : p)

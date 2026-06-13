@@ -46,22 +46,30 @@ public class ProviderSolicitationsService implements
         return solicitationsRepository.findBySolicitationStatus(status);
     }
 
-   @PostMapping
-public ResponseEntity<?> create(@RequestBody CreateProviderSolicitationRequest request) {
-    Optional<ProviderSolicitations> result = solicitationsService.create(request);
-    
-    if (result.isPresent()) {
-        // Devolvemos solo los campos necesarios, sin referencias circulares
-        ProviderSolicitations s = result.get();
-        return ResponseEntity.status(201).body(Map.of(
-            "id", s.getId(),
-            "description", s.getDescription(),
-            "solicitationStatus", s.getSolicitationStatus(),
-            "createdAt", s.getCreatedAt()
-        ));
+    @Override
+    public Optional<ProviderSolicitations> create(CreateProviderSolicitationRequest entity) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
-    return ResponseEntity.badRequest().build();
-}
+
+    // @PostMapping
+    // public ResponseEntity<ProviderSolicitations> create(@RequestBody
+    // CreateProviderSolicitationRequest request) {
+    // Optional<ProviderSolicitations> result =
+    // solicitationsService.create(request);
+
+    // if (result.isPresent()) {
+    // // Devolvemos solo los campos necesarios, sin referencias circulares
+    // ProviderSolicitations s = result.get();
+    // return ResponseEntity.status(201).body(Map.of(
+    // "id", s.getId(),
+    // "description", s.getDescription(),
+    // "solicitationStatus", s.getSolicitationStatus(),
+    // "createdAt", s.getCreatedAt()
+    // ));
+    // }
+    // return ResponseEntity.badRequest().build();
+    // }
 
     @Override
     public Optional<ProviderSolicitations> update(UpdateProviderSolicitationRequest entity, Long id) {
@@ -99,4 +107,5 @@ public ResponseEntity<?> create(@RequestBody CreateProviderSolicitationRequest r
 
         return true;
     }
+
 }

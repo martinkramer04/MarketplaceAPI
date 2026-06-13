@@ -2,6 +2,7 @@ import "./Home.css";
 import BoxCard from "../../components/BoxCard/BoxCard";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import api from '../../api/axiosConfig';
 
 // Íconos y orden de las 4 categorías principales del Home
 const categoriasPrincipales = [
@@ -26,15 +27,11 @@ function Home() {
 
   // === EFFECT 1: CARGAR CATEGORÍAS ===
   useEffect(() => {
-    fetch('http://localhost:4002/api/categories')
+    api.get('/api/categories')
       .then(res => {
-        if (!res.ok) throw new Error(`Error ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
         const filtradas = categoriasPrincipales
           .map(principal => {
-            const encontrada = data.find(cat => cat.name === principal.name);
+            const encontrada = res.data.find(cat => cat.name === principal.name);
             return encontrada ? { ...encontrada, icon: principal.icon } : null;
           })
           .filter(cat => cat !== null);
@@ -51,12 +48,9 @@ function Home() {
 
   // === EFFECT 2: CARGAR CAJAS ===
   useEffect(() => {
-    fetch('http://localhost:4002/api/boxes')
-      .then((response) => {
-        if (!response.ok) throw new Error('No se pudieron cargar las cajas de experiencias.');
-        return response.json();
-      })
-      .then((data) => {
+    api.get('/api/boxes')
+      .then((res) => {
+        const data = res.data;
         const adaptedBoxes = data.map((box) => {
           // Extraemos la URL de la imagen de forma ultra segura resolviendo variaciones
           const primeraImagen = box.images && box.images.length > 0 ? box.images[0] : null;

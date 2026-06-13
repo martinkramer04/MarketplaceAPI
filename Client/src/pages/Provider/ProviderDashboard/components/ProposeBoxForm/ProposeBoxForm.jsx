@@ -1,5 +1,6 @@
 import './ProposeBoxForm.css';
 import React, { useState, useEffect } from 'react';
+import api from '../../../../../api/axiosConfig';
 
 function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
   const [form, setForm] = useState({
@@ -15,9 +16,8 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
   const [categories, setCategories] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:4002/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data))
+    api.get('/api/categories')
+      .then(res => setCategories(res.data))
       .catch(err => console.error('Error cargando categorías:', err))
   }, [])
 
@@ -30,8 +30,6 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const token = localStorage.getItem('access_token')
-
     const payload = {
       name: form.title,
       description: form.shortDescription,
@@ -40,18 +38,7 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
       categoryId: parseInt(form.category),
     }
 
-    fetch('http://localhost:4002/api/boxes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Error al enviar propuesta')
-        return res.json()
-      })
+    api.post('/api/boxes', payload)
       .then(() => {
         alert('¡Propuesta enviada! El administrador la revisará.')
         if (onCancel) onCancel()
