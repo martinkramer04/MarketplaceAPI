@@ -106,7 +106,7 @@ export default function Explore() {
                     checked={selectedCategory == category.id}
                     onChange={() => setSelectedCategory(category.id)}
                   />
-                  {category.description}
+                  {category.name || category.description}
                 </span>
               </label>
             ))}
