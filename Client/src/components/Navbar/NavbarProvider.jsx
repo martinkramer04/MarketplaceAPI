@@ -1,8 +1,15 @@
-import "./Navbar.css"; 
+import "./Navbar.css";
 import ImgPerfilBBox from "../../assets/ImgPerfilBBox.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function NavbarProvider({ isAdmin = false }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user_session');
+    navigate('/login');
+  };
   return (
     <nav className="navbar">
       <Link to={isAdmin ? "/admin/dashboard" : "/provider/dashboard"}>
@@ -24,13 +31,20 @@ function NavbarProvider({ isAdmin = false }) {
 
       <div className="navbar-actions">
 
-        <Link to="/" className="btn-become-provider">
-          Volver a la Web
-        </Link>
-
         <Link to="/perfil">
           <img src={ImgPerfilBBox} alt="User Profile" className="navbar-profile-avatar" />
         </Link>
+        <button onClick={handleLogout} style={{
+          cursor: 'pointer',
+          padding: '6px 16px',
+          borderRadius: '20px',
+          border: 'none',
+          backgroundColor: '#c62828',
+          color: 'white',
+          fontWeight: '600'
+        }}>
+          Cerrar sesión
+        </button>
       </div>
     </nav>
   );

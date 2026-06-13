@@ -24,13 +24,13 @@ import ScrollToTop from "./Context/ScrollToTop";
 
 function AppLayout() {
   const location = useLocation();
-  
+
   const isProvider = location.pathname.startsWith('/provider');
   const isAdmin = location.pathname.startsWith('/admin');
   const isLoginPath = location.pathname === '/login';
   const isRegisterPath = location.pathname === '/register';
 
-  const session = sessionStorage.getItem('user_session');
+  const session = localStorage.getItem('access_token')
 
   if (!session && !isLoginPath && !isRegisterPath) {
     return <Navigate to="/login" replace />;

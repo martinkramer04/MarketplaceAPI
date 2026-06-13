@@ -49,8 +49,8 @@ function Register() {
         return res.json()
       })
       .then(data => {
-        sessionStorage.setItem('user_session', 'active')
-        sessionStorage.setItem('access_token', data.access_token)
+        localStorage.setItem('user_session', 'active')
+        localStorage.setItem('access_token', data.access_token)
         setLoading(false)
         navigate('/')
       })

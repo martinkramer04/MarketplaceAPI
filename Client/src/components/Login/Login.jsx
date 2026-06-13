@@ -32,7 +32,13 @@ function Login() {
       })
     })
       .then(res => {
-        if (!res.ok) throw new Error('Credenciales incorrectas')
+        console.log('Status autenticación:', res.status) // ← AGREGAR
+        if (!res.ok) {
+          return res.json().then(err => {
+            console.log('Error body:', err) // ← AGREGAR
+            throw new Error('Credenciales incorrectas')
+          })
+        }
         return res.json()
       })
       .then(data => {
@@ -42,8 +48,8 @@ function Login() {
         if (!token) throw new Error('Token no recibido del servidor');
 
         // Guardamos las credenciales en la sesión
-        sessionStorage.setItem('access_token', token);
-        sessionStorage.setItem('user_session', 'active');
+        localStorage.setItem('access_token', token);
+        localStorage.setItem('user_session', 'active');
 
         // 2. Segundo Fetch: Obtenemos el perfil completo para saber el ROL
         return fetch('http://localhost:4002/auth/me', {
@@ -58,13 +64,18 @@ function Login() {
         return res.json();
       })
       .then(user => {
+        console.log('Usuario recibido:', user)
         setLoading(false);
 
         // Redirección inteligente por Rol
-        if (user.role === 'PROVIDER' || user.role === 'provider') {
-          navigate('/provider-portal'); // O la ruta de tu panel de proveedor
+        const role = user.role?.toString().replace('ROLE_', '').toUpperCase();
+
+        if (role === 'PROVIDER') {
+          navigate('/provider/dashboard');
+        } else if (role === 'ADMIN') {
+          navigate('/admin/dashboard');
         } else {
-          navigate('/'); // Clientes y admins al Home
+          navigate('/');
         }
       })
       .catch(err => {

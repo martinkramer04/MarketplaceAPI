@@ -1,11 +1,16 @@
 import "./Navbar.css";
 import ImgPerfilBBox from "../../assets/ImgPerfilBBox.png";
-import { Link } from "react-router-dom";
 import { useCart } from "../../Context/useCart";
-
+import { Link, useNavigate } from "react-router-dom";
 function Navbar() {
   const { cartCount } = useCart();
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user_session');
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar">
@@ -31,12 +36,6 @@ function Navbar() {
         <Link to="/become-provider" className="btn-become-provider">
           Hacete proveedor
         </Link>
-        <Link to="/provider/dashboard" className="btn-become-provider">
-          Portal Proveedor
-        </Link>
-        <Link to="/admin/dashboard" className="btn-admin-temp">
-          Portal Admin
-        </Link>
         <Link to="/cart">
           <div className="cart-icon">
             🛒
@@ -46,6 +45,9 @@ function Navbar() {
         <Link to="/perfil">
           <img src={ImgPerfilBBox} alt="User Profile" className="navbar-profile-avatar" />
         </Link>
+        <button onClick={handleLogout} className="btn-become-provider">
+          Cerrar sesión
+        </button>
       </div>
     </nav>
   );

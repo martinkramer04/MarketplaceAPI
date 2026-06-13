@@ -35,6 +35,13 @@ INSERT INTO marketplace.user (id, username, firstname, lastname, email, password
 (3, 'spa_wellness', 'Spa', 'Wellness Inc', 'proveedor.spa@bigbox.com', 's3cur3', 'PROVIDER'),
 (4, 'juan_perez', 'Juan', 'Pérez', 'juan.perez@gmail.com', 's3cur3', 'USER'),
 (5, 'maria_rod', 'María', 'Rodriguez', 'maria.rod@gmail.com', 's3cur3', 'USER');
+INSERT INTO marketplace.users (firstname, lastname, email, password, role) 
+VALUES 
+('Admin', 'General', 'admin@gmail.com', '$2a$10$v0vI4l7uG2w6N8fK8z.XTeG.mXlqXQ7z1Y7JOnD8rE3W2q2mJy8r2', 'ADMIN'),
+
+('Proveedor', 'Oficial', 'provider@gmail.com', '$2a$10$v0vI4l7uG2w6N8fK8z.XTeG.mXlqXQ7z1Y7JOnD8rE3W2q2mJy8r2', 'PROVIDER'),
+
+('Usuario', 'Común', 'user@gmail.com', '$2a$10$v0vI4l7uG2w6N8fK8z.XTeG.mXlqXQ7z1Y7JOnD8rE3W2q2mJy8r2', 'USER');
 
 -- =====================================================================
 -- 🗂️ PASO 3: CATEGORÍAS (Asegura los IDs para las cajas de la vidriera)

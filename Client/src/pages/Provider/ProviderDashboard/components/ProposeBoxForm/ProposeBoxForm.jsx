@@ -30,7 +30,7 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const token = sessionStorage.getItem('access_token')
+    const token = localStorage.getItem('access_token')
 
     const payload = {
       name: form.title,

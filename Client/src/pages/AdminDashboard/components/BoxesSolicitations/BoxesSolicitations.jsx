@@ -7,7 +7,7 @@ function BoxesSolicitations() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
-    const token = sessionStorage.getItem('access_token')
+    const token = localStorage.getItem('access_token')
 
     useEffect(() => {
         fetch('http://localhost:4002/api/boxes/status/PENDING', {

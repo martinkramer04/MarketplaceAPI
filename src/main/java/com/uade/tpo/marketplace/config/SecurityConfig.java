@@ -44,8 +44,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .authorizeHttpRequests(req -> req
                     .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
                     .requestMatchers(publicEndpoints()).permitAll()
-                    .requestMatchers("/auth/**").permitAll()
-                    // 🟢 PASO LIBRE A LOS PREFLIGHTS OPTIONS DEL NAVEGADOR
+                    .requestMatchers("/auth/register", "/auth/authenticate").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
                     .requestMatchers(HttpMethod.GET, publicGetEndpoints()).permitAll()
@@ -57,7 +56,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers(HttpMethod.DELETE, adminDeleteEndpoints()).hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, providerAdminDeleteEndpoints()).hasAnyRole("PROVIDER", "ADMIN")
                     .requestMatchers(HttpMethod.GET, userGetEndpoints()).hasAnyRole("USER", "ADMIN")
-                    .requestMatchers(HttpMethod.POST, userPostEndpoints()).hasAnyRole("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.POST, userPostEndpoints()).hasAnyRole("USER", "ADMIN","PROVIDER")
                     .requestMatchers(HttpMethod.PUT, userPutEndpoints()).hasAnyRole("USER", "ADMIN")
                     .requestMatchers(HttpMethod.DELETE, userDeleteEndpoints()).hasAnyRole("USER", "ADMIN")
                     .anyRequest().authenticated())
