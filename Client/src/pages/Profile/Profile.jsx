@@ -19,18 +19,36 @@ function Profile() {
       .get("/auth/me")
       .then((res) => {
         setUser(res.data);
-        setForm({ firstname: res.data.firstname || "", lastname: res.data.lastname || "", email: res.data.email || "", password: "", repeatPassword: "" });
-        setLoading(false);
+        setForm({
+          firstname: res.data.firstname || "",
+          lastname: res.data.lastname || "",
+          email: res.data.email || "",
+          password: "",
+          repeatPassword: ""
+        });
+
+        // 🟢 CORRECCIÓN: Si es ADMIN o es PROVIDER, ninguno de los dos busca órdenes de compra.
+        if (res.data.role === "ADMIN" || res.data.role === "PROVIDER") {
+          setOrders([]); // Setamos la lista vacía de forma segura
+          setLoading(false);
+          return null; // Cortamos la ejecución acá para que no falle 🚀
+        }
+
+        // Solo los clientes comunes (USER) avanzan a buscar sus órdenes
         return api.get(`/api/orders/user/${res.data.id}`);
       })
-      .then((res) => setOrders(res.data))
+      .then((res) => {
+        if (res) {
+          setOrders(res.data);
+          setLoading(false);
+        }
+      })
       .catch((err) => {
         console.error("Error al cargar perfil:", err);
         setError("No se pudieron cargar los datos del perfil.");
         setLoading(false);
       });
   }, []);
-
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -55,7 +73,6 @@ function Profile() {
     }
   };
 
-  // Iniciales del avatar
   const getInitials = (firstname, lastname) => {
     return `${firstname?.charAt(0) || ""}${lastname?.charAt(0) || ""}`.toUpperCase();
   };
@@ -83,41 +100,41 @@ function Profile() {
         </div>
       </div>
 
-      <div className="perfil-body">
-        {/* PEDIDOS */}
-        <section className="perfil-orders">
-          <h2>Mis pedidos</h2>
+      {/* Cambiamos la grilla del body si es Admin para que visualmente quede centrado y prolijo */}
+      <div className={`perfil-body ${user.role === "ADMIN" ? "perfil-body-admin" : ""}`}>
 
-          {orders.length === 0 ? (
-            <p className="perfil-no-orders">
-              Todavía no tenés pedidos realizados.
-            </p>
-          ) : (
-            orders.map((order) => (
-              <div key={order.id} className="perfil-order-item">
-                <div className="order-info">
-                  <span className="order-id">#{order.id}</span>
-                  {/* boxName está dentro de orderDetails[0] */}
-                  <h3>{order.orderDetails?.[0]?.boxName || "Pedido"}</h3>
-                  {/* Si hay más de un producto en la orden los mostramos */}
-                  {order.orderDetails?.length > 1 && (
-                    <span className="order-extra">
-                      +{order.orderDetails.length - 1} producto(s) más
+        {/* 🟢 OCULTADO CONDICIONAL: "Mis pedidos" SOLO si NO es Administrador */}
+        {user.role !== "ADMIN" && (
+          <section className="perfil-orders">
+            <h2>Mis pedidos</h2>
+
+            {orders.length === 0 ? (
+              <p className="perfil-no-orders">
+                Todavía no tenés pedidos realizados.
+              </p>
+            ) : (
+              orders.map((order) => (
+                <div key={order.id} className="perfil-order-item">
+                  <div className="order-info">
+                    <span className="order-id">#{order.id}</span>
+                    <h3>{order.orderDetails?.[0]?.boxName || "Pedido"}</h3>
+                    {order.orderDetails?.length > 1 && (
+                      <span className="order-extra">
+                        +{order.orderDetails.length - 1} producto(s) más
+                      </span>
+                    )}
+                  </div>
+                  <div className="order-right">
+                    <span className={`order-status ${order.status === "ACTIVE" ? "status-active" : "status-used"}`}>
+                      {order.status === "ACTIVE" ? "Activo" : "Canjeado"}
                     </span>
-                  )}
+                    <span className="order-price">${order.totalAmount}.00</span>
+                  </div>
                 </div>
-                <div className="order-right">
-                  <span
-                    className={`order-status ${order.status === "ACTIVE" ? "status-active" : "status-used"}`}
-                  >
-                    {order.status === "ACTIVE" ? "Activo" : "Canjeado"}
-                  </span>
-                  <span className="order-price">${order.totalAmount}.00</span>
-                </div>
-              </div>
-            ))
-          )}
-        </section>
+              ))
+            )}
+          </section>
+        )}
 
         {/* DATOS */}
         <section className="perfil-datos">
@@ -136,15 +153,15 @@ function Profile() {
               <input type="email" name="email" value={form.email} onChange={handleChange} required />
             </div>
             <div className="perfil-campo">
-              <label>Nueva contrase&ntilde;a</label>
+              <label>Nueva contraseña</label>
               <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Dejar en blanco para no cambiar" />
             </div>
             <div className="perfil-campo">
-              <label>Repetir contrase&ntilde;a</label>
-              <input type="password" name="repeatPassword" value={form.repeatPassword} onChange={handleChange} placeholder="Repetir nueva contrase&ntilde;a" />
+              <label>Repetir contraseña</label>
+              <input type="password" name="repeatPassword" value={form.repeatPassword} onChange={handleChange} placeholder="Repetir nueva contraseña" />
             </div>
             <div className="perfil-campo">
-              <label>Rol</label>
+              <label>Rol actual</label>
               <input type="text" value={user.role} disabled />
             </div>
             <button className="btn-guardar" type="submit" disabled={saving}>

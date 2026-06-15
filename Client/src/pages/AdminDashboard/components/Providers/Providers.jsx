@@ -1,36 +1,72 @@
 import './Providers.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ProviderDetail from '../ProviderDetail/ProviderDetail'
-import mockProveedores from '../../../../data/Providers'
+import api from '../../../../api/axiosConfig' // 🟢 Axios centralizado
 
 function Providers() {
-    // El estado vive acá para que los cambios se reflejen en la tabla
-    const [proveedores, setProveedores] = useState(mockProveedores)
+    const [proveedores, setProveedores] = useState([]) // 💡 El estado se llama proveedores
     const [search, setSearch] = useState('')
     const [selectedProveedor, setSelectedProveedor] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        cargarSolicitudes();
+    }, []);
+
+    const cargarSolicitudes = () => {
+        setLoading(true);
+        api.get('/api/provider-solicitations')
+            .then((res) => {
+                const formateadas = res.data.map(s => ({
+                    id: s.id,
+                    nombre: `Solicitud #${s.id}`,
+                    descriptionFull: s.description || "Sin descripción",
+                    rubro: "Ver Detalle",
+                    ciudad: "Buenos Aires",
+                    cajas: 0,
+                    estado: s.solicitationStatus === 'CONFIRMADA' ? 'active' :
+                        s.solicitationStatus === 'RECHAZADA' ? 'suspended' : 'pending'
+                }));
+                // 🟢 CORREGIDO: Ahora usa setProveedores (con la P correspondiente) de tu useState
+                setProveedores(formateadas);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error cargando solicitudes:", err);
+                setLoading(false);
+            });
+    };
 
     const filtered = proveedores.filter((p) =>
-        p.nombre.toLowerCase().includes(search.toLowerCase()) ||
-        p.rubro.toLowerCase().includes(search.toLowerCase())
+        p.id.toString().includes(search) ||
+        p.descriptionFull.toLowerCase().includes(search.toLowerCase())
     )
 
-    // Función que actualiza el estado en el array y en el proveedor seleccionado
     const handleSuspend = (id) => {
-        const updated = proveedores.map((p) =>
-            p.id === id ? { ...p, estado: 'suspended' } : p
-        )
-        setProveedores(updated)
-        // Actualizamos también el proveedor que se está viendo en el detalle
-        setSelectedProveedor((prev) => prev ? { ...prev, estado: 'suspended' } : prev)
+        api.put(`/api/provider-solicitations/${id}`, { solicitationStatus: 'RECHAZADA' })
+            .then(() => {
+                const updated = proveedores.map((p) =>
+                    p.id === id ? { ...p, estado: 'suspended' } : p
+                )
+                setProveedores(updated)
+                setSelectedProveedor((prev) => prev ? { ...prev, estado: 'suspended' } : prev)
+            })
+            .catch(err => alert("Error al suspender: " + err.message));
     }
 
     const handleApprove = (id) => {
-        const updated = proveedores.map((p) =>
-            p.id === id ? { ...p, estado: 'active' } : p
-        )
-        setProveedores(updated)
-        setSelectedProveedor((prev) => prev ? { ...prev, estado: 'active' } : prev)
+        api.put(`/api/provider-solicitations/${id}`, { solicitationStatus: 'CONFIRMADA' })
+            .then(() => {
+                const updated = proveedores.map((p) =>
+                    p.id === id ? { ...p, estado: 'active' } : p
+                )
+                setProveedores(updated)
+                setSelectedProveedor((prev) => prev ? { ...prev, estado: 'active' } : prev)
+            })
+            .catch(err => alert("Error al aprobar: " + err.message));
     }
+
+    if (loading) return <div style={{ padding: '2rem' }}>Cargando solicitudes desde la base de datos...</div>
 
     if (selectedProveedor) {
         return (
@@ -46,22 +82,22 @@ function Providers() {
     return (
         <div className="proveedores">
             <div className="admin-tab-header">
-                <h1>Proveedores</h1>
-                <p>Listado y gestión de empresas prestadoras de servicios en BigBox.</p>
+                <h1>Solicitudes de Proveedores</h1>
+                <p>Listado transaccional y gestión de postulaciones desde la base de datos MySQL.</p>
             </div>
 
             <div className="prov-toolbar">
                 <input
                     type="text"
-                    placeholder="🔍 Buscar proveedor o rubro..."
+                    placeholder="🔍 Buscar por ID o texto de propuesta..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="prov-search"
                 />
                 <div className="prov-summary">
-                    <span>{proveedores.filter(p => p.estado === 'active').length} activos</span>
+                    <span>{proveedores.filter(p => p.estado === 'active').length} aprobados</span>
                     <span>{proveedores.filter(p => p.estado === 'pending').length} pendientes</span>
-                    <span>{proveedores.filter(p => p.estado === 'suspended').length} suspendidos</span>
+                    <span>{proveedores.filter(p => p.estado === 'suspended').length} rechazados</span>
                 </div>
             </div>
 
@@ -69,10 +105,10 @@ function Providers() {
                 <table className="prov-table">
                     <thead>
                         <tr>
-                            <th>Empresa</th>
-                            <th>Rubro</th>
+                            <th>ID Solicitud</th>
+                            <th>Extracto de Propuesta</th>
                             <th>Ciudad</th>
-                            <th>Cajas Activas</th>
+                            <th>Cajas</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -80,17 +116,19 @@ function Providers() {
                     <tbody>
                         {filtered.map((p) => (
                             <tr key={p.id}>
-                                <td className="prov-nombre">{p.nombre}</td>
-                                <td>{p.rubro}</td>
+                                <td className="prov-nombre">Solicitud #{p.id}</td>
+                                <td style={{ maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {p.descriptionFull}
+                                </td>
                                 <td>{p.ciudad}</td>
                                 <td className="prov-cajas">{p.cajas}</td>
                                 <td>
                                     <span className={`admin-badge ${p.estado === 'active' ? 'badge-approved' :
-                                            p.estado === 'suspended' ? 'badge-suspended' :
-                                                'badge-pending'
+                                        p.estado === 'suspended' ? 'badge-suspended' :
+                                            'badge-pending'
                                         }`}>
-                                        {p.estado === 'active' ? '● Activo' :
-                                            p.estado === 'suspended' ? '● Suspendido' :
+                                        {p.estado === 'active' ? '● Aprobado' :
+                                            p.estado === 'suspended' ? '● Rechazado' :
                                                 '● Pendiente'}
                                     </span>
                                 </td>
@@ -99,7 +137,7 @@ function Providers() {
                                         className="btn-prov-detail"
                                         onClick={() => setSelectedProveedor(p)}
                                     >
-                                        Ver detalle →
+                                        Evaluar Propuesta →
                                     </button>
                                 </td>
                             </tr>
@@ -111,4 +149,4 @@ function Providers() {
     )
 }
 
-export default Providers
+export default Providers;

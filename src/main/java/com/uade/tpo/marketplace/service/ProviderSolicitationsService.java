@@ -5,16 +5,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.uade.tpo.marketplace.entity.ProviderSolicitations;
 import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Provider.CreateProviderSolicitationRequest;
 import com.uade.tpo.marketplace.entity.dto.Provider.UpdateProviderSolicitationRequest;
 import com.uade.tpo.marketplace.entity.enums.SolicitationStatusEnum;
+import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.repository.ProviderSolicitationsRepository;
 import com.uade.tpo.marketplace.repository.UserRepository;
 
@@ -30,7 +29,12 @@ public class ProviderSolicitationsService implements
 
     @Override
     public List<ProviderSolicitations> getAll() {
-        return solicitationsRepository.findAll();
+        try {
+            return solicitationsRepository.findAll();
+        } catch (Exception e) {
+            System.out.println("❌ Error en getAll() del Service: " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -48,29 +52,30 @@ public class ProviderSolicitationsService implements
 
     @Override
     public Optional<ProviderSolicitations> create(CreateProviderSolicitationRequest entity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        if (entity == null) {
+            return Optional.empty();
+        }
+
+        ProviderSolicitations solicitation = new ProviderSolicitations();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el email: " + email));
+
+        solicitation.setUser(user); 
+        solicitation.setDescription(entity.getDescription());
+        solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA); 
+        solicitation.setCreatedAt(LocalDateTime.now());
+
+        try {
+            solicitationsRepository.save(solicitation);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al persistir la solicitud: " + e.getMessage());
+        }
+
+        return Optional.of(solicitation);
     }
-
-    // @PostMapping
-    // public ResponseEntity<ProviderSolicitations> create(@RequestBody
-    // CreateProviderSolicitationRequest request) {
-    // Optional<ProviderSolicitations> result =
-    // solicitationsService.create(request);
-
-    // if (result.isPresent()) {
-    // // Devolvemos solo los campos necesarios, sin referencias circulares
-    // ProviderSolicitations s = result.get();
-    // return ResponseEntity.status(201).body(Map.of(
-    // "id", s.getId(),
-    // "description", s.getDescription(),
-    // "solicitationStatus", s.getSolicitationStatus(),
-    // "createdAt", s.getCreatedAt()
-    // ));
-    // }
-    // return ResponseEntity.badRequest().build();
-    // }
-
+    
     @Override
     public Optional<ProviderSolicitations> update(UpdateProviderSolicitationRequest entity, Long id) {
         ProviderSolicitations solicitation = solicitationsRepository.findById(id).orElse(null);
@@ -79,16 +84,30 @@ public class ProviderSolicitationsService implements
             return Optional.empty();
         }
 
-        solicitation.setSolicitationStatus(entity.getSolicitationStatus());
-        solicitation.setUpdatedAt(LocalDateTime.now());
-
         try {
-            solicitationsRepository.save(solicitation);
-        } catch (Exception e) {
-            throw new RuntimeException("Error updating solicitation: " + e.getMessage());
-        }
+            // 🟢 CORREGIDO: Se le agregó la "c" correspondiente a 'solicitation'
+            solicitation.setSolicitationStatus(entity.getSolicitationStatus());
+            solicitation.setUpdatedAt(LocalDateTime.now());
 
-        return Optional.of(solicitation);
+            if (entity.getSolicitationStatus() == SolicitationStatusEnum.CONFIRMADA) {
+                if (solicitation.getUser() != null) {
+                    Long userId = solicitation.getUser().getId();
+                    User userReal = userRepository.findById(userId)
+                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+                    
+                    userReal.setRole(Role.PROVIDER);
+                    userRepository.save(userReal);
+                }
+            }
+
+            ProviderSolicitations saved = solicitationsRepository.save(solicitation);
+            return Optional.of(saved);
+
+        } catch (Exception e) {
+            System.out.println("====== ERROR CRÍTICO EN UPDATE ======");
+            e.printStackTrace(); 
+            throw new RuntimeException("Error interno: " + e.getMessage());
+        }
     }
 
     @Override
@@ -101,11 +120,9 @@ public class ProviderSolicitationsService implements
 
         try {
             solicitationsRepository.delete(solicitation);
+            return true;
         } catch (Exception e) {
             throw new RuntimeException("Error deleting solicitation: " + e.getMessage());
         }
-
-        return true;
     }
-
-}
+}   

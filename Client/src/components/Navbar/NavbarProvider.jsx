@@ -10,6 +10,10 @@ function NavbarProvider({ isAdmin = false }) {
     localStorage.removeItem('user_session');
     navigate('/login');
   };
+
+  // 🟢 Determinamos a qué ruta de perfil debe ir según el rol actual
+  const perfilPath = isAdmin ? "/admin/perfil" : "/provider/perfil";
+
   return (
     <nav className="navbar">
       <Link to={isAdmin ? "/admin/dashboard" : "/provider/dashboard"}>
@@ -30,10 +34,11 @@ function NavbarProvider({ isAdmin = false }) {
       </div>
 
       <div className="navbar-actions">
-
-        <Link to="/perfil">
+        {/* 🟢 CORRECCIÓN: Ahora el enlace cambia dinámicamente según el rol */}
+        <Link to={perfilPath}>
           <img src={ImgPerfilBBox} alt="User Profile" className="navbar-profile-avatar" />
         </Link>
+
         <button onClick={handleLogout} style={{
           cursor: 'pointer',
           padding: '6px 16px',

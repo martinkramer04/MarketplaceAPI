@@ -51,6 +51,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
                     .requestMatchers(HttpMethod.PUT, "/auth/me").authenticated()
                     .requestMatchers(HttpMethod.GET, publicGetEndpoints()).permitAll()
+                    .requestMatchers(HttpMethod.POST, publicPostEndpoints()).permitAll()
                     .requestMatchers(HttpMethod.GET, adminGetEndpoints()).hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, providerAdminGetEndpoints()).hasAnyRole("PROVIDER", "ADMIN")
                     .requestMatchers(HttpMethod.POST, adminPostEndpoints()).hasRole("ADMIN")
@@ -103,6 +104,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 "/api/categories/{categoryId}",
                 "/api/products",
                 "/api/boxes",
+                "/api/provider-solicitations",
         };
     }
     private String[] publicPostEndpoints() {

@@ -5,19 +5,22 @@ function ProviderDetail({ proveedor, onBack, onSuspend, onApprove }) {
     const isSuspended = proveedor.estado === 'suspended'
     const isPending = proveedor.estado === 'pending'
 
+    // 🟢 Evitamos errores de compilación si el objeto mapeado no cuenta con la lista de cajas
+    const cajasPublicadas = proveedor.cajasPublicadas || [];
+
     return (
         <div className="prov-detalle">
 
             <div className="pd-header">
-                <button className="btn-back-admin" onClick={onBack}>← Volver</button>
+                <button className="btn-back-admin" onClick={onBack}>← Volver al Listado</button>
                 <div>
-                    <h1>{proveedor.nombre}</h1>
+                    <h1>Solicitud #{proveedor.id}</h1>
                     <span className={`admin-badge ${proveedor.estado === 'active' ? 'badge-approved' :
-                            proveedor.estado === 'suspended' ? 'badge-suspended' :
-                                'badge-pending'
+                        proveedor.estado === 'suspended' ? 'badge-suspended' :
+                            'badge-pending'
                         }`}>
-                        {proveedor.estado === 'active' ? '● Activo' :
-                            proveedor.estado === 'suspended' ? '● Suspendido' :
+                        {proveedor.estado === 'active' ? '● Aprobado / Activo' :
+                            proveedor.estado === 'suspended' ? '● Suspendido / Rechazado' :
                                 '● Pendiente de aprobación'}
                     </span>
                 </div>
@@ -27,56 +30,43 @@ function ProviderDetail({ proveedor, onBack, onSuspend, onApprove }) {
 
                 <div className="pd-left">
                     <div className="pd-card">
-                        <h2>Datos de la Empresa</h2>
+                        <h2>Datos de la Postulación</h2>
                         <div className="pd-info-grid">
                             <div className="pd-info-item">
-                                <span>Responsable</span>
-                                <strong>{proveedor.ownerName}</strong>
+                                <span>Identificador</span>
+                                <strong>ID #{proveedor.id}</strong>
                             </div>
                             <div className="pd-info-item">
-                                <span>Email</span>
-                                <strong>{proveedor.email}</strong>
+                                <span>Ciudad Base</span>
+                                <strong>{proveedor.ciudad || 'Buenos Aires'}</strong>
                             </div>
                             <div className="pd-info-item">
-                                <span>Teléfono</span>
-                                <strong>{proveedor.phone}</strong>
-                            </div>
-                            <div className="pd-info-item">
-                                <span>Sitio Web</span>
-                                <strong>{proveedor.website || '—'}</strong>
-                            </div>
-                            <div className="pd-info-item">
-                                <span>Ciudad</span>
-                                <strong>{proveedor.ciudad}</strong>
-                            </div>
-                            <div className="pd-info-item">
-                                <span>Dirección</span>
-                                <strong>{proveedor.address}</strong>
-                            </div>
-                            <div className="pd-info-item">
-                                <span>Rubro</span>
-                                <strong>{proveedor.rubro}</strong>
+                                <span>Rubro Propuesto</span>
+                                <strong>{proveedor.rubro || 'General'}</strong>
                             </div>
                         </div>
                     </div>
 
                     <div className="pd-card">
-                        <h2>Descripción del Negocio</h2>
-                        <p className="pd-description">{proveedor.description}</p>
+                        <h2>Formulario de Propuesta Consolidado</h2>
+                        {/* 🟢 Renderizamos el texto completo que el usuario escribió en el Stepper */}
+                        <p className="pd-description" style={{ whiteSpace: 'pre-wrap', backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '6px', border: '1px solid #e9ecef' }}>
+                            {proveedor.descriptionFull}
+                        </p>
                     </div>
                 </div>
 
                 <div className="pd-right">
                     <div className="pd-card">
-                        <h2>Cajas Publicadas ({proveedor.cajasPublicadas.length})</h2>
-                        {proveedor.cajasPublicadas.length === 0 ? (
+                        <h2>Cajas Publicadas ({cajasPublicadas.length})</h2>
+                        {cajasPublicadas.length === 0 ? (
                             <div className="pd-empty">
-                                <span>📦</span>
-                                <p>Este proveedor aún no tiene cajas publicadas.</p>
+                                <span style={{ fontSize: '2rem' }}>📦</span>
+                                <p>Las cajas se habilitarán una vez que el proveedor sea aprobado e ingrese a su portal.</p>
                             </div>
                         ) : (
                             <div className="pd-cajas-list">
-                                {proveedor.cajasPublicadas.map((caja) => (
+                                {cajasPublicadas.map((caja) => (
                                     <div key={caja.id} className="pd-caja-item">
                                         <div className="pd-caja-thumb" />
                                         <div className="pd-caja-info">
@@ -93,32 +83,34 @@ function ProviderDetail({ proveedor, onBack, onSuspend, onApprove }) {
                         )}
                     </div>
 
-                    {/* ACCIONES — cambian según el estado actual */}
+                    {/* ACCIONES REALES CONECTADAS AL BACKEND */}
                     <div className="pd-card pd-actions-card">
-                        <h2>Acciones</h2>
-                        <div className="pd-actions">
+                        <h2>Acciones de Gestión</h2>
+                        <div className="pd-actions" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
                             {isPending && (
                                 <button
                                     className="btn-approve-prov"
                                     onClick={() => onApprove(proveedor.id)}
+                                    style={{ width: '100%', padding: '10px', fontWeight: '600', cursor: 'pointer' }}
                                 >
-                                    ✓ Aprobar Proveedor
+                                    ✓ Aprobar Proveedor (Cambiar Rol)
                                 </button>
                             )}
                             {isSuspended ? (
-                                // Si ya está suspendido, ofrecemos reactivar
                                 <button
                                     className="btn-approve-prov"
                                     onClick={() => onApprove(proveedor.id)}
+                                    style={{ width: '100%', padding: '10px', fontWeight: '600', cursor: 'pointer' }}
                                 >
-                                    ✓ Reactivar Cuenta
+                                    ✓ Reactivar Cuenta de Proveedor
                                 </button>
                             ) : (
                                 <button
                                     className="btn-suspend-prov"
                                     onClick={() => onSuspend(proveedor.id)}
+                                    style={{ width: '100%', padding: '10px', fontWeight: '600', backgroundColor: '#c62828', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                                 >
-                                    ⊘ Suspender Cuenta
+                                    ⊘ Rechazar / Suspender Solicitud
                                 </button>
                             )}
                         </div>

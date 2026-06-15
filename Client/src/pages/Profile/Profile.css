@@ -218,3 +218,14 @@
     font-size: 0.9rem;
     padding: 16px 0;
 }
+
+.perfil-body-admin {
+    display: flex !important;
+    justify-content: center;
+}
+
+.perfil-body-admin .perfil-datos {
+    width: 100%;
+    max-width: 550px;
+    /* Evita que el formulario se estire infinitamente */
+}

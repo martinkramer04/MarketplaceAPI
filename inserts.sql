@@ -126,4 +126,10 @@ INSERT INTO marketplace.order_details (id, box_name, quantity, unit_price, subto
 SET FOREIGN_KEY_CHECKS = 1;
 SET SQL_SAFE_UPDATES = 1;
 
+
+-- =====================================================================
+-- NOTA: Cambiio para que funcione la solicitud de proveedor.
+ALTER TABLE marketplace.provider_solicitations 
+MODIFY COLUMN description TEXT;
+-- =====================================================================
 SELECT '✅ ¡Base de datos BigBox inicializada con éxito total!' AS Resultado;
