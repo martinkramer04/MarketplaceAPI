@@ -149,8 +149,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     // GET: PROVIDER and ADMIN
     private String[] providerAdminGetEndpoints() {
         return new String[] {
-                "/api/provider-solicitations/{id}",
-                "/api/provider-solicitations/provider/{userId}",
+                "/api/provider-solicitations/**",
+                "/api/boxes/user/{userId}",
         };
     }
 

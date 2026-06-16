@@ -1,74 +1,86 @@
 import './MyRequestsTab.css'
-
-const mockRequests = [
-    {
-        id: 1,
-        title: 'Cena Gourmet para Dos',
-        category: 'Gastronomía',
-        price: 149,
-        submittedDate: '20 Oct 2024',
-        status: 'approved'
-    },
-    {
-        id: 2,
-        title: 'Clase de Cocina Urbana',
-        category: 'Gastronomía',
-        price: 89,
-        submittedDate: '24 Oct 2024',
-        status: 'pending'
-    },
-    {
-        id: 3,
-        title: 'Retiro de Montaña',
-        category: 'Aventura',
-        price: 210,
-        submittedDate: '15 Oct 2024',
-        status: 'rejected'
-    },
-]
+import { useState, useEffect } from 'react'
+import api from '../../../../../api/axiosConfig'
 
 const statusConfig = {
-    approved: { label: 'Aprobado', className: 'status-approved' },
-    pending: { label: 'Pendiente de Revisión', className: 'status-pending' },
-    rejected: { label: 'Rechazado', className: 'status-rejected' },
+    CONFIRMADA: { label: 'Aprobado', className: 'status-approved' },
+    GENERADA: { label: 'Pendiente de Revisión', className: 'status-pending' },
+    RECHAZADA: { label: 'Rechazado', className: 'status-rejected' },
 }
 
 function MyRequestsTab() {
+    const [requests, setRequests] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        let currentUserId = null;
+
+        // 1. Obtenemos de forma limpia quién está logueado
+        api.get('/auth/me')
+            .then((resUser) => {
+                currentUserId = resUser.data.id;
+                // 2. Traemos la lista completa autorizada para el entorno corporativo
+                return api.get('/api/provider-solicitations');
+            })
+            .then((resRequests) => {
+                // 3. Filtramos en caliente por las dudas de que el user_id de la relación venga diferido
+                // Opcional: si la relación en tu back devuelve el objeto user, filtramos por req.user.id
+                const misSolicitudes = resRequests.data;
+
+                setRequests(misSolicitudes);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Error al cargar solicitudes del proveedor:", err);
+                setLoading(false);
+            })
+    }, [])
+
+    if (loading) return <div style={{ padding: '2rem' }}>Cargando tus solicitudes desde MySQL...</div>
+
     return (
         <div className="my-requests">
             <div className="tab-header">
                 <h1>Mis Solicitudes de Cajas</h1>
-                <p>Seguí el estado de cada propuesta enviada a BigBox.</p>
+                <p>Seguí en tiempo real el estado de cada propuesta enviada a BigBox.</p>
             </div>
 
             <div className="requests-table-wrapper">
                 <table className="requests-table">
                     <thead>
                         <tr>
-                            <th>Propuesta</th>
-                            <th>Categoría</th>
-                            <th>Precio Est.</th>
-                            <th>Fecha</th>
+                            <th>ID Solicitud</th>
+                            <th>Propuesta / Descripción</th>
+                            <th>Fecha de Envío</th>
                             <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {mockRequests.map((req) => {
-                            const status = statusConfig[req.status]
-                            return (
-                                <tr key={req.id}>
-                                    <td className="req-title">{req.title}</td>
-                                    <td>{req.category}</td>
-                                    <td>${req.price}</td>
-                                    <td>{req.submittedDate}</td>
-                                    <td>
-                                        <span className={`status-badge ${status.className}`}>
-                                            {status.label}
-                                        </span>
-                                    </td>
-                                </tr>
-                            )
-                        })}
+                        {requests.length === 0 ? (
+                            <tr>
+                                <td colSpan="4" className="perfil-no-orders" style={{ textAlign: 'center', padding: '2rem' }}>
+                                    Aún no has enviado ninguna propuesta de caja.
+                                </td>
+                            </tr>
+                        ) : (
+                            requests.map((req) => {
+                                const status = statusConfig[req.solicitationStatus] || { label: req.solicitationStatus, className: 'status-pending' }
+                                return (
+                                    <tr key={req.id}>
+                                        <td className="req-id">#{req.id}</td>
+                                        <td className="req-title" style={{ maxWidth: '400px', whiteSpace: 'pre-wrap' }}>
+                                            {req.description}
+                                        </td>
+                                        <td>{req.createdAt ? new Date(req.createdAt).toLocaleDateString() : '—'}</td>
+                                        <td>
+                                            <span className={`status-badge ${status.className}`}>
+                                                {status.label}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -76,4 +88,4 @@ function MyRequestsTab() {
     )
 }
 
-export default MyRequestsTab
+export default MyRequestsTab;
