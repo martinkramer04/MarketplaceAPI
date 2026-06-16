@@ -56,6 +56,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers(HttpMethod.GET, providerAdminGetEndpoints()).hasAnyRole("PROVIDER", "ADMIN")
                     .requestMatchers(HttpMethod.POST, adminPostEndpoints()).hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, providerPostEndpoints()).hasRole("PROVIDER")
+                    .requestMatchers(HttpMethod.PUT, providerAdminPutEndpoints()).hasAnyRole("PROVIDER", "ADMIN")
                     .requestMatchers(HttpMethod.PUT, adminPutEndpoints()).hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, adminDeleteEndpoints()).hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, providerAdminDeleteEndpoints()).hasAnyRole("PROVIDER", "ADMIN")
@@ -153,6 +154,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 "/api/boxes/user/{userId}",
         };
     }
+    private String[] providerAdminPutEndpoints() {
+    return new String[] {
+            "/api/boxes/{id}",
+    };
+}
 
     // POST: PROVIDER only
     private String[] providerPostEndpoints() {

@@ -16,6 +16,10 @@ import com.uade.tpo.marketplace.entity.enums.SolicitationStatusEnum;
 import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.repository.ProviderSolicitationsRepository;
 import com.uade.tpo.marketplace.repository.UserRepository;
+import com.uade.tpo.marketplace.repository.BoxRepository;
+import com.uade.tpo.marketplace.entity.Box;
+import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
+import java.math.BigDecimal;
 
 @Service
 public class ProviderSolicitationsService implements
@@ -26,6 +30,9 @@ public class ProviderSolicitationsService implements
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private BoxRepository boxRepository;
 
     @Override
     public List<ProviderSolicitations> getAll() {
@@ -84,31 +91,32 @@ public class ProviderSolicitationsService implements
             return Optional.empty();
         }
 
-        try {
-            // 🟢 CORREGIDO: Se le agregó la "c" correspondiente a 'solicitation'
-            solicitation.setSolicitationStatus(entity.getSolicitationStatus());
-            solicitation.setUpdatedAt(LocalDateTime.now());
+        solicitation.setSolicitationStatus(entity.getSolicitationStatus());
+        solicitation.setUpdatedAt(LocalDateTime.now());
 
-            if (entity.getSolicitationStatus() == SolicitationStatusEnum.CONFIRMADA) {
-                if (solicitation.getUser() != null) {
-                    Long userId = solicitation.getUser().getId();
-                    User userReal = userRepository.findById(userId)
-                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
-                    
-                    userReal.setRole(Role.PROVIDER);
-                    userRepository.save(userReal);
-                }
-            }
+        if (entity.getSolicitationStatus() == SolicitationStatusEnum.CONFIRMADA) {
+            User user = solicitation.getUser();
+            user.setRole(Role.PROVIDER);
+            userRepository.save(user);
 
-            ProviderSolicitations saved = solicitationsRepository.save(solicitation);
-            return Optional.of(saved);
-
-        } catch (Exception e) {
-            System.out.println("====== ERROR CRÍTICO EN UPDATE ======");
-            e.printStackTrace(); 
-            throw new RuntimeException("Error interno: " + e.getMessage());
+            Box box = new Box();
+            box.setName(solicitation.getDescription().substring(0, Math.min(50, solicitation.getDescription().length())));
+            box.setDescription(solicitation.getDescription());
+            box.setUser(user);
+            box.setStatus(BoxStatusEnum.APPROVED);
+            box.setStock(0);
+            box.setPrice(BigDecimal.ZERO);
+            boxRepository.save(box);
         }
-    }
+
+        try {
+            solicitationsRepository.save(solicitation);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating solicitation: " + e.getMessage());
+        }
+
+        return Optional.of(solicitation);
+}
 
     @Override
     public boolean delete(Long id) {

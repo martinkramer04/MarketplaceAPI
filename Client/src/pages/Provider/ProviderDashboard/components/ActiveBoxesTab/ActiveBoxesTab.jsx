@@ -19,23 +19,20 @@ function ActiveBoxesTab({ onEditBox }) {
         api.get('/auth/me')
             .then(resUser => {
                 const userId = resUser.data.id;
-                return api.get(`/api/provider-solicitations/provider/${userId}`);
+                return api.get(`/api/boxes/user/${userId}`);
             })
-            .then(resSolicitations => {
-                // Filtramos solo las CONFIRMADA (aprobadas por el admin)
-                const aprobadas = resSolicitations.data.filter(
-                    s => s.solicitationStatus === 'CONFIRMADA'
-                );
+            .then(resBoxes => {
+                const aprobadas = resBoxes.data.filter(b => b.status === 'APPROVED');
 
-                const adaptadas = aprobadas.map(s => ({
-                    id: s.id,
-                    name: s.description?.substring(0, 40) || 'Experiencia Aprobada',
-                    sku: `SKU: EX-${s.id}00`,
-                    categories: ['APROBADA'],
+                const adaptadas = aprobadas.map(b => ({
+                    id: b.id,
+                    name: b.name || 'Caja de Experiencia',
+                    sku: `SKU: EX-${b.id}00`,
+                    categories: b.category ? [b.category.description.toUpperCase()] : ['SIN CATEGORÍA'],
                     activations: 0,
                     status: 'published',
-                    price: 0,
-                    shortDescription: s.description || '',
+                    price: b.price || 0,
+                    shortDescription: b.description || '',
                 }));
 
                 setBoxes(adaptadas);

@@ -74,6 +74,12 @@ public class BoxController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<BoxDto>> getByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(boxService.getByUserId(userId).stream()
+            .map(BoxDto::convertToDto)
+            .toList());
+    }
 
     // POST
     @PostMapping
