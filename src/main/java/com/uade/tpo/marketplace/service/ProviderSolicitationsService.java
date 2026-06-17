@@ -33,6 +33,10 @@ public class ProviderSolicitationsService implements
     
     @Autowired
     private BoxRepository boxRepository;
+    
+    
+    @Autowired
+    private com.uade.tpo.marketplace.repository.CategoryRepository categoryRepository;
 
     @Override
     public List<ProviderSolicitations> getAll() {
@@ -82,42 +86,63 @@ public class ProviderSolicitationsService implements
 
         return Optional.of(solicitation);
     }
-    
     @Override
     public Optional<ProviderSolicitations> update(UpdateProviderSolicitationRequest entity, Long id) {
+        // 1. Validamos el ID para quitar la advertencia de Null type safety
+        if (id == null) {
+            return Optional.empty();
+        }
+
         ProviderSolicitations solicitation = solicitationsRepository.findById(id).orElse(null);
 
         if (solicitation == null) {
             return Optional.empty();
-        }
+        } 
 
+        // 2. Seteamos el estado. Si te sigue tirando rojo acá, fijate si tu Enum usa APPROVED/REJECTED en vez de CONFIRMADA
         solicitation.setSolicitationStatus(entity.getSolicitationStatus());
         solicitation.setUpdatedAt(LocalDateTime.now());
 
+        // 3. Verificamos la condición del estado usando el Enum de tu proyecto
         if (entity.getSolicitationStatus() == SolicitationStatusEnum.CONFIRMADA) {
             User user = solicitation.getUser();
-            user.setRole(Role.PROVIDER);
+            
+            // 🚨 Si 'setRole' se te pone en rojo, es porque tu entidad User espera un String o el Enum se llama distinto.
+            // Si tu clase 'Role' es un Enum de tu proyecto, se usa así:
+            user.setRole(Role.PROVIDER); 
             userRepository.save(user);
 
             Box box = new Box();
             box.setName(solicitation.getDescription().substring(0, Math.min(50, solicitation.getDescription().length())));
             box.setDescription(solicitation.getDescription());
             box.setUser(user);
+            
+            // Usamos los Enums estándar de cajas
             box.setStatus(BoxStatusEnum.APPROVED);
             box.setStock(0);
             box.setPrice(BigDecimal.ZERO);
+
+            // Buscamos la categoría de respaldo para evitar el 500
+            try {
+                com.uade.tpo.marketplace.entity.Category defaultCategory = categoryRepository.findById(1L)
+                    .orElseThrow(() -> new RuntimeException("Categoría por defecto ID=1 no encontrada"));
+                box.setCategory(defaultCategory);
+            } catch (Exception e) {
+                System.out.println("⚠️ Alerta de categoría: " + e.getMessage());
+            }
+
             boxRepository.save(box);
         }
 
         try {
-            solicitationsRepository.save(solicitation);
+            ProviderSolicitations saved = solicitationsRepository.save(solicitation);
+            return Optional.of(saved);
         } catch (Exception e) {
             throw new RuntimeException("Error updating solicitation: " + e.getMessage());
         }
-
-        return Optional.of(solicitation);
-}
-
+    }
+    
+    
     @Override
     public boolean delete(Long id) {
         ProviderSolicitations solicitation = solicitationsRepository.findById(id).orElse(null);

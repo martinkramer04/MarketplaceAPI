@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class ProviderSolicitations extends BaseEntity {
     @JsonIgnore 
     private User user;
 
-    @Column
+    @Lob 
+    @Column(columnDefinition = "TEXT") 
     private String description;
 }

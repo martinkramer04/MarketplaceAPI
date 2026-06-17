@@ -1,11 +1,11 @@
 import "./Cart.css";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../Context/useCart";
-
+import { useToast } from "../../Context/ToastContext";
 function Cart() {
   const navigate = useNavigate();
   const { cartItems, addToCart, decreaseQuantity, removeFromCart, clearCart } = useCart();
-
+  const toast = useToast();
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
@@ -26,15 +26,55 @@ function Cart() {
                   <p>$ {item.price}</p>
                   <p>Cantidad: {item.quantity}</p>
                   <div className="cart-actions">
-                    <button className="qty-btn" onClick={() => decreaseQuantity(item.id)}>-</button>
+                    {/* 🟢 Toast informativo al disminuir cantidad */}
+                    <button
+                      className="qty-btn"
+                      onClick={() => {
+                        decreaseQuantity(item.id);
+                        toast.info(`Se redujo la cantidad de "${item.name}".`);
+                      }}
+                    >
+                      -
+                    </button>
+
                     <span className="qty-value">{item.quantity}</span>
-                    <button className="qty-btn" onClick={() => addToCart(item)}>+</button>
-                    <button className="remove-btn" onClick={() => removeFromCart(item.id)}>Eliminar</button>
+
+                    {/* 🟢 Toast de éxito al aumentar cantidad */}
+                    <button
+                      className="qty-btn"
+                      onClick={() => {
+                        addToCart(item);
+                        toast.success(`Se agregó otro/a "${item.name}".`);
+                      }}
+                    >
+                      +
+                    </button>
+
+                    {/* 🟢 REQUERIDO: Toast de error/alerta al eliminar un producto específico */}
+                    <button
+                      className="remove-btn"
+                      onClick={() => {
+                        removeFromCart(item.id);
+                        toast.error(`"${item.name}" fue eliminado del carrito.`);
+                      }}
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
-            <button className="clear-cart-btn" onClick={clearCart}>Vaciar carrito</button>
+
+            {/* 🟢 REQUERIDO: Toast de error/alerta al vaciar por completo el carrito */}
+            <button
+              className="clear-cart-btn"
+              onClick={() => {
+                clearCart();
+                toast.error("Se vació el carrito por completo.");
+              }}
+            >
+              Vaciar carrito
+            </button>
           </>
         )}
       </div>
@@ -64,5 +104,4 @@ function Cart() {
     </div>
   );
 }
-
 export default Cart;

@@ -21,6 +21,8 @@ import Login from "./components/Login/Login"
 import Register from "./pages/Register/Register";
 
 import ScrollToTop from "./Context/ScrollToTop";
+import { ToastProvider } from "./Context/ToastContext";
+import ToastContainer from "./components/Toast/Toast";
 
 function AppLayout() {
   const location = useLocation();
@@ -77,9 +79,12 @@ function AppLayout() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppLayout />
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <AppLayout />
+        <ToastContainer />
+      </BrowserRouter>
+    </ToastProvider>
   );
 }
 

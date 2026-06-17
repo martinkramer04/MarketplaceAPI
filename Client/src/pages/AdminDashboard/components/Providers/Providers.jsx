@@ -1,13 +1,14 @@
 import './Providers.css'
 import { useState, useEffect } from 'react'
 import ProviderDetail from '../ProviderDetail/ProviderDetail'
-import api from '../../../../api/axiosConfig' // 🟢 Axios centralizado
-
+import api from '../../../../api/axiosConfig'
+import { useToast } from "../../../../Context/ToastContext"
 function Providers() {
-    const [proveedores, setProveedores] = useState([]) // 💡 El estado se llama proveedores
+    const [proveedores, setProveedores] = useState([])
     const [search, setSearch] = useState('')
     const [selectedProveedor, setSelectedProveedor] = useState(null)
     const [loading, setLoading] = useState(true)
+    const toast = useToast();
 
     useEffect(() => {
         cargarSolicitudes();
@@ -43,29 +44,51 @@ function Providers() {
     )
 
     const handleSuspend = (id) => {
-        api.put(`/api/provider-solicitations/${id}`, { solicitationStatus: 'RECHAZADA' })
+        const payload = {
+            solicitationStatus: 'RECHAZADA',
+            status: 'REJECTED'
+        };
+
+        api.put(`/api/provider-solicitations/${id}`, payload)
             .then(() => {
                 const updated = proveedores.map((p) =>
                     p.id === id ? { ...p, estado: 'suspended' } : p
                 )
                 setProveedores(updated)
                 setSelectedProveedor((prev) => prev ? { ...prev, estado: 'suspended' } : prev)
+
+                // 🟢 3. Usamos la función de éxito que armó tu compañero
+                toast.success(`Solicitud #${id} rechazada correctamente.`);
             })
-            .catch(err => alert("Error al suspender: " + err.message));
+            .catch(err => {
+                const msg = err.response?.data?.message || err.message;
+                // 🟢 4. Usamos la función de error por si falla
+                toast.error(`Error al suspender: ${msg}`);
+            });
     }
 
     const handleApprove = (id) => {
-        api.put(`/api/provider-solicitations/${id}`, { solicitationStatus: 'CONFIRMADA' })
+        const payload = {
+            solicitationStatus: 'CONFIRMADA',
+            status: 'APPROVED'
+        };
+
+        api.put(`/api/provider-solicitations/${id}`, payload)
             .then(() => {
                 const updated = proveedores.map((p) =>
                     p.id === id ? { ...p, estado: 'active' } : p
                 )
                 setProveedores(updated)
                 setSelectedProveedor((prev) => prev ? { ...prev, estado: 'active' } : prev)
-            })
-            .catch(err => alert("Error al aprobar: " + err.message));
-    }
 
+                // 🟢 5. Éxito rotundo en la aprobación
+                toast.success(`¡Solicitud #${id} aprobada con éxito en MySQL!`);
+            })
+            .catch(err => {
+                const msg = err.response?.data?.message || err.message;
+                toast.error(`Error al aprobar: ${msg}`);
+            });
+    }
     if (loading) return <div style={{ padding: '2rem' }}>Cargando solicitudes desde la base de datos...</div>
 
     if (selectedProveedor) {

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 // import { useNavigate } from 'react-router-dom'
 import boxes from "../../data/boxes";
 import { useCart } from "../../Context/useCart";
+import { useToast } from "../../Context/ToastContext";
 
 function BoxDetail() {
   const { addToCart } = useCart();
@@ -10,6 +11,7 @@ function BoxDetail() {
   const { id } = useParams();
   // const navigate = useNavigate()
   const box = boxes.find((b) => b.id === parseInt(id));
+  const toast = useToast();
 
   if (!box) {
     return <p className="not-found">Box not found.</p>;
@@ -45,7 +47,14 @@ function BoxDetail() {
         </p>
 
         <div className="box-detail-actions">
-          <button className="btn-add-cart" onClick={() => addToCart(box)}>
+          {/* 🟢 ACTUALIZADO: Ahora suma al carrito y dispara el Toast de éxito en simultáneo */}
+          <button
+            className="btn-add-cart"
+            onClick={() => {
+              addToCart(box);
+              toast.success(`¡"${box.name}" añadida al carrito con éxito!`);
+            }}
+          >
             Agregar caja al carrito
           </button>
           <div className="box-detail-shipping">
