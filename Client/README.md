@@ -1,16 +1,35 @@
-# React + Vite
+# BigBox Marketplace API - Frontend (Grupo 14)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto corresponde al desarrollo de la capa de Frontend de la plataforma de regalos de experiencias BigBox, estructurado bajo el paradigma de una Single Page Application (SPA).
 
-Currently, two official plugins are available:
+## 🛠️ Arquitectura y Tecnologías Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* **React**: Librería principal para la interfaz de usuario, basada en componentes reutilizables y gestión de estados dinámicos.
+* **Vite**: Entorno de desarrollo moderno y empaquetador de módulos de alta velocidad (con HMR nativo).
+* **React Router DOM**: Gestor de enrutamiento dinámico en el cliente, permitiendo simular múltiples vistas dentro de un único archivo de entrada `index.html`.
+* **CSS3**: Estilos adaptados con diseño responsivo para soportar dispositivos móviles y computadoras de escritorio.
 
-## React Compiler
+## ⚙️ Características Clave Implementadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **Vidriera y Filtros Dinámicos**: Buscador y filtrado en tiempo real de cajas de experiencias gastronómicas, de aventura y bienestar.
+* **Flujo de Compra Optimizado**: Migración de la caja de cupones de descuento al resumen de la orden (`OrderSummary`) según la retroalimentación de experiencia de usuario (UX).
+* **Paneles de Gestión Interactivos**: Vistas especializadas para los roles de Administrador y Proveedor (incluyendo simulación interactiva mediante estados de React para la aprobación y suspensión de cuentas).
 
-## Expanding the ESLint configuration
+## 🚀 Instrucciones para ejecutar el proyecto localmente
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Dado que el proyecto se entrega sin la carpeta `node_modules` por razones de optimización de peso del archivo comprimido, siga estos pasos para inicializarlo:
+
+1. **Instalar dependencias:**
+   Abra la terminal en la raíz de la carpeta del proyecto y descargue las librerías necesarias con:
+   ```bash
+   npm install
+2. **Levantar el servidor local:**
+Una vez completada la instalación de los módulos, ejecute el servidor de desarrollo de Vite:
+    Bash
+    npm run dev
+3. **Acceso al sistema:**
+    Haga clic en la dirección local provista por la consola (habitualmente http://localhost:5173).
+4. **Integrantes**
+    [Kramer Martin]
+    [Mariano Moretti]
+    [German Picas]
