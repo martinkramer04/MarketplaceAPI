@@ -1,135 +1,173 @@
-use marketplace
--- =====================================================================
--- 🔥 SCRIPT DE INICIALIZACIÓN DE BASE DE DATOS - MARKETPLACE BIGBOX
--- 💡 Instrucciones: Copiar y ejecutar todo el bloque junto en MySQL Workbench
--- =====================================================================
+USE marketplace;
 
--- 🔓 Desactivamos el modo seguro y la verificación de claves foráneas temporalmente
 SET SQL_SAFE_UPDATES = 0;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- =====================================================================
--- 🧹 PASO 1: LIMPIEZA TOTAL DE TABLAS
+-- LIMPIEZA TOTAL
 -- =====================================================================
 TRUNCATE TABLE marketplace.order_details;
 TRUNCATE TABLE marketplace.reviews;
 TRUNCATE TABLE marketplace.orders;
 TRUNCATE TABLE marketplace.box_products;
 TRUNCATE TABLE marketplace.image_table;
-TRUNCATE TABLE marketplace.boxes; 
+TRUNCATE TABLE marketplace.boxes;
 TRUNCATE TABLE marketplace.provider_solicitations;
 TRUNCATE TABLE marketplace.payment_methods;
 TRUNCATE TABLE marketplace.discounts;
-TRUNCATE TABLE marketplace.products;          
-TRUNCATE TABLE marketplace.categories;        
-TRUNCATE TABLE marketplace.providers;         
-TRUNCATE TABLE marketplace.role;              
-TRUNCATE TABLE marketplace.user; 
+TRUNCATE TABLE marketplace.products;
+TRUNCATE TABLE marketplace.categories;
+TRUNCATE TABLE marketplace.user;
 
 -- =====================================================================
--- 👥 PASO 2: INSERCIÓN DE USUARIOS (Basado en tu Enum Role real)
+-- USUARIOS
+-- Contraseña de todos: password (hasheada con BCrypt rounds=10)
 -- =====================================================================
-INSERT INTO marketplace.user (id, username, firstname, lastname, email, password, role) VALUES
-(1, 'admin_bigbox', 'Admin', 'Principal', 'admin@bigbox.com', 's3cur3', 'ADMIN'),
-(2, 'gourmet_partner', 'Gourmet', 'Partner SRL', 'proveedor.gourmet@bigbox.com', 's3cur3', 'PROVIDER'),
-(3, 'spa_wellness', 'Spa', 'Wellness Inc', 'proveedor.spa@bigbox.com', 's3cur3', 'PROVIDER'),
-(4, 'juan_perez', 'Juan', 'Pérez', 'juan.perez@gmail.com', 's3cur3', 'USER'),
-(5, 'maria_rod', 'María', 'Rodriguez', 'maria.rod@gmail.com', 's3cur3', 'USER');
-INSERT INTO marketplace.users (firstname, lastname, email, password, role) 
-VALUES 
-('Admin', 'General', 'admin@gmail.com', '$2a$10$v0vI4l7uG2w6N8fK8z.XTeG.mXlqXQ7z1Y7JOnD8rE3W2q2mJy8r2', 'ADMIN'),
-
-('Proveedor', 'Oficial', 'provider@gmail.com', '$2a$10$v0vI4l7uG2w6N8fK8z.XTeG.mXlqXQ7z1Y7JOnD8rE3W2q2mJy8r2', 'PROVIDER'),
-
-('Usuario', 'Común', 'user@gmail.com', '$2a$10$v0vI4l7uG2w6N8fK8z.XTeG.mXlqXQ7z1Y7JOnD8rE3W2q2mJy8r2', 'USER');
-
+INSERT INTO marketplace.user (firstname, lastname, email, username, password, role) VALUES
+('Admin', 'BigBox', 'admin@bigbox.com', 'admin', '$2a$10$951OyvbXiZTcFA8gAnsK4OY5PZuo7fBHrZonvSyux2nZOU3.AFleu', 'ADMIN'),
+('Carlos', 'Mendoza', 'carlos@bigbox.com', 'carlos', '$2a$10$951OyvbXiZTcFA8gAnsK4OY5PZuo7fBHrZonvSyux2nZOU3.AFleu', 'PROVIDER'),
+('Ana', 'Beltrán', 'ana@bigbox.com', 'ana', '$2a$10$951OyvbXiZTcFA8gAnsK4OY5PZuo7fBHrZonvSyux2nZOU3.AFleu', 'PROVIDER'),
+('Lucas', 'Torres', 'lucas@bigbox.com', 'lucas', '$2a$10$951OyvbXiZTcFA8gAnsK4OY5PZuo7fBHrZonvSyux2nZOU3.AFleu', 'USER'),
+('Sofía', 'Ramírez', 'sofia@bigbox.com', 'sofia', '$2a$10$951OyvbXiZTcFA8gAnsK4OY5PZuo7fBHrZonvSyux2nZOU3.AFleu', 'USER');
 -- =====================================================================
--- 🗂️ PASO 3: CATEGORÍAS (Asegura los IDs para las cajas de la vidriera)
+-- CATEGORÍAS
 -- =====================================================================
-INSERT INTO marketplace.categories (id, name, description, user_id) VALUES
-(1, 'Experiencias Gastronómicas', 'Cenas, maridajes y experiencias culinarias', 1),
-(2, 'Aventura', 'Paracaidismo, trekking y adrenalina pura', 1),
-(3, 'Desayunos, Almuerzos y Tapeos', 'Experiencias de desayuno, brunch y tapas', 1),
-(4, 'Estar Bien', 'Tratamientos de spa, masajes y relax holístico', 1),
-(5, 'Ocasiones', 'Regalos pensados para momentos especiales', 1),
-(6, 'Mix', 'Combinación de experiencias variadas', 1),
-(7, 'Cursos y Talleres', 'Aprendé algo nuevo con expertos', 1),
-(8, 'Delivery y Take Away', 'Experiencias para disfrutar en casa', 1),
-(9, 'Entretenimiento', 'Shows, eventos y actividades culturales', 1),
-(10, 'Estadías', 'Hoteles y escapadas de fin de semana', 1);
+INSERT INTO marketplace.categories (name, description, user_id) VALUES
+('Gastronomía', 'Cenas, maridajes y experiencias culinarias', 1),
+('Aventura', 'Paracaidismo, trekking y adrenalina pura', 1),
+('Bienestar', 'Tratamientos de spa, masajes y relax holístico', 1),
+('Entretenimiento', 'Shows, eventos y actividades culturales', 1),
+('Estadías', 'Hoteles y escapadas de fin de semana', 1),
+('Cursos y Talleres', 'Aprendé algo nuevo con expertos', 1),
+('Delivery y Take Away', 'Experiencias para disfrutar en casa', 1),
+('Ocasiones especiales', 'Regalos pensados para momentos únicos', 1);
 
 -- =====================================================================
--- 🏷️ PASO 4: CUPONES DE DESCUENTO (Mapeado con tu Enum real)
+-- DESCUENTOS
 -- =====================================================================
-INSERT INTO marketplace.discounts (id, name, percentage, is_active, code, discount_type) VALUES
-(1, 'Descuento de Bienvenida', 10, 1, 'BIENVENIDA10', 'CUPON'),
-(2, 'Especial Gastro', 15, 1, 'GASTRO15', 'GENERAL');
+INSERT INTO marketplace.discounts (name, percentage, is_active, code, discount_type) VALUES
+('Descuento de Bienvenida', 10, 1, 'BIENVENIDA10', 'CUPON'),
+('Especial Gastro', 15, 1, 'GASTRO15', 'GENERAL'),
+('Promo Aventura', 20, 1, 'AVENTURA20', 'CUPON');
 
 -- =====================================================================
--- 🛠️ PASO 5: PRODUCTOS/PRESTACIONES (Los servicios dentro de las cajas)
+-- PRODUCTOS
 -- =====================================================================
-INSERT INTO marketplace.products (id, name, description, user_id) VALUES
-(1, 'Cena de Pasos Premium', 'Menú degustación exclusivo con maridaje.', 2),
-(2, 'Masaje Descontrasturante', 'Sesión de 60 minutos con aceites esenciales.', 3),
-(3, 'Salto en Paracaídas', 'Salto biplaza a 3000 metros de altura.', 1),
-(4, 'Pase Familiar Parque Temático', 'Acceso ilimitado para 4 personas.', 1);
+INSERT INTO marketplace.products (name, description, price, stock, category_id, user_id) VALUES
+('Cena de Pasos Premium', 'Menú degustación de 7 pasos con maridaje de vinos seleccionados.', 89.00, 50, 1, 2),
+('Masaje Descontracturante', 'Sesión de 60 minutos con aceites esenciales importados.', 65.00, 30, 3, 3),
+('Salto en Paracaídas', 'Salto biplaza a 3500 metros de altura con instructor certificado.', 180.00, 20, 2, 2),
+('Clase de Cocina Italiana', 'Aprendé a preparar pasta fresca y tiramisú con chef profesional.', 55.00, 15, 6, 3),
+('Noche en Hotel Boutique', 'Una noche para dos con desayuno incluido en hotel 5 estrellas.', 220.00, 10, 5, 2),
+('Caja Gourmet Delivery', 'Selección de quesos, fiambres y vinos premium a domicilio.', 75.00, 40, 7, 3);
 
 -- =====================================================================
--- 📦 PASO 6: INSERCIÓN DE CAJAS (Boxes)
+-- CAJAS (BOXES)
+-- PROVIDER 1 = Carlos (id=2) → Gastronomía y Aventura
+-- PROVIDER 2 = Ana (id=3) → Bienestar y Talleres
 -- =====================================================================
-INSERT INTO marketplace.boxes (id, name, description, price, stock, category_id, user_id) VALUES
-(1, 'Escapada Gourmet', 'La máxima experiencia gastronómica para los entusiastas de la comida.', 149.00, 20, 1, 2),
-(2, 'Retiro de Bienestar', 'Recargá energías con una selección de tratamientos de spa premium.', 199.00, 15, 6, 3),
-(3, 'Inyección de Adrenalina', 'Para los buscadores de emociones extremas.', 249.00, 10, 2, 1),
-(4, 'Diversión en Familia', 'Creá recuerdos duraderos con pases para parques temáticos y talleres.', 129.00, 30, 7, 1);
+INSERT INTO marketplace.boxes (name, description, price, stock, category_id, user_id, status) VALUES
+
+-- Carlos - APPROVED (aparecen en Explore)
+('Escapada Gourmet', 'Una noche mágica para los amantes de la gastronomía. Incluye cena de 7 pasos con maridaje de vinos en restaurante top, traslado en vehículo premium y recuerdo de la velada. Ideal para celebrar momentos especiales en pareja.', 149.00, 20, 1, 2, 'APPROVED'),
+('Adrenalina Total', 'Para los que buscan el límite. Esta caja incluye un salto en paracaídas biplaza con instructor certificado, almuerzo post-aventura y foto profesional del salto. Una experiencia que no vas a olvidar nunca.', 249.00, 10, 2, 2, 'APPROVED'),
+('Noche de Lujo', 'Regalate una noche en el mejor hotel boutique de la ciudad. Incluye habitación superior para dos personas, desayuno gourmet, una copa de bienvenida y late checkout. El descanso que merecés.', 320.00, 8, 5, 2, 'APPROVED'),
+
+-- Carlos - PENDING
+('Picnic al Atardecer', 'Una experiencia romántica al aire libre con canasta gourmet, manta, decoración floral y bebidas premium. Para disfrutar del atardecer en los mejores parques de la ciudad.', 95.00, 15, 8, 2, 'PENDING'),
+
+-- Carlos - REJECTED
+('Tour de Bares Secretos', 'Recorrido nocturno por los bares más exclusivos y escondidos de la ciudad con guía especializado y primera consumición incluida en cada parada.', 80.00, 25, 4, 2, 'REJECTED'),
+
+-- Ana - APPROVED (aparecen en Explore)
+('Spa Day Completo', 'Un día entero dedicado a tu bienestar. Incluye masaje descontracturante de 60 minutos, acceso al circuito de hidroterapia, facial express y merienda saludable. Salís renovada por completo.', 199.00, 15, 3, 3, 'APPROVED'),
+('Taller de Pasta Fresca', 'Aprendé los secretos de la cocina italiana con un chef profesional. En 3 horas vas a dominar la pasta fresca, la salsa clásica y el tiramisú. Todo el material incluido, te llevás lo que cocinás.', 89.00, 12, 6, 3, 'APPROVED'),
+('Caja Gourmet en Casa', 'Sin salir de tu hogar podés vivir una experiencia gastronómica de primer nivel. Recibís una selección curada de quesos artesanales, fiambres premium, conservas gourmet y una botella de vino de autor.', 110.00, 30, 7, 3, 'APPROVED'),
+
+-- Ana - PENDING
+('Retiro de Meditación', 'Una jornada completa de desconexión total. Incluye sesión de meditación guiada, yoga al amanecer, almuerzo vegetariano y taller de respiración consciente en entorno natural.', 145.00, 10, 3, 3, 'PENDING'),
+
+-- Ana - REJECTED  
+('Clase de Cerámica', 'Descubrí el arte de la cerámica con un taller de 4 horas con alfarero profesional. Todos los materiales incluidos y te llevás tu pieza terminada.', 70.00, 20, 6, 3, 'REJECTED');
 
 -- =====================================================================
--- 🖼️ PASO 7: IMÁGENES DE LAS CAJAS (image_table)
+-- IMÁGENES (URLs de Unsplash que cargan correctamente)
 -- =====================================================================
-INSERT INTO marketplace.image_table (id, created_at, is_deleted, updated_at, image, name, box_id) VALUES
-(1, NULL, 0, NULL, 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400', 'Portada Gourmet', 1),
-(2, NULL, 0, NULL, 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400', 'Portada Bienestar', 2),
-(3, NULL, 0, NULL, 'https://images.unsplash.com/photo-1601024445121-e5b82f020549?w=400', 'Portada Adrenalina', 3),
-(4, NULL, 0, NULL, 'https://saposyprincesas.elmundo.es/assets/2024/09/Experiencias-imprescindibles-en-familia-Destacada.jpg', 'Portada Familia', 4);
+INSERT INTO marketplace.image_table (created_at, is_deleted, updated_at, image, name, box_id) VALUES
+-- Escapada Gourmet
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80', 'Portada Gourmet', 1),
+-- Adrenalina Total
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1601024445121-e5b82f020549?w=800&q=80', 'Portada Adrenalina', 2),
+-- Noche de Lujo
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80', 'Portada Hotel', 3),
+-- Picnic al Atardecer
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=800&q=80', 'Portada Picnic', 4),
+-- Tour de Bares
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&q=80', 'Portada Bares', 5),
+-- Spa Day
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80', 'Portada Spa', 6),
+-- Taller de Pasta
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=80', 'Portada Pasta', 7),
+-- Caja Gourmet en Casa
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1452195100486-9cc805987862?w=800&q=80', 'Portada Delivery', 8),
+-- Retiro de Meditación
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80', 'Portada Meditacion', 9),
+-- Clase de Cerámica
+(NOW(), 0, NOW(), 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80', 'Portada Ceramica', 10);
 
 -- =====================================================================
--- ⚙️ PASO 8: RELACIÓN MUCHOS A MUCHOS (box_products)
+-- RELACIÓN BOX - PRODUCTOS
 -- =====================================================================
 INSERT INTO marketplace.box_products (box_id, product_id) VALUES
-(1, 1), 
-(2, 2), 
-(3, 3), 
-(4, 4); 
+(1, 1), -- Escapada Gourmet → Cena de Pasos
+(2, 3), -- Adrenalina Total → Salto en Paracaídas
+(3, 5), -- Noche de Lujo → Noche en Hotel
+(6, 2), -- Spa Day → Masaje
+(7, 4), -- Taller de Pasta → Clase de Cocina
+(8, 6); -- Caja Gourmet en Casa → Delivery
 
 -- =====================================================================
--- 🌟 PASO 9: RESEÑAS DE EXPERIENCIAS (Reviews)
+-- MÉTODOS DE PAGO
 -- =====================================================================
-INSERT INTO marketplace.reviews (id, rating, status, comment, user_id, box_id) VALUES
-(1, 5, 'REVIEWED', 'Increíble la cena de pasos, el restaurante asignado fue excelente.', 4, 1),
-(2, 4, 'REVIEWED', 'El hotel de campo y los masajes fueron super relajantes.', 5, 2);
+INSERT INTO marketplace.payment_methods (name, description, user_id) VALUES
+('Tarjeta de Crédito', 'Visa, Mastercard y American Express', 1),
+('Tarjeta de Débito', 'Todas las tarjetas de débito', 1),
+('Transferencia Bancaria', 'CBU o CVU', 1);
 
 -- =====================================================================
--- 💳 PASO 10: MÉTODOS DE PAGO Y FLUJO DE COMPRA (Con status NULL seguro)
+-- RESEÑAS
 -- =====================================================================
-INSERT INTO marketplace.payment_methods (id, name, description, user_id) VALUES
-(1, 'Tarjeta de Crédito Visa', 'Terminada en 4321', 4);
-
-INSERT INTO marketplace.orders (id, total_amount, status, card_holder_name, user_id, payment_method_id, discount_id) VALUES
-(1, 149.00, NULL, 'JUAN PEREZ', 4, 1, NULL);
-
-INSERT INTO marketplace.order_details (id, box_name, quantity, unit_price, subtotal, order_id, box_id) VALUES
-(1, 'Escapada Gourmet', 1, 149.00, 149.00, 1, 1);
+INSERT INTO marketplace.reviews (rating, status, comment, user_id, box_id) VALUES
+(5, 'REVIEWED', 'La cena fue absolutamente increíble, el servicio impecable y los vinos seleccionados perfectamente. ¡Lo recomiendo a todos!', 4, 1),
+(4, 'REVIEWED', 'El spa estuvo muy bien, el masaje fue relajante y el circuito de agua una maravilla. Le faltó un poco más de tiempo libre.', 5, 6),
+(5, 'REVIEWED', 'El salto fue una experiencia única. El instructor muy profesional y la foto quedó espectacular. ¡Volvería a hacerlo!', 4, 2),
+(4, 'REVIEWED', 'El taller de pasta estuvo buenísimo, aprendí muchísimo y el chef fue muy paciente. Me llevé todo lo que cociné.', 5, 7);
 
 -- =====================================================================
--- 🔒 RE-ACTIVACIÓN DE SEGURIDAD
+-- SOLICITUDES DE PROVEEDOR (para demo del flujo become-provider)
+-- Lucas quiere convertirse en proveedor - GENERADA (pendiente)
+-- Sofía intentó pero fue rechazada
 -- =====================================================================
+INSERT INTO marketplace.provider_solicitations (solicitation_status, description, user_id) VALUES
+('GENERADA', 'Soy instructor de deportes extremos con 10 años de experiencia. Me gustaría ofrecer experiencias de kayak, escalada y rappel en la zona de Mendoza. Cuento con todos los permisos y certificaciones necesarias.', 4),
+('RECHAZADA', 'Quisiera ofrecer clases de pintura y arte abstracto para adultos y niños en mi taller del centro.', 5);
+
+-- =====================================================================
+-- ORDEN DE EJEMPLO
+-- =====================================================================
+INSERT INTO marketplace.orders (total_amount, status, card_holder_name, user_id, payment_method_id) VALUES
+(149.00, 'GENERADA', 'LUCAS TORRES', 4, 1);
+
+INSERT INTO marketplace.order_details (box_name, quantity, unit_price, subtotal, order_id, box_id) VALUES
+('Escapada Gourmet', 1, 149.00, 149.00, 1, 1);
+
+-- =====================================================================
+-- AJUSTES DE COLUMNAS (por si no están aplicados)
+-- =====================================================================
+ALTER TABLE marketplace.provider_solicitations MODIFY COLUMN description TEXT;
+ALTER TABLE marketplace.boxes MODIFY COLUMN description TEXT;
+
 SET FOREIGN_KEY_CHECKS = 1;
 SET SQL_SAFE_UPDATES = 1;
 
-
--- =====================================================================
--- NOTA: Cambiio para que funcione la solicitud de proveedor.
-ALTER TABLE marketplace.provider_solicitations 
-MODIFY COLUMN description TEXT;
--- =====================================================================
-SELECT '✅ ¡Base de datos BigBox inicializada con éxito total!' AS Resultado;
+SELECT '✅ Base de datos BigBox inicializada con éxito.' AS Resultado;

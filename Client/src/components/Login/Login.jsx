@@ -23,31 +23,32 @@ function Login() {
     setError(null);
     setLoading(true);
 
-    api
-      .post("/auth/authenticate", {
-        email: form.email,
-        password: form.password,
-      })
-      .then((res) => {
+    api.post('/auth/authenticate', {
+      email: form.email,
+      password: form.password
+    })
+      .then(res => {
         const token = res.data.accessToken || res.data.access_token;
-        if (!token) throw new Error("Token no recibido del servidor");
-        localStorage.setItem("access_token", token.trim());
-        localStorage.setItem("user_session", "active");
-        return api.get("/auth/me");
+        if (!token) throw new Error('Token no recibido');
+        localStorage.setItem('access_token', token);
+        localStorage.setItem('user_session', 'active');
+        return api.get('/auth/me');
       })
-      .then((res) => {
+      .then(res => {
+        const user = res.data;
         setLoading(false);
-        const role = res.data.role
-          ?.toString()
-          .replace("ROLE_", "")
-          .toUpperCase();
-        if (role === "PROVIDER") navigate("/provider/dashboard");
-        else if (role === "ADMIN") navigate("/admin/dashboard");
-        else navigate("/");
+        const role = user.role?.toString().toUpperCase();
+        if (role === 'PROVIDER') {
+          navigate('/provider/dashboard');
+        } else if (role === 'ADMIN') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/');
+        }
       })
-      .catch((err) => {
-        console.error("Error en login:", err);
-        setError("Email o contraseña incorrectos. Intentá de nuevo.");
+      .catch(err => {
+        console.error('Error en login:', err);
+        setError('Email o contraseña incorrectos. Intentá de nuevo.');
         setLoading(false);
       });
   };
