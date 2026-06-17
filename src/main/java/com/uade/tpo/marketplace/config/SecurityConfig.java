@@ -184,6 +184,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     private String[] providerAdminDeleteEndpoints() {
         return new String[] {
                 "/api/provider-solicitations/{id}",
+                "/api/boxes/{id}",
         };
     }
 
@@ -193,7 +194,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 "/api/paymentMethods/{id}",
                 "/api/discounts/{id}",
                 "/api/orders/{id}",
-                "/api/boxes/{id}",
                 "/api/categories/{categoryId}",
                 "/api/products/{productId}",
         };

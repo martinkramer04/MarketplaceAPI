@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './ActiveBoxesTab.css'
 import api from '../../../../../api/axiosConfig' // 🟢 Importamos el Axios centralizado
-
+import { useToast } from '../../../../../Context/ToastContext'
 function ActiveBoxesTab({ onEditBox }) {
     const [boxes, setBoxes] = useState([]) // 🟢 Arranca vacío para llenarse con MySQL
     const [loading, setLoading] = useState(true)
@@ -9,6 +9,7 @@ function ActiveBoxesTab({ onEditBox }) {
     const [boxToDelete, setBoxToDelete] = useState(null)
     const [showConfirmModal, setShowConfirmModal] = useState(false)
 
+    const toast = useToast();
     useEffect(() => {
         cargarCajas();
     }, []);
@@ -54,17 +55,24 @@ function ActiveBoxesTab({ onEditBox }) {
         if (boxToDelete) {
             api.delete(`/api/boxes/${boxToDelete.id}`)
                 .then(() => {
-                    // Si el backend borró con éxito, limpiamos el estado en el Front
                     setBoxes(boxes.filter((b) => b.id !== boxToDelete.id));
                     setShowConfirmModal(false);
                     setBoxToDelete(null);
-                    alert('La caja fue removida del catálogo de BigBox correctamente.');
+
+                    // 🟢 CAMBIADO: Reemplaza el alert de éxito
+                    toast.success(`La caja fue removida del catálogo correctamente.`);
                 })
                 .catch((err) => {
                     console.error("Error al eliminar la caja:", err);
-                    alert(err.response?.data?.message || "No se pudo eliminar la caja de la base de datos.");
                     setShowConfirmModal(false);
                     setBoxToDelete(null);
+
+                    // 🟢 CAMBIADO: Reemplaza el alert de error
+                    if (err.response?.status === 403) {
+                        toast.error("No tenés permisos para eliminar esta caja.");
+                    } else {
+                        toast.error("No se pudo eliminar la caja de la base de datos.");
+                    }
                 });
         }
     }
