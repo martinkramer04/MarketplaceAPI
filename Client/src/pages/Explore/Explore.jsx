@@ -1,59 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./explore.css";
 import { Link, useSearchParams } from "react-router-dom";
-import api from "../../api/axiosConfig";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBoxes } from "../../redux/boxSlice";
+import { fetchCategories } from "../../redux/categorySlice";
 
 export default function Explore() {
   const [searchParams] = useSearchParams();
-
-  // ── Estados de categorías ──────────────────────────────
-  const [categories, setCategories] = useState([]);
-  const [loadingCats, setLoadingCats] = useState(true);
-
-  // ── Estados de Cajas (Boxes) ───────────────────────────
-  const [boxes, setBoxes] = useState([]);
-  const [loadingBoxes, setLoadingBoxes] = useState(true);
-  const [errorBoxes, setErrorBoxes] = useState(null);
 
   // ── Filtros ────────────────────────────────────────────
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [sortBy, setSortBy] = useState("relevance");
 
-  // ── Fetch categorías ───────────────────────────────────
-  useEffect(() => {
-    api
-      .get("/api/categories")
-      .then((res) => {
-        setCategories(res.data);
-        setLoadingCats(false);
+  const dispatch = useDispatch();
+  const { items, error, loading, status } = useSelector((state) => state.boxes);
+  const {
+    items: categories,
+    loading: loadingCats,
+    status: categoriesStatus,
+  } = useSelector((state) => state.categories);
 
-        const categoryParam = searchParams.get("category");
-        const existe = res.data.some((c) => c.id == categoryParam);
-        if (categoryParam && existe) {
-          setSelectedCategory(categoryParam);
-        }
-      })
-      .catch((err) => {
-        console.error("Error al cargar categorías:", err);
-        setLoadingCats(false);
-      });
-  }, [searchParams]);
-
-  // ── Fetch Cajas (Boxes) desde el Backend ────────────────
   useEffect(() => {
-    api
-      .get("/api/boxes")
-      .then((res) => {
-        setBoxes(res.data);
-        setLoadingBoxes(false);
-        setErrorBoxes(null);
-      })
-      .catch((err) => {
-        console.error("Error al cargar las cajas:", err);
-        setErrorBoxes("No se pudieron cargar las cajas de experiencias.");
-        setLoadingBoxes(false);
-      });
-  }, []);
+    dispatch(fetchBoxes());
+    if (categoriesStatus === "idle") {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch]);
+
+  const categoryFromUrl = useMemo(() => {
+    const param = searchParams.get("category");
+    return categories.some((c) => c.id == param) ? param : null;
+  }, [categories, searchParams]);
+
+  const activeCategory = selectedCategory ?? categoryFromUrl;
 
   // ── Helpers ────────────────────────────────────────────
   const formatPrice = (value) =>
@@ -62,11 +41,11 @@ export default function Explore() {
   const clearFilters = () => setSelectedCategory(null);
 
   // ── Filtrado y ordenamiento según tu BoxDto ────────────
-  const filteredBoxes = boxes
+  const filteredBoxes = items
     .filter((box) => {
-      if (!selectedCategory) return true;
+      if (!activeCategory) return true;
       // 💡 Accedemos al ID del objeto category anidado que nos manda tu BoxDto
-      return box.category && box.category.id == selectedCategory;
+      return box.category && box.category.id == activeCategory;
     })
     .sort((a, b) => {
       if (sortBy === "priceAsc") return (a.price || 0) - (b.price || 0);
@@ -83,11 +62,9 @@ export default function Explore() {
           <button onClick={clearFilters}>Limpiar filtros</button>
         </div>
 
-        {selectedCategory && (
+        {activeCategory && (
           <div className="filter-chip">
-            <span>
-              {categories.find((c) => c.id == selectedCategory)?.name}
-            </span>
+            <span>{categories.find((c) => c.id == activeCategory)?.name}</span>
             <button onClick={clearFilters}>×</button>
           </div>
         )}
@@ -103,7 +80,7 @@ export default function Explore() {
                   <input
                     type="radio"
                     name="category"
-                    checked={selectedCategory == category.id}
+                    checked={activeCategory == category.id}
                     onChange={() => setSelectedCategory(category.id)}
                   />
                   {category.name || category.description}
@@ -124,11 +101,16 @@ export default function Explore() {
         </div>
 
         <div className="products-grid">
-          {loadingBoxes && <p>Cargando cajas de experiencias...</p>}
-          {errorBoxes && <p className="error-msg">{errorBoxes}</p>}
+          {loading && <p>Cargando cajas de experiencias...</p>}
+          {error && <p className="error-msg">{error}</p>}
+          {status === "failed" && (
+            <p className="error-msg">
+              Error al cargar las cajas de experiencias.
+            </p>
+          )}
 
-          {!loadingBoxes &&
-            !errorBoxes &&
+          {!loading &&
+            !error &&
             filteredBoxes.map((box, index) => {
               // 💡 Tomamos la primera imagen de la lista de ImageDto si existe, o ponemos un fallback
               const portadaUrl =
@@ -175,7 +157,7 @@ export default function Explore() {
               );
             })}
 
-          {!loadingBoxes && !errorBoxes && filteredBoxes.length === 0 && (
+          {!loading && !error && filteredBoxes.length === 0 && (
             <p className="no-results">
               No hay cajas disponibles para esta categoría.
             </p>
