@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
-import api from '../../api/axiosConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../redux/userSlice';
 
 function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error: reduxError } = useSelector((state) => state.user);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [passwordError, setPasswordError] = useState(null);
   const [form, setForm] = useState({
     firstname: '',
     lastname: '',
@@ -22,36 +25,29 @@ function Register() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setError(null)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPasswordError(null);
 
     if (form.password !== form.confirmPassword) {
-      setError('Las contraseñas no coinciden.')
-      return
+      setPasswordError('Las contraseñas no coinciden.');
+      return;
     }
 
-    setLoading(true)
-
-    api.post('/auth/register', {
-      firstname: form.firstname,
-      lastname: form.lastname,
-      email: form.email,
-      password: form.password,
-      role: 'USER',
-    })
-      .then(res => {
-        localStorage.setItem('user_session', 'active');
-        localStorage.setItem('access_token', res.data.access_token);
-        setLoading(false);
-        navigate('/');
-      })
-      .catch(err => {
-        console.error('Error en registro:', err);
-        setError('No se pudo completar el registro. El email puede estar en uso.');
-        setLoading(false);
-      });
+    try {
+      await dispatch(registerUser({
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        password: form.password,
+      })).unwrap();
+      navigate('/');
+    } catch {
+      // error is already in Redux state
+    }
   }
+
+  const error = passwordError || reduxError;
 
   return (
     <div className="register-container">

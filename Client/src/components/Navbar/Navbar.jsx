@@ -2,13 +2,16 @@ import "./Navbar.css";
 import ImgPerfilBBox from "../../assets/ImgPerfilBBox.png";
 import { useCart } from "../../Context/useCart";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../redux/userSlice";
+
 function Navbar() {
   const { cartCount } = useCart();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_session');
+    dispatch(logoutUser());
     navigate('/login');
   };
 

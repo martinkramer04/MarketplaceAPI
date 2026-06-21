@@ -1,6 +1,7 @@
 import './BoxesSolicitations.css'
 import { useState, useEffect } from 'react'
 import api from '../../../../api/axiosConfig'
+import StatusBadge from '../../../../components/StatusBadge/StatusBadge'
 
 function BoxesSolicitations() {
     const [proposals, setProposals] = useState([])
@@ -27,7 +28,7 @@ function BoxesSolicitations() {
         api.put(`/api/boxes/${id}`, { status })
             .then(() => {
                 setProposals(prev =>
-                    prev.map(p => p.id === id ? { ...p, status: status } : p)
+                    prev.map(p => p.id === id ? { ...p, status } : p)
                 )
                 setActiveProposal(null)
             })
@@ -39,7 +40,6 @@ function BoxesSolicitations() {
 
     return (
         <div className="propuestas">
-
             <div className="admin-tab-header">
                 <h1>Propuestas de Cajas</h1>
                 <p>
@@ -49,13 +49,12 @@ function BoxesSolicitations() {
             </div>
 
             <div className="propuestas-body">
-
                 <div className="propuestas-table-wrapper">
                     <table className="propuestas-table">
                         <thead>
                             <tr>
                                 <th>Propuesta</th>
-                                <th>Categoría</th>
+                                <th>Categoria</th>
                                 <th>Precio Est.</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
@@ -71,19 +70,15 @@ function BoxesSolicitations() {
                                     <td>{p.name}</td>
                                     <td>{p.category?.name}</td>
                                     <td>${p.price}</td>
-                                    <td>
-                                        {p.status === 'PENDING' && <span className="admin-badge badge-pending">Pendiente</span>}
-                                        {p.status === 'APPROVED' && <span className="admin-badge badge-approved">✓ Aprobado</span>}
-                                        {p.status === 'REJECTED' && <span className="admin-badge badge-rejected">✗ Rechazado</span>}
-                                    </td>
+                                    <td><StatusBadge status={p.status} /></td>
                                     <td>
                                         {p.status === 'PENDING' && (
                                             <div className="prop-actions" onClick={(e) => e.stopPropagation()}>
                                                 <button className="btn-approve" onClick={() => handleAction(p.id, 'approved')}>
-                                                    ✓ Aprobar
+                                                    Aprobar
                                                 </button>
                                                 <button className="btn-reject" onClick={() => handleAction(p.id, 'rejected')}>
-                                                    ✗ Rechazar
+                                                    Rechazar
                                                 </button>
                                             </div>
                                         )}
@@ -102,7 +97,7 @@ function BoxesSolicitations() {
                         </div>
                         <div className="propuesta-detail-body">
                             <div className="pd-row">
-                                <span>Categoría</span>
+                                <span>Categoria</span>
                                 <strong>{activeProposal.category?.name}</strong>
                             </div>
                             <div className="pd-row">
@@ -110,21 +105,20 @@ function BoxesSolicitations() {
                                 <strong>${activeProposal.price}</strong>
                             </div>
                             <div className="pd-row">
-                                <span>Descripción</span>
+                                <span>Descripcion</span>
                                 <strong>{activeProposal.description}</strong>
                             </div>
                         </div>
                         <div className="propuesta-detail-actions">
                             <button className="btn-approve-full" onClick={() => handleAction(activeProposal.id, 'approved')}>
-                                ✓ Aprobar Propuesta
+                                Aprobar Propuesta
                             </button>
                             <button className="btn-reject-full" onClick={() => handleAction(activeProposal.id, 'rejected')}>
-                                ✗ Rechazar
+                                Rechazar
                             </button>
                         </div>
                     </div>
                 )}
-
             </div>
         </div>
     )

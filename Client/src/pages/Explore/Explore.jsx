@@ -1,19 +1,19 @@
 import { useState, useEffect, useMemo } from "react";
 import "./explore.css";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBoxes } from "../../redux/boxSlice";
 import { fetchCategories } from "../../redux/categorySlice";
+import BoxCard from "../../components/BoxCard/BoxCard";
 
 export default function Explore() {
   const [searchParams] = useSearchParams();
 
-  // ── Filtros ────────────────────────────────────────────
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [sortBy, setSortBy] = useState("relevance");
 
   const dispatch = useDispatch();
-  const { items, error, loading, status } = useSelector((state) => state.boxes);
+  const { items, error, loading } = useSelector((state) => state.boxes);
   const {
     items: categories,
     loading: loadingCats,
@@ -22,10 +22,8 @@ export default function Explore() {
 
   useEffect(() => {
     dispatch(fetchBoxes());
-    if (categoriesStatus === "idle") {
-      dispatch(fetchCategories());
-    }
-  }, [dispatch]);
+    if (categoriesStatus === "idle") dispatch(fetchCategories());
+  }, [dispatch, categoriesStatus]);
 
   const categoryFromUrl = useMemo(() => {
     const param = searchParams.get("category");
@@ -34,23 +32,17 @@ export default function Explore() {
 
   const activeCategory = selectedCategory ?? categoryFromUrl;
 
-  // ── Helpers ────────────────────────────────────────────
-  const formatPrice = (value) =>
-    "$ " + (value ? value.toLocaleString("es-AR") : "0");
-
   const clearFilters = () => setSelectedCategory(null);
 
-  // ── Filtrado y ordenamiento según tu BoxDto ────────────
   const filteredBoxes = items
     .filter((box) => {
       if (!activeCategory) return true;
-      // 💡 Accedemos al ID del objeto category anidado que nos manda tu BoxDto
       return box.category && box.category.id == activeCategory;
     })
     .sort((a, b) => {
       if (sortBy === "priceAsc") return (a.price || 0) - (b.price || 0);
       if (sortBy === "priceDesc") return (b.price || 0) - (a.price || 0);
-      return 0; // Removí ratingDesc porque tu BoxDto no lo incluye en sus atributos actuales
+      return 0;
     });
 
   return (
@@ -69,10 +61,10 @@ export default function Explore() {
           </div>
         )}
 
-        <div className="category-title">Categorías</div>
+        <div className="category-title">Categorias</div>
 
         <div className="categories-list">
-          {loadingCats && <p>Cargando categorías...</p>}
+          {loadingCats && <p>Cargando categorias...</p>}
           {!loadingCats &&
             categories.map((category) => (
               <label className="category-item" key={category.id}>
@@ -94,7 +86,7 @@ export default function Explore() {
       <section className="explore-content">
         <div className="explore-topbar">
           <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option value="relevance">Ordenar por Más relevantes</option>
+            <option value="relevance">Ordenar por Mas relevantes</option>
             <option value="priceAsc">Menor precio</option>
             <option value="priceDesc">Mayor precio</option>
           </select>
@@ -103,63 +95,14 @@ export default function Explore() {
         <div className="products-grid">
           {loading && <p>Cargando cajas de experiencias...</p>}
           {error && <p className="error-msg">{error}</p>}
-          {status === "failed" && (
-            <p className="error-msg">
-              Error al cargar las cajas de experiencias.
-            </p>
-          )}
 
           {!loading &&
             !error &&
-            filteredBoxes.map((box, index) => {
-              // 💡 Tomamos la primera imagen de la lista de ImageDto si existe, o ponemos un fallback
-              const portadaUrl =
-                box.images && box.images.length > 0
-                  ? `data:image/png;base64,  ${box.images[0].base64Image}`
-                  : "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80";
-              // 💡 Contamos las opciones de la caja según el tamaño de la lista de ProductDto
-              const cantidadOpciones = box.products ? box.products.length : 0;
-
-              return (
-                <Link
-                  to={`/box/${box.id}`}
-                  className="product-card-link"
-                  key={box.id || index}
-                >
-                  <article className="product-card">
-                    <div className="product-image-container">
-                      <img src={portadaUrl} alt={box.name} />
-                      <div className="product-image-title">
-                        Box <br /> {box.name}
-                      </div>
-                    </div>
-
-                    <div className="product-body">
-                      <div className="product-title-row">
-                        <h3>{box.name}</h3>
-                      </div>
-
-                      <p className="product-description">{box.description}</p>
-
-                      <p className="product-info">
-                        ♡ Contiene {cantidadOpciones} opciones
-                      </p>
-                      <p className="product-info">
-                        ♧ Stock disponible: {box.stock || 0}
-                      </p>
-
-                      <div className="product-price">
-                        {formatPrice(box.price)}
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              );
-            })}
+            filteredBoxes.map((box) => <BoxCard key={box.id} box={box} />)}
 
           {!loading && !error && filteredBoxes.length === 0 && (
             <p className="no-results">
-              No hay cajas disponibles para esta categoría.
+              No hay cajas disponibles para esta categoria.
             </p>
           )}
         </div>

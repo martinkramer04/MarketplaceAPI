@@ -1,13 +1,15 @@
 import "./Navbar.css";
 import ImgPerfilBBox from "../../assets/ImgPerfilBBox.png";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../redux/userSlice";
 
 function NavbarProvider({ isAdmin = false }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_session');
+    dispatch(logoutUser());
     navigate('/login');
   };
 

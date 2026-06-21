@@ -1,23 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './ProviderDashboard.css'
 import ProviderSidebar from './components/ProviderSidebar/ProviderSidebar'
 import OverviewTab from './components/OverviewTab/OverviewTab'
 import MyRequestsTab from './components/MyRequestsTab/MyRequestsTab'
-import ProposeBoxForm from './components/ProposeBoxForm/ProposeBoxForm'
+import BoxForm from './components/BoxForm/BoxForm'
 import CompleteDetailsTab from './components/CompleteDetailsTab/CompleteDetailsTab'
 import ActiveBoxesTab from './components/ActiveBoxesTab/ActiveBoxesTab'
-import EditBoxForm from './components/EditBoxForm/EditBoxForm'
-
 
 function ProviderDashboard() {
     const [activeTab, setActiveTab] = useState('overview')
     const [selectedRequest, setSelectedRequest] = useState(null)
-
-    // Usamos este estado específico para controlar cuándo se dibuja el formulario
     const [isEditingBox, setIsEditingBox] = useState(false)
     const [selectedBoxToEdit, setSelectedBoxToEdit] = useState(null)
 
-    // Si el usuario cambia de pestaña en el Sidebar, cerramos cualquier edición abierta automáticamente
     const handleNavigation = (tabId) => {
         setIsEditingBox(false)
         setSelectedRequest(null)
@@ -31,17 +26,17 @@ function ProviderDashboard() {
 
     const handleEditBox = (box) => {
         setSelectedBoxToEdit(box)
-        setIsEditingBox(true) // Activamos la vista de edición de forma independiente
+        setIsEditingBox(true)
     }
 
     const renderTab = () => {
-        // Si el estado de edición está activo y estamos parados en la solapa de cajas, mostramos el formulario
         if (isEditingBox && activeTab === 'active-boxes') {
             return (
-                <EditBoxForm
-                    propuestaInicial={selectedBoxToEdit}
+                <BoxForm
+                    mode="edit"
+                    initialData={selectedBoxToEdit}
                     onCancel={() => setIsEditingBox(false)}
-                    onUpdatePropuesta={() => {
+                    onSuccess={() => {
                         setIsEditingBox(false)
                         setActiveTab('my-requests')
                     }}
@@ -55,7 +50,13 @@ function ProviderDashboard() {
             case 'my-requests':
                 return <MyRequestsTab onCompleteDetails={handleCompleteDetails} />
             case 'propose-box':
-                return <ProposeBoxForm onSuccess={() => handleNavigation('my-requests')} />
+                return (
+                    <BoxForm
+                        mode="create"
+                        onSuccess={() => handleNavigation('my-requests')}
+                        onCancel={() => handleNavigation('overview')}
+                    />
+                )
             case 'complete-details':
                 return <CompleteDetailsTab request={selectedRequest} onBack={() => handleNavigation('my-requests')} />
             case 'active-boxes':
@@ -66,14 +67,12 @@ function ProviderDashboard() {
     }
 
     return (
-        <>
-            <div className="provider-theme provider-dashboard">
-                <ProviderSidebar activeTab={activeTab} onNavigate={handleNavigation} />
-                <main className="provider-main">
-                    {renderTab()}
-                </main>
-            </div>
-        </>
+        <div className="provider-theme provider-dashboard">
+            <ProviderSidebar activeTab={activeTab} onNavigate={handleNavigation} />
+            <main className="provider-main">
+                {renderTab()}
+            </main>
+        </div>
     )
 }
 

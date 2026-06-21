@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCurrentUser } from "./redux/userSlice";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
@@ -26,15 +28,21 @@ import ToastContainer from "./components/Toast/Toast";
 
 function AppLayout() {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const { isAuthenticated, data: user } = useSelector((state) => state.user);
 
   const isProvider = location.pathname.startsWith('/provider');
   const isAdmin = location.pathname.startsWith('/admin');
   const isLoginPath = location.pathname === '/login';
   const isRegisterPath = location.pathname === '/register';
 
-  const session = localStorage.getItem('access_token');
+  useEffect(() => {
+    if (isAuthenticated && !user) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [isAuthenticated, user, dispatch]);
 
-  if (!session && !isLoginPath && !isRegisterPath) {
+  if (!isAuthenticated && !isLoginPath && !isRegisterPath) {
     return <Navigate to="/login" replace />;
   }
 
