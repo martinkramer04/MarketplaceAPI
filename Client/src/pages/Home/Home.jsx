@@ -1,8 +1,10 @@
 import "./Home.css";
 import BoxCard from "../../components/BoxCard/BoxCard";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import api from "../../api/axiosConfig";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBoxes } from "../../redux/slices/BoxSlice";
+import { fetchCategories } from "../../redux/slices/CategorySlice";
 
 const getIconForCategory = (description = "", name = "") => {
   const s = `${description} ${name}`.toLowerCase();
@@ -75,74 +77,39 @@ const getIconForCategory = (description = "", name = "") => {
 
 function Home() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Estados para Categorías
-  const [categories, setCategories] = useState([]);
-  const [loadingCats, setLoadingCats] = useState(true);
-  const [errorCats, setErrorCats] = useState(null);
+  // ── Selectors ──────────────────────────────────────────
+  const { categories, loading: loadingCats, error: errorCats } = useSelector(state => state.categories);
+  const { boxes, loading: loadingBoxes, error: errorBoxes } = useSelector(state => state.boxes);
 
-  // Estados para Cajas (Boxes)
-  const [boxes, setBoxes] = useState([]);
-  const [loadingBoxes, setLoadingBoxes] = useState(true);
-  const [errorBoxes, setErrorBoxes] = useState(null);
-
-  // === EFFECT 1: CARGAR CATEGORÍAS ===
+  // ── Fetch al montar ────────────────────────────────────
   useEffect(() => {
-    api
-      .get("/api/categories")
-      .then((res) => {
-        setCategories(
-          res.data.map((cat) => ({
-            ...cat,
-            icon: getIconForCategory(cat.description, cat.name),
-          })),
-        );
-        setLoadingCats(false);
-      })
-      .catch((err) => {
-        console.error("Error al cargar categorías:", err);
-        setErrorCats("No se pudieron cargar las categorías.");
-        setLoadingCats(false);
-      });
-  }, []);
+    dispatch(fetchCategories());
+    dispatch(fetchBoxes());
+  }, [dispatch]);
 
-  // === EFFECT 2: CARGAR CAJAS ===
-  useEffect(() => {
-    api
-      .get("/api/boxes")
-      .then((res) => {
-        const data = res.data;
-        const adaptedBoxes = data.map((box) => {
-          // Extraemos la URL de la imagen de forma ultra segura resolviendo variaciones
+  const categoriesWithIcons = categories.map(cat => ({
+    ...cat,
+    icon: getIconForCategory(cat.description, cat.name)
+  }));
 
-          const urlDetectada =
-            box.images && box.images.length > 0
-              ? `data:image/png;base64,  ${box.images[0].base64Image}`
-              : "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400";
-
-          return {
-            id: box.id,
-            name: box.name,
-            description: box.description,
-            price: box.price,
-            stock: box.stock,
-            category: box.category,
-            // Multi-fallback de propiedades de imagen para blindar el componente BoxCard
-            image: urlDetectada,
-            imageUrl: urlDetectada,
-            images: box.images || [],
-          };
-        });
-
-        setBoxes(adaptedBoxes);
-        setLoadingBoxes(false);
-      })
-      .catch((err) => {
-        console.error("Error al cargar cajas:", err);
-        setErrorBoxes(err.message);
-        setLoadingBoxes(false);
-      });
-  }, []);
+  const adaptedBoxes = boxes.map(box => {
+    const urlDetectada = box.images && box.images.length > 0
+      ? `data:image/png;base64,  ${box.images[0].base64Image}`
+      : "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400";
+    return {
+      id: box.id,
+      name: box.name,
+      description: box.description,
+      price: box.price,
+      stock: box.stock,
+      category: box.category,
+      image: urlDetectada,
+      imageUrl: urlDetectada,
+      images: box.images || [],
+    };
+  });
 
   const handleCategoryClick = (categoryId) => {
     navigate(`/explore?category=${categoryId}`);

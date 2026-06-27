@@ -8,11 +8,13 @@ import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ToastProvider>
-      <CartProvider>
-        <App />
-      </CartProvider>
-      <ToastContainer />
-    </ToastProvider>
+    <Provider store={store}>
+      <ToastProvider>
+        <CartProvider>
+          <App />
+        </CartProvider>
+        <ToastContainer />
+      </ToastProvider>
+    </Provider>
   </StrictMode>,
 );

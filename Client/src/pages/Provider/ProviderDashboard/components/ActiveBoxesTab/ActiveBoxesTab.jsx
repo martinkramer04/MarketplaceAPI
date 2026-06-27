@@ -1,79 +1,69 @@
 import { useState, useEffect } from 'react'
 import './ActiveBoxesTab.css'
-import api from '../../../../../api/axiosConfig' // 🟢 Importamos el Axios centralizado
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchBoxesByUser, deleteBox } from '../../../../../redux/slices/BoxSlice'
+import { fetchCurrentUser } from '../../../../../redux/slices/UserSlice'
 import { useToast } from '../../../../../Context/ToastContext'
+
 function ActiveBoxesTab({ onEditBox }) {
-    const [boxes, setBoxes] = useState([]) // 🟢 Arranca vacío para llenarse con MySQL
-    const [loading, setLoading] = useState(true)
+    const dispatch = useDispatch()
+    const toast = useToast()
+
+    const { currentUser } = useSelector(state => state.user)
+    const { boxes, loading } = useSelector(state => state.boxes)
+
     const [search, setSearch] = useState('')
     const [boxToDelete, setBoxToDelete] = useState(null)
     const [showConfirmModal, setShowConfirmModal] = useState(false)
 
-    const toast = useToast();
     useEffect(() => {
-        cargarCajas();
-    }, []);
+        dispatch(fetchCurrentUser())
+    }, [dispatch])
 
-    const cargarCajas = () => {
-        setLoading(true);
+    useEffect(() => {
+        if (currentUser?.id) {
+            dispatch(fetchBoxesByUser(currentUser.id))
+        }
+    }, [currentUser, dispatch])
 
-        api.get('/auth/me')
-            .then(resUser => {
-                const userId = resUser.data.id;
-                return api.get(`/api/boxes/user/${userId}`);
-            })
-            .then(resBoxes => {
-                const aprobadas = resBoxes.data.filter(b => b.status === 'APPROVED');
+    const aprobadas = boxes
+        .filter(b => b.status === 'APPROVED')
+        .map(b => ({
+            id: b.id,
+            name: b.name || 'Caja de Experiencia',
+            sku: `SKU: EX-${b.id}00`,
+            categories: b.category ? [b.category.description.toUpperCase()] : ['SIN CATEGORÍA'],
+            activations: 0,
+            status: 'published',
+            price: b.price || 0,
+            shortDescription: b.description || '',
+        }))
 
-                const adaptadas = aprobadas.map(b => ({
-                    id: b.id,
-                    name: b.name || 'Caja de Experiencia',
-                    sku: `SKU: EX-${b.id}00`,
-                    categories: b.category ? [b.category.description.toUpperCase()] : ['SIN CATEGORÍA'],
-                    activations: 0,
-                    status: 'published',
-                    price: b.price || 0,
-                    shortDescription: b.description || '',
-                }));
+    const filteredBoxes = aprobadas.filter(b =>
+        b.name.toLowerCase().includes(search.toLowerCase()) ||
+        b.id.toString().includes(search)
+    )
 
-                setBoxes(adaptadas);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error('Error cargando cajas:', err);
-                setLoading(false);
-            });
-    };
     const handleDeleteClick = (box) => {
         if (box.status !== 'published') return
         setBoxToDelete(box)
         setShowConfirmModal(true)
     }
 
-    // 🟢 2. Conectamos la eliminación real en la base de datos (Impacta en el Explore)
     const handleConfirmDelete = () => {
         if (boxToDelete) {
-            api.delete(`/api/boxes/${boxToDelete.id}`)
+            dispatch(deleteBox(boxToDelete.id))
+                .unwrap()
                 .then(() => {
-                    setBoxes(boxes.filter((b) => b.id !== boxToDelete.id));
-                    setShowConfirmModal(false);
-                    setBoxToDelete(null);
-
-                    // 🟢 CAMBIADO: Reemplaza el alert de éxito
-                    toast.success(`La caja fue removida del catálogo correctamente.`);
+                    setShowConfirmModal(false)
+                    setBoxToDelete(null)
+                    toast.success('La caja fue removida del catálogo correctamente.')
                 })
                 .catch((err) => {
-                    console.error("Error al eliminar la caja:", err);
-                    setShowConfirmModal(false);
-                    setBoxToDelete(null);
-
-                    // 🟢 CAMBIADO: Reemplaza el alert de error
-                    if (err.response?.status === 403) {
-                        toast.error("No tenés permisos para eliminar esta caja.");
-                    } else {
-                        toast.error("No se pudo eliminar la caja de la base de datos.");
-                    }
-                });
+                    setShowConfirmModal(false)
+                    setBoxToDelete(null)
+                    toast.error('No se pudo eliminar la caja de la base de datos.')
+                })
         }
     }
 
@@ -81,12 +71,6 @@ function ActiveBoxesTab({ onEditBox }) {
         setShowConfirmModal(false)
         setBoxToDelete(null)
     }
-
-    // Filtrado dinámico por la barra de búsqueda
-    const filteredBoxes = boxes.filter((b) =>
-        b.name.toLowerCase().includes(search.toLowerCase()) ||
-        b.id.toString().includes(search)
-    )
 
     if (loading) return <div style={{ padding: '2rem' }}>Cargando catálogo de experiencias en vivo...</div>
 
@@ -154,18 +138,13 @@ function ActiveBoxesTab({ onEditBox }) {
                                         </td>
                                         <td>
                                             <div className="ab-actions-container">
-                                                <button
-                                                    className="btn-edit-box"
-                                                    onClick={() => onEditBox && onEditBox(box)}
-                                                >
+                                                <button className="btn-edit-box" onClick={() => onEditBox && onEditBox(box)}>
                                                     Editar →
                                                 </button>
-
                                                 <button
                                                     onClick={() => handleDeleteClick(box)}
                                                     disabled={!isActive}
                                                     className={`btn-delete-box ${isActive ? 'active' : 'disabled'}`}
-                                                    title={isActive ? "Eliminar de la plataforma" : "Solo se pueden eliminar cajas activas"}
                                                 >
                                                     Eliminar
                                                 </button>
@@ -183,7 +162,6 @@ function ActiveBoxesTab({ onEditBox }) {
                 </div>
             </div>
 
-            {/* MODAL DE CONFIRMACIÓN DE BORRADO */}
             {showConfirmModal && (
                 <div className="modal-overlay">
                     <div className="modal-container">
@@ -195,9 +173,7 @@ function ActiveBoxesTab({ onEditBox }) {
                             Estás a punto de despublicar <strong>"{boxToDelete?.name}"</strong>. Desaparecerá de inmediato de la vitrina de compras de los clientes.
                         </p>
                         <div className="modal-actions">
-                            <button onClick={handleCancelDelete} className="btn-modal-cancel">
-                                Cancelar
-                            </button>
+                            <button onClick={handleCancelDelete} className="btn-modal-cancel">Cancelar</button>
                             <button onClick={handleConfirmDelete} className="btn-modal-confirm" style={{ backgroundColor: '#d32f2f', color: 'white' }}>
                                 Sí, eliminar en BD
                             </button>
@@ -209,4 +185,4 @@ function ActiveBoxesTab({ onEditBox }) {
     )
 }
 
-export default ActiveBoxesTab;
+export default ActiveBoxesTab
