@@ -64,6 +64,7 @@ public class BoxController {
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<BoxDto>> getByCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(boxService.getByCategory(categoryId).stream().map(BoxDto::convertToDto).toList());
+
     }
 
     // GET
@@ -74,11 +75,12 @@ public class BoxController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<BoxDto>> getByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(boxService.getByUserId(userId).stream()
-            .map(BoxDto::convertToDto)
-            .toList());
+                .map(BoxDto::convertToDto)
+                .toList());
     }
 
     // POST
@@ -134,10 +136,11 @@ public class BoxController {
                 .encodeToString(image.getImage().getBytes(1, (int) image.getImage().length()));
         return ResponseEntity.ok().body(ImageResponse.builder().file(encodedString).id(id).build());
     }
+
     @GetMapping("/status/{status}")
     public ResponseEntity<List<BoxDto>> getByStatus(@PathVariable BoxStatusEnum status) {
         return ResponseEntity.ok(boxService.getByStatus(status).stream()
-            .map(BoxDto::convertToDto)
-            .toList());
-}
+                .map(BoxDto::convertToDto)
+                .toList());
+    }
 }
