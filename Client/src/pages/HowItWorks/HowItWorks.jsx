@@ -42,15 +42,6 @@ function HowItWorks() {
                 ))}
             </section>
 
-            <section className="cf-banner">
-                <h2>¿Tenés un código de regalo?</h2>
-                <p>Ingresá tu código y canjeá tu experiencia en segundos.</p>
-                <div className="cf-redeem">
-                    <input type="text" placeholder="Ingresá tu código aquí" />
-                    <button>Canjear</button>
-                </div>
-            </section>
-
         </div>
     )
 }
