@@ -65,42 +65,46 @@
   padding: 48px 32px;
   text-align: center;
   background-color: #fafafa;
+  position: relative;
 }
 
 .categories h2 {
   font-size: 1.6rem;
   margin-bottom: 32px;
-  color: var(--neutral);
+  color: #333;
+}
+
+/* Envoltorio nuevo para posicionar las flechas */
+.categories-container-wrapper {
+position: relative; /* Clave: hace que los botones absolutos se referencien a ESTE contenedor */
+  display: block; /* Volvemos a block para que el carrusel ocupe todo el ancho */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0; /* Sacamos paddings que puedan interferir */
 }
 
 .categories-carousel {
-  overflow: hidden;
-  width: 100%;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-}
-
-.categories-carousel:hover .categories-track {
-  animation-play-state: paused;
+overflow: hidden;
+  /* Ancho máximo menor para que entren menos íconos por vista */
+  width: 90%; /* Dejamos un 5% de margen a cada lado */
+  margin: 0 auto;
 }
 
 .categories-track {
   display: flex;
   gap: 48px;
-  width: max-content;
-  animation: carousel-scroll 20s linear infinite;
+  width: 100%;
+  overflow-x: auto; /* Permite scroll manual arrastrando en celular */
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  
+  /* Ocultamos la barra de scroll visual en navegadores para mantener la estética limpia */
+  scrollbar-width: none; /* Firefox */
+}
+
+.categories-track::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .category-item {
@@ -112,6 +116,8 @@
   font-size: 0.9rem;
   font-weight: 600;
   color: black;
+  flex-shrink: 0; /* Clave: evita que las categorías se achiquen o aplasten si hay poco espacio */
+  min-width: 100px;
 }
 
 .category-icon {
@@ -119,6 +125,70 @@
   background-color: #eee;
   padding: 16px;
   border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.category-item:hover .category-icon {
+  transform: scale(1.05);
+  background-color: #e2e2e2;
+}
+
+/* --- ESTILOS DE LOS BOTONES DE NAVEGACIÓN --- */
+.nav-btn {
+position: absolute;
+  top: 50%;
+  transform: translateY(-50%); /* Los centramos verticalmente */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 44px; /* Un toque más grandes para que se separen bien visualmente */
+  height: 44px;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Sombra para dar profundidad y separarlos */
+  z-index: 20; /* Prioridad alta para flotar sobre todo */
+  transition: all 0.2s ease;
+  padding: 0; /* Evitamos paddings internos */
+}
+
+.nav-btn:hover {
+background-color: #f8f8f8;
+  color: #333;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.nav-btn.left {
+left: 10px;
+}
+
+.nav-btn.right {
+right: 10px;
+}
+
+
+/* Ocultar flechas en pantallas muy chicas (táctiles), ya que ahí deslizan directo con el dedo */
+@media (max-width: 600px) {
+  .nav-btn {
+    display: none;
+  }
+  .categories-track {
+    gap: 24px; /* Achicamos la distancia en mobile */
+  }
+}
+
+.categories-track {
+  display: flex;
+  gap: 48px; /* Espaciado entre items */
+  width: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 15px 0; /* Espacio para que no se corten las sombras de los íconos */
 }
 
 .boxes-section {

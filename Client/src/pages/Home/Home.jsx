@@ -1,7 +1,7 @@
 import "./Home.css";
 import BoxCard from "../../components/BoxCard/BoxCard";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBoxes } from "../../redux/boxSlice";
 import { fetchCategories } from "../../redux/categorySlice";
@@ -10,6 +10,7 @@ import { getIconForCategory } from "../../utils/boxUtils";
 function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const trackRef = useRef(null);
 
   const {
     items: rawCategories,
@@ -38,6 +39,16 @@ function Home() {
     navigate(`/explore?category=${categoryId}`);
   };
 
+  const scroll = (direction) => {
+  if (trackRef.current) {
+    const scrollAmount = direction === "left" ? -300 : 300;
+    trackRef.current.scrollBy({
+      left: scrollAmount,
+      behavior: "smooth" 
+    });
+  }
+};
+
   return (
     <div className="home">
       {/* HERO */}
@@ -56,21 +67,35 @@ function Home() {
         <h2>Descubri nuestras experiencias</h2>
         {loadingCats && <p className="loading-text">Cargando categorias...</p>}
         {errorCats && <p className="error-text">{errorCats}</p>}
+
         {!loadingCats && !errorCats && (
-          <div className="categories-carousel">
-            <div className="categories-track">
-              {[...categories, ...categories].map((cat, i) => (
-                <div
-                  key={`${cat.id}-${i}`}
-                  className="category-item"
-                  onClick={() => handleCategoryClick(cat.id)}
-                >
-                  <span className="category-icon">{cat.icon}</span>
-                  <span>{cat.name || cat.description}</span>
-                </div>
-              ))}
-            </div>
+<div className="categories-container-wrapper">
+        {/* BOTÓN IZQUIERDO */}
+        <button className="nav-btn left" onClick={() => scroll("left")}>
+          ‹
+        </button>
+
+        <div className="categories-carousel">
+          {/* El contenedor con la referencia del scroll. Ya no duplicamos el array */}
+          <div className="categories-track" ref={trackRef}>
+            {categories.map((cat) => (
+              <div
+                key={cat.id}
+                className="category-item"
+                onClick={() => handleCategoryClick(cat.id)}
+              >
+                <span className="category-icon">{cat.icon}</span>
+                <span>{cat.name || cat.description}</span>
+              </div>
+            ))}
           </div>
+        </div>
+
+        {/* BOTÓN DERECHO */}
+        <button className="nav-btn right" onClick={() => scroll("right")}>
+          ›
+        </button>
+      </div>
         )}
       </section>
 
