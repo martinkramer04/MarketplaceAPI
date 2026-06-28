@@ -127,8 +127,14 @@
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
-.btn-checkout:hover {
+.btn-checkout:hover:not(:disabled) {
   opacity: 0.9;
+}
+
+.btn-checkout:disabled {
+  background-color: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
 }
 
 .cart-actions {

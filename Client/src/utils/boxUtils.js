@@ -8,6 +8,14 @@ export const getBoxImageUrl = (box) => {
   return FALLBACK_IMAGE
 }
 
+export const getItemImageUrl = (item) => {
+  if (item.images?.length > 0) {
+    if (item.images[0].base64Image) return `data:image/png;base64,${item.images[0].base64Image}`
+    if (item.images[0].url) return item.images[0].url
+  }
+  return item.image ?? FALLBACK_IMAGE
+}
+
 export const formatPrice = (value) =>
   '$ ' + (value ? value.toLocaleString('es-AR') : '0')
 

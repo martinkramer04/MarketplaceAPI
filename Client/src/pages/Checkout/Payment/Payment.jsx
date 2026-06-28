@@ -1,15 +1,16 @@
 import './Payment.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useCart } from '../../../Context/useCart'
 import Stepper from '../../../components/Stepper/Stepper'
-import api from '../../../api/axiosConfig'
+import { createOrder } from '../../../redux/orderSlice'
 import { useToast } from '../../../Context/ToastContext'
 import OrderPanel from '../../../components/OrderPanel/OrderPanel'
 
 function Payment() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const { cartItems, clearCart } = useCart()
     const { discount } = useSelector((state) => state.discount)
     const [paymentMethod, setPaymentMethod] = useState('card')
@@ -64,16 +65,17 @@ function Payment() {
             items: cartItems.map(item => ({ boxId: item.id, quantity: item.quantity }))
         }
 
-        api.post('/api/orders', orderBody)
-            .then(res => {
+        dispatch(createOrder(orderBody))
+            .unwrap()
+            .then(data => {
                 setLoading(false)
                 clearCart()
                 toast.success('Pago procesado con exito! Generando tu orden...')
-                navigate('/checkout/confirmation', { state: { order: res.data } })
+                navigate('/checkout/confirmation', { state: { order: data } })
             })
             .catch(err => {
                 console.error('Error al crear la orden:', err)
-                const errorMsg = err.response?.data?.message || 'No se pudo procesar el pago. Intenta de nuevo.'
+                const errorMsg = err?.message || err || 'No se pudo procesar el pago. Intenta de nuevo.'
                 setError(errorMsg)
                 toast.error(errorMsg)
                 setLoading(false)
