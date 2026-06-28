@@ -45,6 +45,14 @@ export default function CartProvider({ children }) {
     );
   };
 
+  const updateQuantity = (productId, quantity) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === productId ? { ...item, quantity } : item,
+      ),
+    );
+  };
+
   const clearCart = () => {
     setCartItems([]);
   };
@@ -59,6 +67,7 @@ export default function CartProvider({ children }) {
         addToCart,
         removeFromCart,
         decreaseQuantity,
+        updateQuantity,
         clearCart,
       }}
     >

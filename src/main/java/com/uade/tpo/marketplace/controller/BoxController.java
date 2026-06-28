@@ -26,8 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Image;
 import com.uade.tpo.marketplace.entity.dto.Box.BoxDto;
+import com.uade.tpo.marketplace.entity.dto.Box.CartValidationResponse;
 import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
+import com.uade.tpo.marketplace.entity.dto.Box.ValidateCartRequest;
 import com.uade.tpo.marketplace.entity.dto.Image.AddImageBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Image.ImageResponse;
 import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
@@ -142,5 +144,10 @@ public class BoxController {
         return ResponseEntity.ok(boxService.getByStatus(status).stream()
                 .map(BoxDto::convertToDto)
                 .toList());
+    }
+
+    @PostMapping("/validate-cart")
+    public ResponseEntity<CartValidationResponse> validateCart(@RequestBody ValidateCartRequest request) {
+        return ResponseEntity.ok(boxService.validateCart(request));
     }
 }

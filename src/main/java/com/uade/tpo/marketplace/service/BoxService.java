@@ -13,8 +13,12 @@ import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.Product;
 import com.uade.tpo.marketplace.entity.User;
+import com.uade.tpo.marketplace.entity.dto.Box.CartItemRequest;
+import com.uade.tpo.marketplace.entity.dto.Box.CartItemValidationResult;
+import com.uade.tpo.marketplace.entity.dto.Box.CartValidationResponse;
 import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
+import com.uade.tpo.marketplace.entity.dto.Box.ValidateCartRequest;
 import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
 import com.uade.tpo.marketplace.repository.BoxRepository;
 import com.uade.tpo.marketplace.repository.CategoryRepository;
@@ -160,5 +164,59 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
     }
     public List<Box> getByStatus(BoxStatusEnum status) {
         return boxRepository.findByStatus(status);
+    }
+
+    public CartValidationResponse validateCart(ValidateCartRequest request) {
+        List<CartItemValidationResult> results = request.getItems().stream()
+                .map(item -> {
+                    Optional<Box> boxOpt = boxRepository.findById(item.getBoxId());
+
+                    if (boxOpt.isEmpty() || Boolean.TRUE.equals(boxOpt.get().getIsDeleted())) {
+                        return CartItemValidationResult.builder()
+                                .boxId(item.getBoxId())
+                                .valid(false)
+                                .requestedQuantity(item.getQuantity())
+                                .availableStock(null)
+                                .action("REMOVE")
+                                .reason("NOT_FOUND")
+                                .build();
+                    }
+
+                    Box box = boxOpt.get();
+
+                    if (box.getStock() == 0) {
+                        return CartItemValidationResult.builder()
+                                .boxId(item.getBoxId())
+                                .valid(false)
+                                .requestedQuantity(item.getQuantity())
+                                .availableStock(0)
+                                .action("REMOVE")
+                                .reason("OUT_OF_STOCK")
+                                .build();
+                    }
+
+                    if (box.getStock() < item.getQuantity()) {
+                        return CartItemValidationResult.builder()
+                                .boxId(item.getBoxId())
+                                .valid(false)
+                                .requestedQuantity(item.getQuantity())
+                                .availableStock(box.getStock())
+                                .action("UPDATE_QUANTITY")
+                                .reason("INSUFFICIENT_STOCK")
+                                .build();
+                    }
+
+                    return CartItemValidationResult.builder()
+                            .boxId(item.getBoxId())
+                            .valid(true)
+                            .requestedQuantity(item.getQuantity())
+                            .availableStock(box.getStock())
+                            .action(null)
+                            .reason(null)
+                            .build();
+                })
+                .toList();
+
+        return CartValidationResponse.builder().results(results).build();
     }
 }
