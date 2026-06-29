@@ -73,10 +73,25 @@ public class ProviderSolicitationsService implements
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el email: " + email));
 
-        solicitation.setUser(user); 
-        solicitation.setDescription(entity.getDescription());
-        solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA); 
+        solicitation.setUser(user);
+        solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA);
         solicitation.setCreatedAt(LocalDateTime.now());
+
+        solicitation.setBusinessName(entity.getBusinessName());
+        solicitation.setOwnerName(entity.getOwnerName());
+        solicitation.setEmail(entity.getEmail());
+        solicitation.setPhone(entity.getPhone());
+        solicitation.setWebsite(entity.getWebsite());
+        solicitation.setCategory(entity.getCategory());
+        solicitation.setLocation(entity.getLocation());
+        solicitation.setAddress(entity.getAddress());
+        solicitation.setDescription(entity.getDescription());
+        solicitation.setExperienceName(entity.getExperienceName());
+        solicitation.setExperienceDescription(entity.getExperienceDescription());
+        solicitation.setMinPrice(entity.getMinPrice());
+        solicitation.setMaxPrice(entity.getMaxPrice());
+        solicitation.setCapacity(entity.getCapacity());
+        solicitation.setDuration(entity.getDuration());
 
         try {
             solicitationsRepository.save(solicitation);
@@ -113,14 +128,16 @@ public class ProviderSolicitationsService implements
             userRepository.save(user);
 
             Box box = new Box();
-            box.setName(solicitation.getDescription().substring(0, Math.min(50, solicitation.getDescription().length())));
-            box.setDescription(solicitation.getDescription());
+            box.setName(solicitation.getExperienceName() != null
+                ? solicitation.getExperienceName()
+                : solicitation.getBusinessName());
+            box.setDescription(solicitation.getExperienceDescription() != null
+                ? solicitation.getExperienceDescription()
+                : solicitation.getDescription());
             box.setUser(user);
-            
-            // Usamos los Enums estándar de cajas
             box.setStatus(BoxStatusEnum.APPROVED);
             box.setStock(0);
-            box.setPrice(BigDecimal.ZERO);
+            box.setPrice(solicitation.getMinPrice() != null ? solicitation.getMinPrice() : BigDecimal.ZERO);
 
             // Buscamos la categoría de respaldo para evitar el 500
             try {

@@ -1,6 +1,6 @@
 package com.uade.tpo.marketplace.entity;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uade.tpo.marketplace.entity.enums.SolicitationStatusEnum;
@@ -28,10 +28,56 @@ public class ProviderSolicitations extends BaseEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore 
+    @JsonIgnore
     private User user;
 
-    @Lob 
-    @Column(columnDefinition = "TEXT") 
+    // Business info
+    @Column
+    private String businessName;
+
+    @Column
+    private String ownerName;
+
+    @Column
+    private String email;
+
+    @Column
+    private String phone;
+
+    @Column
+    private String website;
+
+    // Location
+    @Column
+    private String category;
+
+    @Column
+    private String location;
+
+    @Column
+    private String address;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    // Experience proposal
+    @Column
+    private String experienceName;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String experienceDescription;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal minPrice;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal maxPrice;
+
+    @Column
+    private Integer capacity;
+
+    @Column
+    private String duration;
 }

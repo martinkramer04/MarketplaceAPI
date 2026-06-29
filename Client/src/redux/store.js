@@ -3,6 +3,8 @@ import boxSlice from "./boxSlice";
 import categorySlice from "./categorySlice";
 import userSlice from "./userSlice";
 import discountSlice from "./discountSlice";
+import providerSolicitationSlice from "./providerSolicitationSlice";
+import boxSolicitationSlice from "./boxSolicitationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +12,7 @@ export const store = configureStore({
     categories: categorySlice,
     user: userSlice,
     discount: discountSlice,
+    providerSolicitations: providerSolicitationSlice,
+    boxSolicitations: boxSolicitationSlice,
   },
 });

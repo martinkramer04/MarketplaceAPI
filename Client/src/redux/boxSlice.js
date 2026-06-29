@@ -1,10 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../api/axiosConfig";
 
-export const fetchBoxes = createAsyncThunk("/api/boxes", async () => {
-  const { data } = await api.get("/api/boxes");
+export const fetchBoxes = createAsyncThunk("boxes/fetchAvailable", async () => {
+  const { data } = await api.get("/api/boxes/available");
   return data;
 });
+
+export const updateBox = createAsyncThunk(
+  "boxes/update",
+  async ({ id, payload }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put(`/api/boxes/${id}`, payload);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  },
+);
 
 export const validateCart = createAsyncThunk(
   "boxes/validateCart",
@@ -48,6 +60,20 @@ const boxSlice = createSlice({
       .addCase(fetchBoxes.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      .addCase(updateBox.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateBox.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.items.findIndex((b) => b.id === action.payload.id);
+        if (index !== -1) state.items[index] = action.payload;
+      })
+      .addCase(updateBox.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.error.message;
       })
 

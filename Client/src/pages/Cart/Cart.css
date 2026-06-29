@@ -194,10 +194,28 @@
   transition: 0.2s ease;
 }
 
-.qty-btn:hover {
+.qty-btn:hover:not(:disabled) {
   background: #3524d6;
   color: #ffffff;
   border-color: #3524d6;
+}
+
+.qty-btn:disabled {
+  background: #f3f4f6;
+  color: #d1d5db;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+}
+
+.qty-max-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
 }
 
 .qty-value {

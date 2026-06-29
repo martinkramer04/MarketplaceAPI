@@ -1,78 +1,90 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import '../ProposeBoxForm/ProposeBoxForm.css'
-import api from '../../../../../api/axiosConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCategories } from '../../../../../redux/categorySlice'
+import { createBoxSolicitation } from '../../../../../redux/boxSolicitationSlice'
+import { updateBox } from '../../../../../redux/boxSlice'
 
 function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
   const dispatch = useDispatch()
   const { items: categories, status: categoriesStatus } = useSelector((state) => state.categories)
+  const fileInputRef = useRef(null)
 
   const [saving, setSaving] = useState(false)
-  const [form, setForm] = useState({
-    title: '',
-    category: '',
-    price: '',
-    shortDescription: '',
-    detailedDescription: '',
-    subProviders: '',
-    cancellationPolicy: '',
-    termsAccepted: false,
-  })
+  const [error, setError] = useState(null)
+  const [images, setImages] = useState([])
+  const [form, setForm] = useState(() =>
+    mode === 'edit' && initialData
+      ? {
+          title: initialData.title || initialData.name || '',
+          category: initialData.category || '',
+          price: initialData.price || '',
+          shortDescription: initialData.shortDescription || '',
+          detailedDescription: initialData.detailedDescription || '',
+          subProviders: initialData.subProviders || '',
+          cancellationPolicy: initialData.cancellationPolicy || '',
+          termsAccepted: false,
+        }
+      : {
+          title: '',
+          category: '',
+          price: '',
+          shortDescription: '',
+          detailedDescription: '',
+          subProviders: '',
+          cancellationPolicy: '',
+          termsAccepted: false,
+        },
+  )
 
   useEffect(() => {
     if (categoriesStatus === 'idle') dispatch(fetchCategories())
   }, [dispatch, categoriesStatus])
-
-  useEffect(() => {
-    if (mode === 'edit' && initialData) {
-      setForm({
-        title: initialData.title || initialData.name || '',
-        category: initialData.category || '',
-        price: initialData.price || '',
-        shortDescription: initialData.shortDescription || '',
-        detailedDescription: initialData.detailedDescription || '',
-        subProviders: initialData.subProviders || '',
-        cancellationPolicy: initialData.cancellationPolicy || '',
-        termsAccepted: false,
-      })
-    }
-  }, [mode, initialData])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
   }
 
+  const handleImageChange = (e) => {
+    const incoming = Array.from(e.target.files)
+    setImages(prev => [...prev, ...incoming].slice(0, 4))
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const handleRemoveImage = (index) => {
+    setImages(prev => prev.filter((_, i) => i !== index))
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
-
-    const payload =
-      mode === 'create'
-        ? {
-            name: form.title,
-            description: form.shortDescription,
-            price: parseFloat(form.price),
-            stock: 0,
-            categoryId: parseInt(form.category),
-          }
-        : {
-            name: form.title,
-            price: parseFloat(form.price),
-            description: form.shortDescription,
-          }
+    setError(null)
 
     try {
       if (mode === 'create') {
-        await api.post('/api/boxes', payload)
+        const fields = {
+          title: form.title,
+          shortDescription: form.shortDescription,
+          detailedDescription: form.detailedDescription,
+          price: parseFloat(form.price),
+          categoryId: parseInt(form.category),
+          cancellationPolicy: form.cancellationPolicy,
+          subProviders: form.subProviders,
+        }
+        await dispatch(createBoxSolicitation({ fields, images })).unwrap()
       } else {
-        await api.put(`/api/boxes/${initialData.id}`, payload)
+        const payload = {
+          name: form.title,
+          price: parseFloat(form.price),
+          description: form.shortDescription,
+        }
+        await dispatch(updateBox({ id: initialData.id, payload })).unwrap()
       }
       if (onSuccess) onSuccess()
     } catch (err) {
-      console.error(err)
-      alert(err.response?.data?.message || 'Error al guardar los cambios.')
+      setError(typeof err === 'string' ? err : err?.message || 'Error al guardar los cambios.')
     } finally {
       setSaving(false)
     }
@@ -87,9 +99,15 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
         <p>
           {isEdit
             ? 'Modifica la informacion de la experiencia en tiempo real.'
-            : 'Carga toda la informacion basica y descriptiva de la experiencia.'}
+            : 'Carga toda la informacion basica y descriptiva de la experiencia para enviarla a revision.'}
         </p>
       </div>
+
+      {error && (
+        <div style={{ color: 'red', fontWeight: '600', marginBottom: '1rem' }}>
+          ⚠️ {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="pb-unified-form">
         <div className="pb-form-card step-one-section">
@@ -157,13 +175,41 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
           <div className="cd-left">
             <div className="cd-section">
               <h2>Imagenes de Alta Resolucion</h2>
-              <p className="cd-hint">Minimo 3000px de ancho. Formatos: JPG, PNG.</p>
+              <p className="cd-hint">Hasta 4 imagenes. Formatos: JPG, PNG.</p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png"
+                multiple
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+              />
               <div className="cd-image-grid">
-                {[0, 1, 2, 3].map((i) => (
-                  <div key={i} className="cd-image-slot">
-                    <span>+</span>
+                {images.map((file, i) => (
+                  <div key={i} className="cd-image-slot" style={{ position: 'relative', cursor: 'default' }}>
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(i)}
+                      style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.55)', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.7rem', lineHeight: '1' }}
+                    >
+                      ✕
+                    </button>
                   </div>
                 ))}
+                {images.length < 4 && (
+                  <div
+                    className="cd-image-slot"
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <span>+</span>
+                  </div>
+                )}
               </div>
             </div>
 

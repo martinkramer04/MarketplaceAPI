@@ -25,9 +25,7 @@ function Cart() {
     try {
       const { results } = await dispatch(validateCart(items)).unwrap();
       const issues = {};
-      results
-        .filter((r) => r.action !== null)
-        .forEach((r) => { issues[r.boxId] = r; });
+      results.forEach((r) => { issues[r.boxId] = r; });
       setValidationIssues(issues);
     } catch {
       toast.error("No se pudo validar el carrito. Intenta de nuevo.");
@@ -86,6 +84,7 @@ function Cart() {
                 issue.action === "REMOVE" ||
                 (issue.action === "UPDATE_QUANTITY" && item.quantity > issue.availableStock)
               );
+              const isAtMaxStock = issue?.availableStock != null && item.quantity >= issue.availableStock;
 
               return (
                 <div key={item.id} className={`cart-item${hasIssue ? " cart-item--issue" : ""}`}>
@@ -115,9 +114,13 @@ function Cart() {
                           addToCart(item);
                           toast.success(`Se agregó otro/a "${item.name}".`);
                         }}
+                        disabled={isAtMaxStock}
                       >
                         +
                       </button>
+                      {isAtMaxStock && (
+                        <span className="qty-max-label">Máx. disponible</span>
+                      )}
                       <button
                         className="remove-btn"
                         onClick={() => {

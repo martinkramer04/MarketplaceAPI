@@ -141,9 +141,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     private String[] adminGetEndpoints() {
         return new String[] {
                 "/api/orders/{id}",
-                "/api/products/{productId}", 
-                "/api/provider-solicitations/status/{status}", 
+                "/api/products/{productId}",
+                "/api/provider-solicitations/status/{status}",
                 "/api/boxes/status/{status}",
+                "/api/box-solicitations",
+                "/api/box-solicitations/status/{status}",
         };
     }
 
@@ -152,6 +154,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         return new String[] {
                 "/api/provider-solicitations/**",
                 "/api/boxes/user/{userId}",
+                "/api/box-solicitations/{id}",
+                "/api/box-solicitations/provider/{userId}",
         };
     }
     private String[] providerAdminPutEndpoints() {
@@ -164,6 +168,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     private String[] providerPostEndpoints() {
         return new String[] {
                 "/api/boxes",
+                "/api/box-solicitations",
         };
     }
 
@@ -172,11 +177,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         return new String[] {
                 "/api/paymentMethods/{id}",
                 "/api/orders/{id}",
-                "/api/provider-solicitations/{id}", // admin only
+                "/api/provider-solicitations/{id}",
                 "/api/discounts/{id}",
                 "/api/boxes/{id}",
                 "/api/categories/{categoryId}",
                 "/api/products/{productId}",
+                "/api/box-solicitations/{id}",
         };
     }
 
@@ -185,6 +191,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         return new String[] {
                 "/api/provider-solicitations/{id}",
                 "/api/boxes/{id}",
+                "/api/box-solicitations/{id}",
         };
     }
 

@@ -1,8 +1,15 @@
 import './ProposeBoxForm.css';
-import React, { useState, useEffect } from 'react';
-import api from '../../../../../api/axiosConfig';
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createBoxSolicitation } from '../../../../../redux/boxSolicitationSlice';
+import { fetchCategories } from '../../../../../redux/categorySlice';
 
-function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
+function ProposeBoxForm({ onCancel }) {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector(state => state.boxSolicitations);
+  const { items: categories, status: categoryStatus } = useSelector(state => state.categories);
+  const fileInputRef = useRef(null);
+
   const [form, setForm] = useState({
     title: '',
     category: '',
@@ -11,51 +18,61 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
     detailedDescription: '',
     subProviders: '',
     cancellationPolicy: '',
-    termsAccepted: false
+    termsAccepted: false,
   });
-  const [categories, setCategories] = useState([])
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
-    api.get('/api/categories')
-      .then(res => setCategories(res.data))
-      .catch(err => console.error('Error cargando categorías:', err))
-  }, [])
+    if (categoryStatus === 'idle') dispatch(fetchCategories());
+  }, [categoryStatus, dispatch]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const finalValue = type === 'checkbox' ? checked : value;
-    setForm((prev) => ({ ...prev, [name]: finalValue }));
+    setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const handleImageChange = (e) => {
+    const selected = Array.from(e.target.files).slice(0, 4);
+    setImages(selected);
+  };
+
+  const handleRemoveImage = (index) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    const payload = {
-      name: form.title,
-      description: form.shortDescription,
+    e.preventDefault();
+    const fields = {
+      title: form.title,
+      shortDescription: form.shortDescription,
+      detailedDescription: form.detailedDescription,
       price: parseFloat(form.price),
-      stock: 0,
       categoryId: parseInt(form.category),
+      cancellationPolicy: form.cancellationPolicy,
+      subProviders: form.subProviders,
+    };
+    try {
+      await dispatch(createBoxSolicitation({ fields, images })).unwrap();
+      if (onCancel) onCancel();
+    } catch {
+      // error is held in redux state
     }
-
-    api.post('/api/boxes', payload)
-      .then(() => {
-        alert('¡Propuesta enviada! El administrador la revisará.')
-        if (onCancel) onCancel()
-      })
-      .catch(err => {
-        console.error(err)
-        alert('Error al enviar la propuesta. Verificá que estés logueado.')
-      })
-  }
+  };
 
   return (
     <div className="propose-box-container">
 
       <div className="pb-header">
         <h1>Proponer Nueva Caja</h1>
-        <p>Cargá toda la información básica, descriptiva e imágenes de la experiencia para enviarla a publicación oficial.</p>
+        <p>Cargá toda la información básica, descriptiva e imágenes de la experiencia para enviarla a revisión.</p>
       </div>
+
+      {error && (
+        <div style={{ color: 'red', fontWeight: '600', marginBottom: '1rem' }}>
+          ⚠️ {typeof error === 'string' ? error : 'Error al enviar la propuesta. Verificá que estés logueado.'}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="pb-unified-form">
 
@@ -126,13 +143,45 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
 
             <div className="cd-section">
               <h2>Imágenes de Alta Resolución</h2>
-              <p className="cd-hint">Mínimo 3000px de ancho. Formatos: JPG, PNG.</p>
+              <p className="cd-hint">Hasta 4 imágenes. Formatos: JPG, PNG.</p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png"
+                multiple
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+              />
               <div className="cd-image-grid">
-                {[0, 1, 2, 3].map((i) => (
-                  <div key={i} className="cd-image-slot">
-                    <span>＋</span>
+                {images.map((file, i) => (
+                  <div
+                    key={i}
+                    className="cd-image-slot"
+                    style={{ position: 'relative', cursor: 'default' }}
+                  >
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(i)}
+                      style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.55)', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.7rem', lineHeight: '1' }}
+                    >
+                      ✕
+                    </button>
                   </div>
                 ))}
+                {images.length < 4 && (
+                  <div
+                    className="cd-image-slot"
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <span>＋</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -169,7 +218,6 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
                   </div>
                   <span className="cd-sp-check">✓</span>
                 </div>
-
                 <div className="cd-subprovider-item">
                   <div className="cd-sp-avatar">BT</div>
                   <div>
@@ -237,9 +285,9 @@ function ProposeBoxForm({ onCancel, onSubmitPropuesta }) {
           <button
             type="submit"
             className="btn-submit-final"
-            disabled={!form.termsAccepted}
+            disabled={loading || !form.termsAccepted}
           >
-            Enviar Propuesta Final ✓
+            {loading ? 'Enviando...' : 'Enviar Propuesta Final ✓'}
           </button>
         </div>
 

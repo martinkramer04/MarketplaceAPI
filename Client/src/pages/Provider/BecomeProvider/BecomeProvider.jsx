@@ -1,27 +1,28 @@
 import "./BecomeProvider.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../../api/axiosConfig";
+import { useDispatch, useSelector } from "react-redux";
+import { createSolicitation } from "../../../redux/providerSolicitationSlice";
 
 function BecomeProvider() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector(
+    (state) => state.providerSolicitations,
+  );
+
   const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
-    // Datos personales/empresa
     businessName: "",
     ownerName: "",
     email: "",
     phone: "",
     website: "",
-    // Rubro y ubicacion
     category: "",
     description: "",
     location: "",
     address: "",
-    // Productos y precios
     experienceName: "",
     experienceDescription: "",
     minPrice: "",
@@ -33,47 +34,21 @@ function BecomeProvider() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  // === CONEXIÓN CON EL BACKEND ===
-  const handleSubmit = () => {
-    setLoading(true);
-    setError(null);
 
-    const textoConsolidado = `
-        NUEVA SOLICITUD DE PROVEEDOR
-        ---------------------------------
-        Empresa: ${formData.businessName}
-        Responsable: ${formData.ownerName}
-        Email: ${formData.email} | Teléfono: ${formData.phone}
-        Web: ${formData.website || "No especifica"}
+  const handleSubmit = async () => {
+    const payload = {
+      ...formData,
+      minPrice: Number(formData.minPrice),
+      maxPrice: formData.maxPrice ? Number(formData.maxPrice) : null,
+      capacity: formData.capacity ? Number(formData.capacity) : null,
+    };
 
-        RUBRO Y UBICACIÓN
-        ---------------------------------
-        Categoría: ${formData.category}
-        Ciudad/Provincia: ${formData.location}
-        Dirección: ${formData.address || "No especifica"}
-        Descripción del Negocio: ${formData.description}
-
-        PROPUESTA DE EXPERIENCIA
-        ---------------------------------
-        Experiencia: ${formData.experienceName}
-        Detalle: ${formData.experienceDescription}
-        Precios: ARS $${formData.minPrice} - ARS $${formData.maxPrice || "No especifica"}
-        Capacidad: ${formData.capacity || "No especifica"} personas | Duración: ${formData.duration || "No especifica"}
-    `.trim();
-
-    const payload = { description: textoConsolidado };
-
-    api
-      .post("/api/provider-solicitations", payload)
-      .then(() => {
-        setLoading(false);
-        setStep(4);
-      })
-      .catch((err) => {
-        console.error("Error completo:", err.message);
-        setError(`Error: ${err.message}`);
-        setLoading(false);
-      });
+    try {
+      await dispatch(createSolicitation(payload)).unwrap();
+      setStep(4);
+    } catch {
+      // error is held in redux state
+    }
   };
 
   return (
@@ -84,7 +59,6 @@ function BecomeProvider() {
         <p>Sumá tus experiencias a BigBox y llegá a miles de clientes.</p>
       </div>
 
-      {/* STEPPER ORIGINAL RESTAURADO */}
       {step < 4 && (
         <div className="bp-stepper">
           <div className="bp-step-item">
@@ -118,13 +92,12 @@ function BecomeProvider() {
         </div>
       )}
 
-      {/* CONTENEDOR PRINCIPAL DEL FORMULARIO */}
       <div className="bp-form-container">
         {error && (
           <div
             style={{ color: "red", marginBottom: "20px", fontWeight: "bold" }}
           >
-            ⚠️ {error}
+            ⚠️ {typeof error === "string" ? error : "Ocurrió un error al enviar la solicitud."}
           </div>
         )}
 
@@ -202,7 +175,7 @@ function BecomeProvider() {
             </>
           )}
 
-          {/* PASO 2 - Rubro e Ubicación */}
+          {/* PASO 2 - Rubro y Ubicación */}
           {step === 2 && (
             <>
               <h2>Rubro y Ubicación</h2>
