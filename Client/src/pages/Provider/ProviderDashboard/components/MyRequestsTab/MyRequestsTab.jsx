@@ -20,11 +20,9 @@ function MyRequestsTab() {
             .then((resUser) => {
                 currentUserId = resUser.data.id;
                 // 2. Traemos la lista completa autorizada para el entorno corporativo
-                return api.get('/api/provider-solicitations');
+                return api.get(`/api/provider-solicitations/provider/${currentUserId}`);
             })
             .then((resRequests) => {
-                // 3. Filtramos en caliente por las dudas de que el user_id de la relación venga diferido
-                // Opcional: si la relación en tu back devuelve el objeto user, filtramos por req.user.id
                 const misSolicitudes = resRequests.data;
 
                 setRequests(misSolicitudes);

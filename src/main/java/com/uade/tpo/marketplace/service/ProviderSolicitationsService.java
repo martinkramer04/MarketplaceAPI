@@ -54,7 +54,7 @@ public class ProviderSolicitationsService implements
     }
 
     public List<ProviderSolicitations> getByUser(Long userId) {
-        return solicitationsRepository.findByUserId(userId);
+        return solicitationsRepository.findByUser_Id(userId);
     }
 
     public List<ProviderSolicitations> getByStatus(SolicitationStatusEnum status) {
