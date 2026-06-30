@@ -39,6 +39,17 @@ export const createDiscount = createAsyncThunk(
     }
   }
 );
+export const updateDiscount = createAsyncThunk(
+  "discount/update",
+  async ({ id, payload }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put(`/api/discounts/${id}`, payload); // Pega a tu PUT /api/discounts/{id}
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Error al actualizar el beneficio.");
+    }
+  }
+);
 
 const discountSlice = createSlice({
   name: "discount",
@@ -93,6 +104,12 @@ const discountSlice = createSlice({
 
       .addCase(createDiscount.fulfilled, (state, action) => {
         state.discounts.push(action.payload); // Insertamos el nuevo descuento en la lista
+      })
+      .addCase(updateDiscount.fulfilled, (state, action) => {
+        state.loading = false;
+        // Buscamos el descuento modificado por ID y actualizamos sus valores en la lista local
+        const index = state.discounts.findIndex((d) => d.id === action.payload.id);
+        if (index !== -1) state.items ? state.items[index] = action.payload : state.discounts[index] = action.payload;
       });
   },
 });
