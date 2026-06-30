@@ -3,6 +3,9 @@ import './AdminSidebar.css'
 const navItems = [
     { key: 'vistaGeneral', icon: '▦', label: 'Vista General' },
     { key: 'propuestasCajas', icon: '📋', label: 'Propuestas de Cajas' },
+    { key: 'boxes', icon: '🎁', label: 'Cajas Publicadas' },
+    { key: 'cupones', icon: '🎟️', label: 'Cupones' },
+    { key: 'ordenes', icon: '🛍️', label: 'Órdenes' },
     { key: 'proveedores', icon: '🏢', label: 'Proveedores' },
     { key: 'configuracionSistema', icon: '⚙️', label: 'Configuración' },
 ]

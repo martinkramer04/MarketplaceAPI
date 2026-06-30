@@ -1,0 +1,14 @@
+.admin-orders-container {
+    padding: 20px;
+    background-color: #f9fbfd;
+}
+
+.payment-method {
+    background-color: #ebf8ff;
+    color: #2b6cb0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+}

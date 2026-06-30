@@ -5,6 +5,7 @@ import userSlice from "./userSlice";
 import discountSlice from "./discountSlice";
 import providerSolicitationSlice from "./providerSolicitationSlice";
 import boxSolicitationSlice from "./boxSolicitationSlice";
+import orderSlice from "./orderSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     discount: discountSlice,
     providerSolicitations: providerSolicitationSlice,
     boxSolicitations: boxSolicitationSlice,
+    orders: orderSlice,
   },
 });
