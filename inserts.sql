@@ -171,3 +171,19 @@ SET FOREIGN_KEY_CHECKS = 1;
 SET SQL_SAFE_UPDATES = 1;
 
 SELECT '✅ Base de datos BigBox inicializada con éxito.' AS Resultado;
+--CAMBIO PARA ACTUALIZAR LA BASE DE DATOS CON LA NUEVA COLUMNA isDeleted EN LA TABLA user Y boxes, PARA QUE NO HAYA PROBLEMAS CON EL FILTRO DE ENTIDADES ELIMINADAS.
+UPDATE boxes SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE provider_solicitations SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE reviews SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE products SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE orders SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE payment_methods SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE discounts SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE box_solicitation_images SET is_deleted = false WHERE is_deleted IS NULL;
+
+UPDATE box_solicitations SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE order_details SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE categories SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE providers SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE image_table SET is_deleted = false WHERE is_deleted IS NULL;
+UPDATE discounts SET is_deleted = false WHERE is_deleted IS NULL;

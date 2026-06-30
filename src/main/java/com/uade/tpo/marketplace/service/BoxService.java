@@ -171,7 +171,7 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
                 .map(item -> {
                     Optional<Box> boxOpt = boxRepository.findById(item.getBoxId());
 
-                    if (boxOpt.isEmpty() || Boolean.TRUE.equals(boxOpt.get().getIsDeleted())) {
+                    if (boxOpt.isEmpty() || Boolean.TRUE.equals(boxOpt.get().isDeleted())) {
                         return CartItemValidationResult.builder()
                                 .boxId(item.getBoxId())
                                 .valid(false)

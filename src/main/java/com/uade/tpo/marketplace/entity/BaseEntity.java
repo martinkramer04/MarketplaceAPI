@@ -16,8 +16,8 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private Boolean isDeleted = false;
+    @Column(nullable = false)
+    private boolean isDeleted = false;
 
     @Column
     private LocalDateTime createdAt = LocalDateTime.now();
