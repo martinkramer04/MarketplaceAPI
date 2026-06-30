@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../api/axiosConfig";
 
-export const fetchBoxes = createAsyncThunk("boxes/fetchAvailable", async () => {
-  const { data } = await api.get("/api/boxes/available");
+export const fetchBoxes = createAsyncThunk("boxes/fetchAll", async () => {
+  const { data } = await api.get("/api/boxes");
   return data;
 });
 

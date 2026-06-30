@@ -70,3 +70,117 @@
 .btn-delete:hover {
     background-color: #c53030;
 }
+
+/* Contenedor del fondo oscuro semi-transparente */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    /* Efecto blur de fondo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* Caja del modal */
+.custom-modal {
+    background: #232a3b;
+    /* Tono oscuro premium a juego con el admin */
+    color: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-modal-header h2 {
+    margin: 0 0 16px 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #323b52;
+    padding-bottom: 12px;
+}
+
+.custom-modal-body p {
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #e2e8f0;
+}
+
+.modal-warning-subtext {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    display: block;
+    margin-bottom: 24px;
+}
+
+/* Botones de acción del modal */
+.custom-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-modal-cancel {
+    background: #4a5568;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+}
+
+.btn-modal-cancel:hover {
+    background: #3e4654;
+}
+
+.btn-modal-confirm {
+    background: #e53e3e;
+    /* Rojo BigBox */
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.15s;
+}
+
+.btn-modal-confirm:hover {
+    background: #c53030;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleUp {
+    from {
+        transform: scale(0.96);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

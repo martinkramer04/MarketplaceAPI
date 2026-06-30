@@ -1,21 +1,56 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBoxes, updateBox } from '../../../../redux/boxSlice';
+import { useToast } from '../../../../Context/ToastContext';
 import './AdminBoxes.css';
 
 function AdminBoxes() {
     const dispatch = useDispatch();
-    // Tu slice guarda la lista en 'items'
+    const toast = useToast();
+
     const { items: boxes, loading, error, status: fetchStatus } = useSelector((state) => state.boxes);
+
+    // Estados locales para controlar el Modal personalizado
+    const [showModal, setShowModal] = useState(false);
+    const [boxToHide, setBoxToHide] = useState(null);
 
     useEffect(() => {
         if (fetchStatus === 'idle') dispatch(fetchBoxes());
     }, [fetchStatus, dispatch]);
 
-    const handleDelete = (id) => {
-        if (window.confirm('¿Estás seguro de que deseas desactivar esta caja?')) {
-            // Mandamos payload con active false respetando el boolean primitivo
-            dispatch(updateBox({ id, payload: { isActive: false } }));
+    // Al hacer clic en los botones de la tabla
+    const handleButtonClick = (box) => {
+        const isCurrentlyApproved = box.status === 'APPROVED';
+
+        if (isCurrentlyApproved) {
+            // Si está activa, en vez de mandar el confirm nativo, abrimos nuestro modal
+            setBoxToHide(box);
+            setShowModal(true);
+        } else {
+            // Si está inactiva, la reactivamos directo sin preguntar
+            executeStatusChange(box, 'APPROVED');
+        }
+    };
+
+    // La función que ejecuta la petición definitiva a Redux
+    const executeStatusChange = async (box, newStatus) => {
+        try {
+            await dispatch(updateBox({
+                id: box.id,
+                payload: { status: newStatus }
+            })).unwrap();
+
+            if (newStatus === 'APPROVED') {
+                toast.success(`La caja "${box.name}" fue reactivada con éxito.`);
+            } else {
+                toast.success(`La caja "${box.name}" ha sido desactivada.`);
+            }
+        } catch (err) {
+            toast.error(`Error al modificar el estado: ${typeof err === 'string' ? err : 'Intente de nuevo.'}`);
+        } finally {
+            // Limpiamos estados del modal por si venía de ahí
+            setShowModal(false);
+            setBoxToHide(null);
         }
     };
 
@@ -26,8 +61,9 @@ function AdminBoxes() {
         <div className="propuestas">
             <div className="admin-tab-header">
                 <h1>Cajas Publicadas</h1>
-                <p>Gestioná las cajas que actualmente están activas en la aplicación.</p>
+                <p>Gestioná el catálogo disponible. Activá o desactivá cajas para controlar su visibilidad en el frontend.</p>
             </div>
+
             <div className="propuestas-body">
                 <div className="propuestas-table-wrapper" style={{ width: '100%' }}>
                     <table className="propuestas-table">
@@ -36,38 +72,76 @@ function AdminBoxes() {
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Precio</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {!boxes || boxes.length === 0 ? (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>
+                                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>
                                         No hay cajas publicadas.
                                     </td>
                                 </tr>
                             ) : (
-                                boxes.map((box) => (
-                                    <tr key={box.id}>
-                                        <td>#{box.id}</td>
-                                        <td><strong>{box.name}</strong></td>
-                                        <td>ARS ${Number(box.price).toLocaleString('es-AR')}</td>
-                                        <td>
-                                            <button
-                                                className="btn-reject"
-                                                style={{ padding: '4px 8px', fontSize: '0.8rem' }}
-                                                onClick={() => handleDelete(box.id)}
-                                            >
-                                                Desactivar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
+                                boxes.map((box) => {
+                                    const isBoxActive = box.status === 'APPROVED';
+                                    return (
+                                        <tr key={box.id}>
+                                            <td>#{box.id}</td>
+                                            <td><strong>{box.name}</strong></td>
+                                            <td>ARS ${Number(box.price).toLocaleString('es-AR')}</td>
+                                            <td>
+                                                <span className={`status-badge ${isBoxActive ? 'approved' : 'rejected'}`}>
+                                                    {isBoxActive ? 'Activo' : 'Inactivo'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    className={isBoxActive ? "btn-reject" : "btn-approve"}
+                                                    style={{ padding: '6px 12px', fontSize: '0.85rem', width: '100px' }}
+                                                    onClick={() => handleButtonClick(box)}
+                                                >
+                                                    {isBoxActive ? 'Desactivar' : 'Reactivar'}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
                             )}
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            {/* 👇 MODAL PERSONALIZADO DE CONFIRMACIÓN */}
+            {showModal && boxToHide && (
+                <div className="custom-modal-overlay">
+                    <div className="custom-modal">
+                        <div className="custom-modal-header">
+                            <h2>Confirmar Acción</h2>
+                        </div>
+                        <div className="custom-modal-body">
+                            <p>¿Está seguro de que desea desactivar la caja <strong>"{boxToHide.name}"</strong>?</p>
+                            <span className="modal-warning-subtext">(Esta caja dejará de ser visible para los clientes)</span>
+                        </div>
+                        <div className="custom-modal-actions">
+                            <button
+                                className="btn-modal-cancel"
+                                onClick={() => { setShowModal(false); setBoxToHide(null); }}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                className="btn-modal-confirm"
+                                onClick={() => executeStatusChange(boxToHide, 'REJECTED')}
+                            >
+                                Confirmar Desactivación
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
