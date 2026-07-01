@@ -227,5 +227,365 @@
 .perfil-body-admin .perfil-datos {
     width: 100%;
     max-width: 550px;
-    /* Evita que el formulario se estire infinitamente */
+}
+
+/* === ORDER CARDS === */
+.order-card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.order-card-expanded {
+    border-color: var(--primary);
+}
+
+.order-card-header {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    text-align: left;
+}
+
+.order-card-header:hover {
+    background-color: #fafafa;
+}
+
+.order-card-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.order-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111;
+    margin: 0;
+}
+
+.order-card-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.order-toggle-icon {
+    font-size: 0.72rem;
+    color: #aaa;
+}
+
+/* === ORDER EXPANDED BODY === */
+.order-card-body {
+    border-top: 1px solid #f0f0f0;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* === BOX ITEM WITHIN ORDER === */
+.order-box-item {
+    background-color: #fafafa;
+    border: 1px solid #efefef;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.order-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.order-box-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-box-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.order-box-qty {
+    font-size: 0.75rem;
+    color: #888;
+    background-color: #e8e8e8;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.btn-toggle-review {
+    background: none;
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-toggle-review:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* === REVIEW BADGES === */
+.review-badge-pending {
+    display: inline-block;
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: #b45309;
+    background-color: #fef3c7;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.review-badge-done {
+    display: inline-block;
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: green;
+    background-color: #e6f4ea;
+    padding: 3px 10px;
+    border-radius: 20px;
+    align-self: flex-start;
+}
+
+/* === STAR RATING === */
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.star-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: transform 0.1s;
+}
+
+.star-btn:not(:disabled):hover {
+    transform: scale(1.15);
+}
+
+.star-btn:disabled {
+    cursor: default;
+}
+
+.star-filled {
+    color: #f59e0b;
+}
+
+.star-empty {
+    color: #d1d5db;
+}
+
+/* === REVIEW FORM === */
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.review-form-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #555;
+    margin: 0;
+}
+
+.review-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.88rem;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.review-textarea:focus {
+    border-color: var(--primary);
+}
+
+.btn-review-submit {
+    align-self: flex-start;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.btn-review-submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.btn-review-submit:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+/* === EXISTING REVIEW DISPLAY === */
+.review-display {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.review-comment {
+    font-size: 0.85rem;
+    color: #555;
+    font-style: italic;
+    margin: 0;
+}
+
+/* === HISTORY SECTION HEADER + TABS === */
+.perfil-orders-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.perfil-orders-header h2 {
+    margin-bottom: 0;
+}
+
+.tab-switcher {
+    display: flex;
+    gap: 4px;
+    background-color: #f3f4f6;
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #888;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.tab-btn.tab-active {
+    background-color: white;
+    color: #111;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tab-count {
+    font-size: 0.7rem;
+    font-weight: 700;
+    background-color: var(--primary);
+    color: white;
+    padding: 1px 6px;
+    border-radius: 20px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.tab-btn:not(.tab-active) .tab-count {
+    background-color: #ccc;
+}
+
+/* === ORDER CARD META (id + pending badge in header) === */
+.order-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pending-review-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #b45309;
+    background-color: #fef3c7;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+/* === REVIEWS LIST TAB === */
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.review-card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.15s;
+}
+
+.review-card:hover {
+    border-color: #ddd;
+}
+
+.review-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.review-box-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #222;
+}
+
+.review-card-comment {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+    margin: 0;
+    line-height: 1.5;
+    padding: 10px 12px;
+    background-color: #fafafa;
+    border-radius: 8px;
+    border-left: 3px solid #eee;
 }

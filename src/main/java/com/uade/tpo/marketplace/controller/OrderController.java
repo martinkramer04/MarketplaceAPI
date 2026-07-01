@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.uade.tpo.marketplace.entity.Order;
 import com.uade.tpo.marketplace.entity.OrderDetails;
 import com.uade.tpo.marketplace.entity.User;
@@ -24,6 +27,8 @@ import com.uade.tpo.marketplace.entity.dto.Order.OrderAdminDto;
 import com.uade.tpo.marketplace.entity.dto.Order.OrderDetailsDto;
 import com.uade.tpo.marketplace.entity.dto.Order.OrderUserDto;
 import com.uade.tpo.marketplace.entity.dto.Order.UpdateOrderRequest;
+import com.uade.tpo.marketplace.entity.enums.ReviewStatusEnum;
+import com.uade.tpo.marketplace.repository.ReviewRepository;
 import com.uade.tpo.marketplace.service.OrderService;
 
 @RestController
@@ -32,6 +37,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     // GET /api/orders
     @GetMapping
@@ -60,8 +68,15 @@ public class OrderController {
     // GET /api/orders/user/{userId}
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<OrderUserDto>> getByUser(@PathVariable Long userId) {
+        Set<Long> pendingReviewBoxIds = reviewRepository
+                .findByUserIdAndStatus(userId, ReviewStatusEnum.WAITING_REVIEW)
+                .stream()
+                .filter(r -> r.getBox() != null)
+                .map(r -> r.getBox().getId())
+                .collect(Collectors.toSet());
+
         return ResponseEntity.ok(orderService.getByUser(userId).stream()
-                .map(OrderUserDto::convertToDto)
+                .map(o -> OrderUserDto.convertToDto(o, pendingReviewBoxIds))
                 .toList());
     }
 

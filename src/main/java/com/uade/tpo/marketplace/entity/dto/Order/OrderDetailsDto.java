@@ -16,6 +16,7 @@ public class OrderDetailsDto {
     private BigDecimal discountAmount;
     private Integer boxStock;
     private BoxDto box;
+    private boolean pendingReview;
 
     public static OrderDetailsDto convertToDto(OrderDetails orderDetails) {
         OrderDetailsDto dto = new OrderDetailsDto();
@@ -26,6 +27,12 @@ public class OrderDetailsDto {
         dto.setDiscountAmount(orderDetails.getDiscountAmount());
         dto.setBoxStock(orderDetails.getBoxStock());
         dto.setBox(BoxDto.convertToDto(orderDetails.getBox()));
+        return dto;
+    }
+
+    public static OrderDetailsDto convertToDto(OrderDetails orderDetails, boolean pendingReview) {
+        OrderDetailsDto dto = convertToDto(orderDetails);
+        dto.setPendingReview(pendingReview);
         return dto;
     }
 
