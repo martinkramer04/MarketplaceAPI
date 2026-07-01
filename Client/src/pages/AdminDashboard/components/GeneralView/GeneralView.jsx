@@ -24,7 +24,7 @@ function GeneralView() {
 
             <div className="vg-header">
                 <div>
-                    <h1>BigBox Dashboard</h1>
+                    <h1>Boxify Dashboard</h1>
                     <p>Bienvenido. Gestioná el ecosistema de experiencias premium.</p>
                 </div>
                 <div className="vg-date">

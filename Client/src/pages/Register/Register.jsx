@@ -55,7 +55,7 @@ function Register() {
 
         <div className="register-header">
           <div className="register-logo">
-            BigBox<span>.</span>
+            Boxify<span>.</span>
           </div>
           <h1>Crear Cuenta</h1>
           <p>Registrate para empezar a gestionar tus experiencias y propuestas.</p>

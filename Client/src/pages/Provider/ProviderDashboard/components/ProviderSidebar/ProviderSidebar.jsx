@@ -11,7 +11,7 @@ function ProviderSidebar({ activeTab, onNavigate }) {
     return (
         <aside className="provider-sidebar">
             <div className="sidebar-brand">
-                <span className="sidebar-logo">BigBox</span>
+                <span className="sidebar-logo">Boxify</span>
                 <span className="sidebar-role">Portal de Proveedores</span>
             </div>
 

@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 function SystemConfiguration() {
     const [config, setConfig] = useState({
-        platformName: 'BigBox',
+        platformName: 'Boxify',
         maintenanceMode: false,
         maxBoxPrice: 500,
         commissionRate: 15,
@@ -25,7 +25,7 @@ function SystemConfiguration() {
 
             <div className="admin-tab-header">
                 <h1>Configuración del Sistema</h1>
-                <p>Ajustes generales de la plataforma BigBox.</p>
+                <p>Ajustes generales de la plataforma Boxify.</p>
             </div>
 
             <div className="config-body">

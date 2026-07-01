@@ -19,7 +19,7 @@ function Navbar() {
     <nav className="navbar">
       <Link to="/">
         <div className="navbar-logo">
-          <h1>BigBox</h1>
+          <h1>Boxify</h1>
         </div>
       </Link>
 

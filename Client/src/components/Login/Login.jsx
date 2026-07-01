@@ -35,7 +35,7 @@ function Login() {
       <div className="login-card">
         <div className="login-header">
           <div className="login-logo">
-            BigBox<span>.</span>
+            Boxify<span>.</span>
           </div>
           <h1>Ingreso a la Plataforma</h1>
           <p>
