@@ -151,6 +151,10 @@ function BoxDetail() {
           ${box.price} <span>per box</span>
         </p>
 
+        {box.stock > 0 && box.stock < 5 && (
+          <span className="bd-stock-badge">¡Últimas disponibles!</span>
+        )}
+
         <div className="box-detail-actions">
           <button
             className="btn-add-cart"
