@@ -1,16 +1,23 @@
 package com.uade.tpo.marketplace.service;
 
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.rowset.serial.SerialBlob;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.marketplace.entity.Box;
 import com.uade.tpo.marketplace.entity.Category;
+import com.uade.tpo.marketplace.entity.Image;
 import com.uade.tpo.marketplace.entity.Product;
 import com.uade.tpo.marketplace.entity.User;
 import com.uade.tpo.marketplace.entity.dto.Box.CartItemRequest;
@@ -30,6 +37,8 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
     private BoxRepository boxRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ImageService imageService;
 
     @Override
     public List<Box> getAll() {
@@ -140,7 +149,7 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
             box.setStock(entity.getStock());
         }
         if (entity.getStatus() != null) {
-            box.setStatus(entity.getStatus()); 
+            box.setStatus(entity.getStatus());
         }
         box.setUpdatedAt(LocalDateTime.now());
 
@@ -148,6 +157,23 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
             boxRepository.save(box);
         } catch (Exception e) {
             throw new RuntimeException("Error updating box: " + e.getMessage());
+        }
+
+        if (entity.getImages() != null) {
+            for (MultipartFile file : entity.getImages()) {
+                if (file == null || file.isEmpty()) {
+                    continue;
+                }
+                try {
+                    Blob blob = new SerialBlob(file.getBytes());
+                    imageService.create(Image.builder()
+                            .image(blob)
+                            .name(file.getOriginalFilename())
+                            .build(), box.getId());
+                } catch (IOException | SQLException e) {
+                    throw new RuntimeException("Error saving box image: " + e.getMessage());
+                }
+            }
         }
 
         return Optional.of(box);

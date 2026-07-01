@@ -1,115 +1,87 @@
-import { useState, useEffect, useRef } from 'react'
-import '../ProposeBoxForm/ProposeBoxForm.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchCategories } from '../../../../../redux/categorySlice'
-import { createBoxSolicitation } from '../../../../../redux/boxSolicitationSlice'
-import { updateBox } from '../../../../../redux/boxSlice'
-import api from '../../../../../api/axiosConfig' // 🟢 Importamos axios para el modo edición
-import { getBoxImageUrl } from '../../../../../utils/boxUtils' // 🟢 Importamos el utilitario para mostrar fotos guardadas en base de datos
+import { useState, useEffect, useRef } from "react";
+import "../ProposeBoxForm/ProposeBoxForm.css";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../../../../redux/categorySlice";
+import { createBoxSolicitation } from "../../../../../redux/boxSolicitationSlice";
+import { updateBox } from "../../../../../redux/boxSlice";
 
-function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
-  const dispatch = useDispatch()
-  const { items: categories, status: categoriesStatus } = useSelector((state) => state.categories)
-  const fileInputRef = useRef(null)
+function BoxForm({ mode = "create", initialData = null, onSuccess, onCancel }) {
+  const dispatch = useDispatch();
+  const { items: categories, status: categoriesStatus } = useSelector(
+    (state) => state.categories,
+  );
+  const fileInputRef = useRef(null);
 
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState(null)
-  const [images, setImages] = useState([]) // Maneja archivos locales en modo 'create'
-  const [currentDbImages, setCurrentDbImages] = useState([]) // 🟢 Maneja imágenes de MySQL en modo 'edit'
-
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  // existingImages: objects from the server { id, base64Image, ... }
+  const [existingImages, setExistingImages] = useState(() =>
+    mode === "edit" && initialData?.images ? initialData.images : [],
+  );
+  // newImages: File objects added by the user during this session
+  const [newImages, setNewImages] = useState([]);
   const [form, setForm] = useState(() =>
-    mode === 'edit' && initialData
+    mode === "edit" && initialData
       ? {
-        title: initialData.title || initialData.name || '',
-        category: initialData.category?.id || initialData.category || '', // 🟢 Tomamos el ID si viene como objeto
-        price: initialData.price || '',
-        shortDescription: initialData.shortDescription || initialData.description || '', // 👈 Mapeo de description de MySQL
-        detailedDescription: initialData.detailedDescription || '',
-        subProviders: initialData.subProviders || '',
-        cancellationPolicy: initialData.cancellationPolicy || '',
-        termsAccepted: false,
-      }
+          title: initialData.title || initialData.name || "",
+          category: initialData.category?.id || initialData.category || "", // 🟢 Tomamos el ID si viene como objeto
+          price: initialData.price || "",
+          shortDescription:
+            initialData.shortDescription || initialData.description || "", // 👈 Mapeo de description de MySQL
+          detailedDescription: initialData.detailedDescription || "",
+          subProviders: initialData.subProviders || "",
+          cancellationPolicy: initialData.cancellationPolicy || "",
+          termsAccepted: false,
+        }
       : {
-        title: '',
-        category: '',
-        price: '',
-        shortDescription: '',
-        detailedDescription: '',
-        subProviders: '',
-        cancellationPolicy: '',
-        termsAccepted: false,
-      },
-  )
+          title: "",
+          category: "",
+          price: "",
+          shortDescription: "",
+          detailedDescription: "",
+          subProviders: "",
+          cancellationPolicy: "",
+          termsAccepted: false,
+        },
+  );
 
   useEffect(() => {
-    if (categoriesStatus === 'idle') dispatch(fetchCategories())
-  }, [dispatch, categoriesStatus])
-
-  // 🟢 Si estamos editando, inicializamos las imágenes existentes de la caja
-  useEffect(() => {
-    if (mode === 'edit' && initialData) {
-      setCurrentDbImages(initialData.images || [])
-    }
-  }, [mode, initialData])
+    if (categoriesStatus === "idle") dispatch(fetchCategories());
+  }, [dispatch, categoriesStatus]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
-  }
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
-  // 🟢 Manejo de imágenes inteligente según el modo
-  const handleImageChange = async (e) => {
-    const incoming = Array.from(e.target.files)
-    if (incoming.length === 0) return
+  const totalImages = existingImages.length + newImages.length;
 
-    if (mode === 'create') {
-      // Comportamiento original para creación
-      setImages(prev => [...prev, ...incoming].slice(0, 4))
-      if (fileInputRef.current) fileInputRef.current.value = ''
-    } else {
-      // 🟢 Comportamiento para Edición: Envío Multipart directo por Axios a BoxController
-      const file = incoming[0]
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('name', file.name)
-      formData.append('boxId', initialData.id)
+  const handleImageChange = (e) => {
+    const incoming = Array.from(e.target.files);
+    const available = 4 - existingImages.length;
+    setNewImages((prev) => [...prev, ...incoming].slice(0, available));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
-      try {
-        setError(null)
-        setSaving(true)
+  const handleRemoveExistingImage = (index) => {
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
-        // Al NO setear 'Content-Type' manualmente, Axios y el navegador
-        // manejan el Multipart automáticamente sin pisar el token de autenticación (JWT).
-        await api.post('/api/boxes/add-image', formData)
-
-        // Recargamos los datos actualizados de la caja para sincronizar las fotos nuevas con la base de datos
-        const res = await api.get(`/api/boxes/${initialData.id}`)
-        if (res.data && res.data.images) {
-          setCurrentDbImages(res.data.images)
-        }
-      } catch (err) {
-        console.error("Error al subir imagen:", err)
-        setError("No tenés permisos o no se pudo subir la imagen al servidor remoto (403).")
-      } finally {
-        setSaving(false)
-        if (fileInputRef.current) fileInputRef.current.value = ''
-      }
-    }
-  }
-
-
-  const handleRemoveImage = (index) => {
-    setImages(prev => prev.filter((_, i) => i !== index))
-    if (fileInputRef.current) fileInputRef.current.value = ''
-  }
+  const handleRemoveNewImage = (index) => {
+    setNewImages((prev) => prev.filter((_, i) => i !== index));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSaving(true)
-    setError(null)
+    e.preventDefault();
+    setSaving(true);
+    setError(null);
 
     try {
-      if (mode === 'create') {
+      if (mode === "create") {
         const fields = {
           title: form.title,
           shortDescription: form.shortDescription,
@@ -118,41 +90,63 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
           categoryId: parseInt(form.category),
           cancellationPolicy: form.cancellationPolicy,
           subProviders: form.subProviders,
-        }
-        await dispatch(createBoxSolicitation({ fields, images })).unwrap()
+        };
+        await dispatch(
+          createBoxSolicitation({ fields, images: newImages }),
+        ).unwrap();
       } else {
-        const payload = {
+        const fields = {
           name: form.title,
           price: parseFloat(form.price),
           description: form.shortDescription,
-        }
-        await dispatch(updateBox({ id: initialData.id, payload })).unwrap()
+          detailedDescription: form.detailedDescription,
+          ...(form.category && { categoryId: parseInt(form.category) }),
+          ...(form.cancellationPolicy && {
+            cancellationPolicy: form.cancellationPolicy,
+          }),
+          ...(form.subProviders && { subProviders: form.subProviders }),
+        };
+        const keepImageIds = existingImages
+          .filter((img) => img.id)
+          .map((img) => img.id);
+        await dispatch(
+          updateBox({
+            id: initialData.id,
+            fields,
+            images: newImages,
+            keepImageIds,
+          }),
+        ).unwrap();
       }
-      if (onSuccess) onSuccess()
+      if (onSuccess) onSuccess();
     } catch (err) {
-      setError(typeof err === 'string' ? err : err?.message || 'Error al guardar los cambios.')
+      setError(
+        typeof err === "string"
+          ? err
+          : err?.message || "Error al guardar los cambios.",
+      );
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
-  const isEdit = mode === 'edit'
-  // Definimos cuántas imágenes tenemos cargadas dependiendo del modo actual
-  const totalImagesCount = isEdit ? currentDbImages.length : images.length
+  const isEdit = mode === "edit";
 
   return (
     <div className="propose-box-container">
       <div className="pb-header">
-        <h1>{isEdit ? `Editar Caja #${initialData?.id}` : 'Proponer Nueva Caja'}</h1>
+        <h1>
+          {isEdit ? `Editar Caja #${initialData?.id}` : "Proponer Nueva Caja"}
+        </h1>
         <p>
           {isEdit
-            ? 'Modifica la informacion de la experiencia en tiempo real.'
-            : 'Carga toda la informacion basica y descriptiva de la experiencia para enviarla a revision.'}
+            ? "Modifica la informacion de la experiencia en tiempo real."
+            : "Carga toda la informacion basica y descriptiva de la experiencia para enviarla a revision."}
         </p>
       </div>
 
       {error && (
-        <div style={{ color: 'red', fontWeight: '600', marginBottom: '1rem' }}>
+        <div style={{ color: "red", fontWeight: "600", marginBottom: "1rem" }}>
           ⚠️ {error}
         </div>
       )}
@@ -229,45 +223,96 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
                 type="file"
                 accept="image/jpeg,image/png"
                 multiple={!isEdit} // Múltiple sólo al crear; de a uno al editar
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 onChange={handleImageChange}
               />
               <div className="cd-image-grid">
-                {/* 🟢 Renderizado Condicional de Slots según el modo */}
-                {isEdit
-                  ? currentDbImages.map((imgObj, i) => (
-                    <div key={i} className="cd-image-slot" style={{ position: 'relative', cursor: 'default' }}>
-                      <img
-                        src={getBoxImageUrl({ images: [imgObj] })}
-                        alt={imgObj.name || `imagen-${i}`}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }}
-                      />
-                    </div>
-                  ))
-                  : images.map((file, i) => (
-                    <div key={i} className="cd-image-slot" style={{ position: 'relative', cursor: 'default' }}>
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={file.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveImage(i)}
-                        style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.55)', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.7rem', lineHeight: '1' }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))
-                }
-
-                {totalImagesCount < 4 && (
+                {existingImages.map((img, i) => (
+                  <div
+                    key={`existing-${i}`}
+                    className="cd-image-slot"
+                    style={{ position: "relative", cursor: "default" }}
+                  >
+                    <img
+                      src={`data:image/png;base64,${img.base64Image}`}
+                      alt={`imagen-existente-${i}`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: "4px",
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveExistingImage(i)}
+                      style={{
+                        position: "absolute",
+                        top: "4px",
+                        right: "4px",
+                        background: "rgba(0,0,0,0.55)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "20px",
+                        height: "20px",
+                        cursor: "pointer",
+                        fontSize: "0.7rem",
+                        lineHeight: "1",
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                {newImages.map((file, i) => (
+                  <div
+                    key={`new-${i}`}
+                    className="cd-image-slot"
+                    style={{ position: "relative", cursor: "default" }}
+                  >
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: "4px",
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveNewImage(i)}
+                      style={{
+                        position: "absolute",
+                        top: "4px",
+                        right: "4px",
+                        background: "rgba(0,0,0,0.55)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "20px",
+                        height: "20px",
+                        cursor: "pointer",
+                        fontSize: "0.7rem",
+                        lineHeight: "1",
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                {totalImages < 4 && (
                   <div
                     className="cd-image-slot"
                     onClick={() => fileInputRef.current?.click()}
-                    style={{ cursor: 'pointer' }}
-                    title={isEdit ? "Hacé click para añadir una foto a MySQL" : "Añadir foto local"}
+                    style={{ cursor: "pointer" }}
+                    title={
+                      isEdit
+                        ? "Hacé click para añadir una foto a MySQL"
+                        : "Añadir foto local"
+                    }
                   >
                     <span>+</span>
                   </div>
@@ -279,7 +324,9 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
               <h2>Descripcion Detallada</h2>
               <div className="cd-editor-toolbar">
                 <button type="button">B</button>
-                <button type="button"><i>I</i></button>
+                <button type="button">
+                  <i>I</i>
+                </button>
                 <button type="button">&#8801;</button>
               </div>
               <textarea
@@ -310,15 +357,34 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
             <div className="cd-section">
               <h2>Terminos del Servicio</h2>
               {!isEdit && (
-                <div className="pb-campo" style={{ marginBottom: '16px' }}>
-                  <label style={{ fontSize: '0.9rem', fontWeight: '600', color: '#2c3e3b', marginBottom: '8px', display: 'block' }}>
+                <div className="pb-campo" style={{ marginBottom: "16px" }}>
+                  <label
+                    style={{
+                      fontSize: "0.9rem",
+                      fontWeight: "600",
+                      color: "#2c3e3b",
+                      marginBottom: "8px",
+                      display: "block",
+                    }}
+                  >
                     Politica de Cancelacion
                   </label>
-                  <select name="cancellationPolicy" value={form.cancellationPolicy} onChange={handleChange} required>
+                  <select
+                    name="cancellationPolicy"
+                    value={form.cancellationPolicy}
+                    onChange={handleChange}
+                    required
+                  >
                     <option value="">Selecciona una politica</option>
-                    <option value="strict">Estricta - Sin reembolso en 7 dias</option>
-                    <option value="moderate">Moderada - Reembolso parcial</option>
-                    <option value="flexible">Flexible - Reembolso completo</option>
+                    <option value="strict">
+                      Estricta - Sin reembolso en 7 dias
+                    </option>
+                    <option value="moderate">
+                      Moderada - Reembolso parcial
+                    </option>
+                    <option value="flexible">
+                      Flexible - Reembolso completo
+                    </option>
                   </select>
                 </div>
               )}
@@ -332,8 +398,8 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
                 />
                 <span>
                   {isEdit
-                    ? 'Confirmo que las modificaciones cumplen con los estandares de la plataforma.'
-                    : 'Confirmo que todos los terminos cumplen con los estandares globales de la plataforma.'}
+                    ? "Confirmo que las modificaciones cumplen con los estandares de la plataforma."
+                    : "Confirmo que todos los terminos cumplen con los estandares globales de la plataforma."}
                 </span>
               </label>
             </div>
@@ -341,20 +407,29 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
         </div>
 
         <div className="pb-form-actions">
-          <button type="button" onClick={onCancel} className="btn-pb-cancel" disabled={saving}>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn-pb-cancel"
+            disabled={saving}
+          >
             Cancelar
           </button>
-          <button type="submit" className="btn-submit-final" disabled={!form.termsAccepted || saving}>
+          <button
+            type="submit"
+            className="btn-submit-final"
+            disabled={!form.termsAccepted || saving}
+          >
             {saving
-              ? 'Guardando...'
+              ? "Guardando..."
               : isEdit
-                ? 'Guardar Cambios ✓'
-                : 'Enviar Propuesta Final ✓'}
+                ? "Guardar Cambios ✓"
+                : "Enviar Propuesta Final ✓"}
           </button>
         </div>
       </form>
     </div>
-  )
+  );
 }
 
-export default BoxForm
+export default BoxForm;

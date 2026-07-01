@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -98,10 +99,10 @@ public class BoxController {
     }
 
     // PUT
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BoxDto> update(
             @PathVariable Long id,
-            @RequestBody UpdateBoxRequest request) {
+            @ModelAttribute UpdateBoxRequest request) {
         Optional<Box> result = boxService.update(request, id);
         return result.map(BoxDto::convertToDto)
                 .map(ResponseEntity::ok)

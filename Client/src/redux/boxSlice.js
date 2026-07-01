@@ -13,9 +13,15 @@ export const fetchBoxesAvailable = createAsyncThunk("boxes/fetchAvailable", asyn
 
 export const updateBox = createAsyncThunk(
   "boxes/update",
-  async ({ id, payload }, { rejectWithValue }) => {
+  async ({ id, fields, images = [], keepImageIds = [] }, { rejectWithValue }) => {
     try {
-      const { data } = await api.put(`/api/boxes/${id}`, payload);
+      const formData = new FormData();
+      Object.entries(fields).forEach(([key, value]) => {
+        if (value != null && value !== "") formData.append(key, value);
+      });
+      images.forEach((img) => formData.append("images", img));
+      keepImageIds.forEach((imgId) => formData.append("keepImageIds", imgId));
+      const { data } = await api.put(`/api/boxes/${id}`, formData);
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
