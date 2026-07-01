@@ -79,19 +79,23 @@ public class ReviewService implements IBaseService<ReviewDto, CreateReviewReques
                 .getAuthentication()
                 .getPrincipal();
 
-        Review review = reviewRepository.findByUserIdAndBoxIdAndStatus(
+        // 🟢 1. Traemos la lista completa de pendientes en vez de un objeto único
+        List<Review> pendingReviews = reviewRepository.findByUserIdAndBoxIdAndStatus(
                 currentUser.getId(),
                 entity.getBoxId(),
                 ReviewStatusEnum.WAITING_REVIEW);
 
-        if (review == null) {
+        // 🟢 2. Validamos si la lista está vacía
+        if (pendingReviews.isEmpty()) {
             throw new IllegalStateException("User has not purchased this box or has already reviewed it");
         }
+
+        // 🟢 3. Tomamos la primera reseña pendiente de la lista para proceder a completarla
+        Review review = pendingReviews.get(0);
 
         review.setRating(entity.getRating());
         review.setStatus(ReviewStatusEnum.REVIEWED);
         review.setComment(entity.getComment());
-
         try {
             reviewRepository.save(review);
         } catch (Exception e) {
