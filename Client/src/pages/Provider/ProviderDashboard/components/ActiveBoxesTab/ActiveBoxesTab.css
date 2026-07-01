@@ -248,3 +248,86 @@
     color: #ffffff;
     cursor: pointer;
 }
+
+/* ====================================================================
+   BOTÓN PRINCIPAL: + Stock
+   ==================================================================== */
+.btn-add-stock {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2d3748; /* Un gris oscuro elegante */
+    background-color: #edf2f7; /* Gris muy claro sutil */
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-add-stock:hover {
+    background-color: #e2e8f0;
+    border-color: #a0aec0;
+}
+
+.btn-add-stock:active {
+    transform: scale(0.98);
+}
+
+
+/* ====================================================================
+   ESTADOS DEL INPUT Y CONFIRMACIÓN (Al hacer click)
+   ==================================================================== */
+
+/* Contenedor del Input + Botón ✓ */
+.ab-stock-input-wrapper {
+    display: flex;
+    gap: 6px !important; /* Ajustamos levemente el gap para que respire */
+    align-items: center;
+}
+
+/* Forzamos que el input de stock se acople visualmente al diseño */
+.ab-stock-input-wrapper input {
+    height: 32px; /* Altura alineada a los botones de acciones */
+    border: 1px solid #cbd5e0 !important;
+    border-radius: 6px !important;
+    outline: none;
+    font-size: 14px;
+    color: #2d3748;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.ab-stock-input-wrapper input:focus {
+    border-color: #319795 !important; /* Color verde/azulado similar al botón Editar */
+    box-shadow: 0 0 0 1px #319795;
+}
+
+/* Botón de Confirmación (✓) */
+.btn-add-stock-confirm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 32px; /* Lo hacemos cuadrado para el check */
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #319795; /* Sintoniza con el estilo de "Editar" y "Activa" */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-add-stock-confirm:hover:not(:disabled) {
+    background-color: #287976;
+}
+
+.btn-add-stock-confirm:disabled {
+    background-color: #cbd5e0;
+    color: #718096;
+    cursor: not-allowed;
+}
