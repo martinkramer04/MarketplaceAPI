@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './EditBoxForm.css';
 import api from '../../../../../api/axiosConfig';
-import { useToast } from '../../../../../Context/ToastContext'; // 👈 Importamos tus toasts
-import { getBoxImageUrl } from '../../../../utils/boxUtils'; // 👈 Importamos tus utilitarios de imagen
+import { useToast } from '../../../../../Context/ToastContext';
+import { getBoxImageUrl } from '../../../../utils/boxUtils';
 
 function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
-  const toast = useToast(); // 👈 Instanciamos el manejador de notificaciones
+  const toast = useToast();
+  // 🟢 Usamos una referencia para el input file oculto
+  const fileInputRef = useRef(null);
 
   const [form, setForm] = useState({
     title: '',
@@ -17,6 +19,9 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
     cancellationPolicy: '',
     termsAccepted: false
   });
+
+  // 🟢 Estado local para manejar las imágenes actuales de la caja en tiempo real
+  const [currentImages, setCurrentImages] = useState([]);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -31,6 +36,8 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
         cancellationPolicy: propuestaInicial.cancellationPolicy || '',
         termsAccepted: false
       });
+      // Guardamos las imágenes iniciales que vienen de la base de datos
+      setCurrentImages(propuestaInicial.images || []);
     }
   }, [propuestaInicial]);
 
@@ -40,11 +47,56 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
     setForm((prev) => ({ ...prev, [name]: finalValue }));
   };
 
+  // 🟢 Función para disparar el input file cuando hacen clic en un slot
+  const handleSlotClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  // 🟢 Función que intercepta el archivo seleccionado y lo sube al backend vía Multipart
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('name', file.name);
+    formData.append('boxId', propuestaInicial.id);
+
+    try {
+      toast.info("Subiendo nueva imagen...");
+
+      // Ejecutamos tu método del controller pasándole el MULTIPART_FORM_DATA
+      await api.post('/api/boxes/add-image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      toast.success("¡Imagen subida con éxito!");
+
+      // Volvemos a pedir los datos de la caja para actualizar la lista de imágenes con sus IDs nuevos
+      const res = await api.get(`/api/boxes/${propuestaInicial.id}`);
+      if (res.data && res.data.images) {
+        setCurrentImages(res.data.images);
+        if (onUpdatePropuesta) {
+          onUpdatePropuesta({ ...propuestaInicial, images: res.data.images });
+        }
+      }
+    } catch (err) {
+      console.error("Error al subir la imagen:", err);
+      toast.error("No se pudo guardar la imagen en el servidor.");
+    } finally {
+      // Limpiamos el input para poder subir el mismo archivo u otro consecutivamente
+      e.target.value = '';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
 
-    // Mapeamos el payload adaptado a lo que espera tu entidad Box de Java
     const payload = {
       name: form.title,
       price: parseFloat(form.price),
@@ -52,19 +104,16 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
     };
 
     try {
-      // Mandamos el PUT real a MySQL a través de tu endpoint de Java
       await api.put(`/api/boxes/${propuestaInicial.id}`, payload);
-
-      // 📢 Reemplazamos el alert nativo por tu toast exitoso
       toast.success(`La caja "${form.title}" fue actualizada correctamente en la base de datos.`);
 
       if (onUpdatePropuesta) {
-        onUpdatePropuesta({ ...propuestaInicial, ...form });
+        // Enviamos la propuesta actualizada con las imágenes que subimos en caliente
+        onUpdatePropuesta({ ...propuestaInicial, ...form, images: currentImages });
       }
     } catch (err) {
       console.error("Error al actualizar la caja:", err);
-      // 📢 Disparamos el toast de error si la transacción con la API falla
-      toast.error(err.response?.data?.message || "No se pudieron guardar las modificaciones en la base de datos.");
+      toast.error(err.response?.data?.message || "No se pudieron guardar las modificaciones.");
     } finally {
       setSaving(false);
     }
@@ -76,6 +125,15 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
         <h1>Editar Propuesta de Caja #{propuestaInicial?.id}</h1>
         <p>Modificá la información de la experiencia en tiempo real de tu catálogo.</p>
       </div>
+
+      {/* 🟢 Input oculto que maneja el envío de binarios de las imágenes */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        accept="image/*"
+        onChange={handleFileChange}
+      />
 
       <form onSubmit={handleSubmit} className="pb-unified-form">
         <div className="pb-form-card step-one-section">
@@ -107,21 +165,26 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
           </div>
         </div>
 
-        {/* Sección de Imágenes y editor intermedio */}
         <div className="cd-body">
           <div className="cd-left">
             <div className="cd-section">
               <h2>Imágenes de Alta Resolución</h2>
               <div className="cd-image-grid">
                 {[0, 1, 2, 3].map((i) => {
-                  // Verificamos si la propuesta inicial contiene una imagen en este índice exacto
-                  const hasImage = propuestaInicial?.images && propuestaInicial.images[i];
+                  // 🟢 Evaluamos usando nuestro estado local dinámico 'currentImages'
+                  const hasImage = currentImages && currentImages[i];
 
                   return (
-                    <div key={i} className="cd-image-slot" style={{ overflow: 'hidden', padding: 0 }}>
+                    <div
+                      key={i}
+                      className="cd-image-slot"
+                      style={{ overflow: 'hidden', padding: 0, cursor: 'pointer' }}
+                      onClick={handleSlotClick} // 🟢 Al hacer click abre el explorador de archivos
+                      title="Haz click para cambiar o agregar una foto"
+                    >
                       {hasImage ? (
                         <img
-                          src={getBoxImageUrl({ images: [propuestaInicial.images[i]] })}
+                          src={getBoxImageUrl({ images: [currentImages[i]] })}
                           alt={`Caja slot ${i}`}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />

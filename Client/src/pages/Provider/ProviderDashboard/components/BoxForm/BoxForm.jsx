@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchCategories } from '../../../../../redux/categorySlice'
 import { createBoxSolicitation } from '../../../../../redux/boxSolicitationSlice'
 import { updateBox } from '../../../../../redux/boxSlice'
+import api from '../../../../../api/axiosConfig' // 🟢 Importamos axios para el modo edición
+import { getBoxImageUrl } from '../../../../../utils/boxUtils' // 🟢 Importamos el utilitario para mostrar fotos guardadas en base de datos
 
 function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
   const dispatch = useDispatch()
@@ -12,45 +14,89 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState([]) // Maneja archivos locales en modo 'create'
+  const [currentDbImages, setCurrentDbImages] = useState([]) // 🟢 Maneja imágenes de MySQL en modo 'edit'
+
   const [form, setForm] = useState(() =>
     mode === 'edit' && initialData
       ? {
-          title: initialData.title || initialData.name || '',
-          category: initialData.category || '',
-          price: initialData.price || '',
-          shortDescription: initialData.shortDescription || '',
-          detailedDescription: initialData.detailedDescription || '',
-          subProviders: initialData.subProviders || '',
-          cancellationPolicy: initialData.cancellationPolicy || '',
-          termsAccepted: false,
-        }
+        title: initialData.title || initialData.name || '',
+        category: initialData.category?.id || initialData.category || '', // 🟢 Tomamos el ID si viene como objeto
+        price: initialData.price || '',
+        shortDescription: initialData.shortDescription || initialData.description || '', // 👈 Mapeo de description de MySQL
+        detailedDescription: initialData.detailedDescription || '',
+        subProviders: initialData.subProviders || '',
+        cancellationPolicy: initialData.cancellationPolicy || '',
+        termsAccepted: false,
+      }
       : {
-          title: '',
-          category: '',
-          price: '',
-          shortDescription: '',
-          detailedDescription: '',
-          subProviders: '',
-          cancellationPolicy: '',
-          termsAccepted: false,
-        },
+        title: '',
+        category: '',
+        price: '',
+        shortDescription: '',
+        detailedDescription: '',
+        subProviders: '',
+        cancellationPolicy: '',
+        termsAccepted: false,
+      },
   )
 
   useEffect(() => {
     if (categoriesStatus === 'idle') dispatch(fetchCategories())
   }, [dispatch, categoriesStatus])
 
+  // 🟢 Si estamos editando, inicializamos las imágenes existentes de la caja
+  useEffect(() => {
+    if (mode === 'edit' && initialData) {
+      setCurrentDbImages(initialData.images || [])
+    }
+  }, [mode, initialData])
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
   }
 
-  const handleImageChange = (e) => {
+  // 🟢 Manejo de imágenes inteligente según el modo
+  const handleImageChange = async (e) => {
     const incoming = Array.from(e.target.files)
-    setImages(prev => [...prev, ...incoming].slice(0, 4))
-    if (fileInputRef.current) fileInputRef.current.value = ''
+    if (incoming.length === 0) return
+
+    if (mode === 'create') {
+      // Comportamiento original para creación
+      setImages(prev => [...prev, ...incoming].slice(0, 4))
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    } else {
+      // 🟢 Comportamiento para Edición: Envío Multipart directo por Axios a BoxController
+      const file = incoming[0]
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('name', file.name)
+      formData.append('boxId', initialData.id)
+
+      try {
+        setError(null)
+        setSaving(true)
+
+        // Al NO setear 'Content-Type' manualmente, Axios y el navegador
+        // manejan el Multipart automáticamente sin pisar el token de autenticación (JWT).
+        await api.post('/api/boxes/add-image', formData)
+
+        // Recargamos los datos actualizados de la caja para sincronizar las fotos nuevas con la base de datos
+        const res = await api.get(`/api/boxes/${initialData.id}`)
+        if (res.data && res.data.images) {
+          setCurrentDbImages(res.data.images)
+        }
+      } catch (err) {
+        console.error("Error al subir imagen:", err)
+        setError("No tenés permisos o no se pudo subir la imagen al servidor remoto (403).")
+      } finally {
+        setSaving(false)
+        if (fileInputRef.current) fileInputRef.current.value = ''
+      }
+    }
   }
+
 
   const handleRemoveImage = (index) => {
     setImages(prev => prev.filter((_, i) => i !== index))
@@ -91,6 +137,8 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
   }
 
   const isEdit = mode === 'edit'
+  // Definimos cuántas imágenes tenemos cargadas dependiendo del modo actual
+  const totalImagesCount = isEdit ? currentDbImages.length : images.length
 
   return (
     <div className="propose-box-container">
@@ -180,32 +228,46 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
                 ref={fileInputRef}
                 type="file"
                 accept="image/jpeg,image/png"
-                multiple
+                multiple={!isEdit} // Múltiple sólo al crear; de a uno al editar
                 style={{ display: 'none' }}
                 onChange={handleImageChange}
               />
               <div className="cd-image-grid">
-                {images.map((file, i) => (
-                  <div key={i} className="cd-image-slot" style={{ position: 'relative', cursor: 'default' }}>
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(i)}
-                      style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.55)', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.7rem', lineHeight: '1' }}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-                {images.length < 4 && (
+                {/* 🟢 Renderizado Condicional de Slots según el modo */}
+                {isEdit
+                  ? currentDbImages.map((imgObj, i) => (
+                    <div key={i} className="cd-image-slot" style={{ position: 'relative', cursor: 'default' }}>
+                      <img
+                        src={getBoxImageUrl({ images: [imgObj] })}
+                        alt={imgObj.name || `imagen-${i}`}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }}
+                      />
+                    </div>
+                  ))
+                  : images.map((file, i) => (
+                    <div key={i} className="cd-image-slot" style={{ position: 'relative', cursor: 'default' }}>
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(i)}
+                        style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.55)', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.7rem', lineHeight: '1' }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))
+                }
+
+                {totalImagesCount < 4 && (
                   <div
                     className="cd-image-slot"
                     onClick={() => fileInputRef.current?.click()}
                     style={{ cursor: 'pointer' }}
+                    title={isEdit ? "Hacé click para añadir una foto a MySQL" : "Añadir foto local"}
                   >
                     <span>+</span>
                   </div>
@@ -286,8 +348,8 @@ function BoxForm({ mode = 'create', initialData = null, onSuccess, onCancel }) {
             {saving
               ? 'Guardando...'
               : isEdit
-              ? 'Guardar Cambios ✓'
-              : 'Enviar Propuesta Final ✓'}
+                ? 'Guardar Cambios ✓'
+                : 'Enviar Propuesta Final ✓'}
           </button>
         </div>
       </form>
