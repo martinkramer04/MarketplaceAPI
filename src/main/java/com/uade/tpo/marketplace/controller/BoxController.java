@@ -118,6 +118,16 @@ public class BoxController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    
+    @PutMapping("/{id}/ReduceStock")
+    public ResponseEntity<BoxDto> ReduceStock(
+            @PathVariable Long id,
+            @RequestBody @Valid StockUpdateRequest request) {
+        Optional<Box> result = boxService.ReduceStock(id, request.getAmount());
+        return result.map(BoxDto::convertToDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     // DELETE
     @DeleteMapping("/{id}")

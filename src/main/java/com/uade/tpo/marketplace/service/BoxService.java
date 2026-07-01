@@ -119,6 +119,21 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
                     return boxRepository.save(box);
                 });
     }
+    public Optional<Box> ReduceStock(Long id, Integer amount) {
+    return boxRepository.findById(id)
+            .map(box -> {
+                if (box.getStock() <= 0) {
+                    throw new IllegalStateException("No hay stock disponible.");
+                }
+
+                if (box.getStock() < amount) {
+                    throw new IllegalStateException("Stock insuficiente.");
+                }
+
+                box.setStock(box.getStock() - amount);
+                return boxRepository.save(box);
+            });
+}
 
     @Override
     public Optional<Box> update(UpdateBoxRequest entity, Long id) {
