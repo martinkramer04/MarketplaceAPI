@@ -88,6 +88,19 @@
     color: #888;
 }
 
+.bd-stock-badge {
+    display: inline-block;
+    background-color: #ff6b35;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    align-self: flex-start;
+}
+
 .box-detail-actions {
     display: flex;
     flex-direction: column;
