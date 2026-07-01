@@ -10,14 +10,12 @@ function AdminBoxes() {
 
     const { items: boxes, loading, error, status: fetchStatus } = useSelector((state) => state.boxes);
 
-
     const [showModal, setShowModal] = useState(false);
     const [boxToHide, setBoxToHide] = useState(null);
 
     useEffect(() => {
         if (fetchStatus === 'idle') dispatch(fetchBoxes());
     }, [fetchStatus, dispatch]);
-
 
     const handleButtonClick = (box) => {
         const isCurrentlyApproved = box.status === 'APPROVED';
@@ -34,7 +32,9 @@ function AdminBoxes() {
         try {
             await dispatch(updateBox({
                 id: box.id,
-                payload: { status: newStatus }
+                fields: {
+                    status: newStatus
+                }
             })).unwrap();
 
             if (newStatus === 'APPROVED') {
@@ -50,8 +50,8 @@ function AdminBoxes() {
         }
     };
 
-    if (loading && (!boxes || !boxes.length)) return <p style={{ padding: '2rem' }}>Cargando cajas...</p>;
-    if (error && (!boxes || !boxes.length)) return <p style={{ padding: '2rem', color: 'red' }}>Error: {error}</p>;
+    if (loading && (!boxes || !boxes.length)) return <p className="boxes-loading">Cargando cajas...</p>;
+    if (error && (!boxes || !boxes.length)) return <p className="boxes-error">Error: {error}</p>;
 
     return (
         <div className="propuestas">
@@ -61,7 +61,7 @@ function AdminBoxes() {
             </div>
 
             <div className="propuestas-body">
-                <div className="propuestas-table-wrapper" style={{ width: '100%' }}>
+                <div className="propuestas-table-wrapper full-width">
                     <table className="propuestas-table">
                         <thead>
                             <tr>
@@ -75,7 +75,7 @@ function AdminBoxes() {
                         <tbody>
                             {!boxes || boxes.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>
+                                    <td colSpan="5" className="table-empty-message">
                                         No hay cajas publicadas.
                                     </td>
                                 </tr>
@@ -94,8 +94,7 @@ function AdminBoxes() {
                                             </td>
                                             <td>
                                                 <button
-                                                    className={isBoxActive ? "btn-reject" : "btn-approve"}
-                                                    style={{ padding: '6px 12px', fontSize: '0.85rem', width: '100px' }}
+                                                    className={`btn-action ${isBoxActive ? "btn-reject" : "btn-approve"}`}
                                                     onClick={() => handleButtonClick(box)}
                                                 >
                                                     {isBoxActive ? 'Desactivar' : 'Reactivar'}

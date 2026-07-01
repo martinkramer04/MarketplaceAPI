@@ -184,3 +184,34 @@
         opacity: 1;
     }
 }
+
+/* ==========================================
+   Nuevos estilos migrados desde AdminBoxes.jsx
+   ========================================== */
+
+.boxes-loading {
+    padding: 2rem;
+}
+
+.boxes-error {
+    padding: 2rem;
+    color: red;
+}
+
+.propuestas-table-wrapper.full-width {
+    width: 100%;
+}
+
+.table-empty-message {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+}
+
+/* Botones de acción en la tabla */
+.btn-action {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    width: 100px;
+    cursor: pointer;
+}
