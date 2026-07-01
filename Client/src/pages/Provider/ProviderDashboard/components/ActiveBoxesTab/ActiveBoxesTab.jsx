@@ -5,6 +5,8 @@ import { useToast } from '../../../../../Context/ToastContext'
 import StatusBadge from '../../../../../components/StatusBadge/StatusBadge'
 import ConfirmModal from '../../../../../components/ConfirmModal/ConfirmModal'
 
+import { getBoxImageUrl } from '../../../../../utils/boxUtils'
+
 function ActiveBoxesTab({ onEditBox }) {
     const [boxes, setBoxes] = useState([])
     const [loading, setLoading] = useState(true)
@@ -33,6 +35,7 @@ function ActiveBoxesTab({ onEditBox }) {
                         status: 'published',
                         price: b.price || 0,
                         shortDescription: b.description || '',
+                        images: b.images || [] // 👈 PRESERVAMOS LAS IMÁGENES ORIGINALES PARA EL UTILITARIO
                     }))
                 setBoxes(adaptadas)
                 setLoading(false)
@@ -115,7 +118,13 @@ function ActiveBoxesTab({ onEditBox }) {
                                     <tr key={box.id}>
                                         <td>
                                             <div className="ab-box-info">
-                                                <div className="ab-box-thumb" />
+                                                {/* 👇 REEMPLAZAMOS EL DIV VACÍO POR LA ETIQUETA IMG USANDO TU PROPIO MÈTODO */}
+                                                <img
+                                                    src={getBoxImageUrl(box)}
+                                                    alt={box.name}
+                                                    className="ab-box-thumb"
+                                                    style={{ objectFit: 'cover' }}
+                                                />
                                                 <div>
                                                     <strong>{box.name}</strong>
                                                     <p>{box.sku} — <span style={{ color: '#2e7d32', fontWeight: '600' }}>${box.price}</span></p>
