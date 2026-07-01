@@ -29,8 +29,6 @@ export const fetchBoxSolicitationsByProvider = createAsyncThunk(
 
 export const createBoxSolicitation = createAsyncThunk(
   "boxSolicitations/create",
-  // Accepts { fields: plainObject, images: File[] } — FormData is built here
-  // to avoid passing non-serializable File objects through Redux state.
   async ({ fields, images }, { rejectWithValue }) => {
     try {
       const formData = new FormData();

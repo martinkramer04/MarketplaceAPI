@@ -76,7 +76,6 @@ function Home() {
             </button>
 
             <div className="categories-carousel">
-              {/* El contenedor con la referencia del scroll. Ya no duplicamos el array */}
               <div className="categories-track" ref={trackRef}>
                 {categories.map((cat) => (
                   <div

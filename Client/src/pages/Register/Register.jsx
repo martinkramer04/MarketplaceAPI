@@ -63,7 +63,6 @@ function Register() {
 
         <form onSubmit={handleSubmit} className="register-form">
 
-          {/* El backend pide firstname y lastname por separado */}
           <div className="register-campo-row">
             <div className="register-campo">
               <label htmlFor="firstname">Nombre</label>

@@ -10,7 +10,7 @@ function AdminBoxes() {
 
     const { items: boxes, loading, error, status: fetchStatus } = useSelector((state) => state.boxes);
 
-    // Estados locales para controlar el Modal personalizado
+
     const [showModal, setShowModal] = useState(false);
     const [boxToHide, setBoxToHide] = useState(null);
 
@@ -18,21 +18,18 @@ function AdminBoxes() {
         if (fetchStatus === 'idle') dispatch(fetchBoxes());
     }, [fetchStatus, dispatch]);
 
-    // Al hacer clic en los botones de la tabla
+
     const handleButtonClick = (box) => {
         const isCurrentlyApproved = box.status === 'APPROVED';
 
         if (isCurrentlyApproved) {
-            // Si está activa, en vez de mandar el confirm nativo, abrimos nuestro modal
             setBoxToHide(box);
             setShowModal(true);
         } else {
-            // Si está inactiva, la reactivamos directo sin preguntar
             executeStatusChange(box, 'APPROVED');
         }
     };
 
-    // La función que ejecuta la petición definitiva a Redux
     const executeStatusChange = async (box, newStatus) => {
         try {
             await dispatch(updateBox({
@@ -48,7 +45,6 @@ function AdminBoxes() {
         } catch (err) {
             toast.error(`Error al modificar el estado: ${typeof err === 'string' ? err : 'Intente de nuevo.'}`);
         } finally {
-            // Limpiamos estados del modal por si venía de ahí
             setShowModal(false);
             setBoxToHide(null);
         }
@@ -114,7 +110,6 @@ function AdminBoxes() {
                 </div>
             </div>
 
-            {/* 👇 MODAL PERSONALIZADO DE CONFIRMACIÓN */}
             {showModal && boxToHide && (
                 <div className="custom-modal-overlay">
                     <div className="custom-modal">

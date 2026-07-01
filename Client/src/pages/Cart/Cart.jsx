@@ -18,7 +18,6 @@ function Cart() {
   const toast = useToast();
   const { validating } = useSelector((state) => state.boxes);
 
-  // { [boxId]: { action, reason, availableStock } }
   const [validationIssues, setValidationIssues] = useState({});
 
   const runCartValidation = async (items) => {

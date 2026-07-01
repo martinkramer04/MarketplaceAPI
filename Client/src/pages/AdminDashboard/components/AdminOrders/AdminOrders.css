@@ -12,3 +12,169 @@
     text-transform: uppercase;
     font-weight: 600;
 }
+
+.orders-loading {
+    padding: 2rem;
+}
+
+.orders-error {
+    padding: 2rem;
+    color: red;
+}
+
+/* Contenedor adaptativo de la tabla */
+.propuestas-table-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.propuestas-table-container.split-view {
+    max-width: 60%;
+}
+
+.propuestas-table-container.full-view {
+    max-width: 100%;
+}
+
+/* Filas y celdas de la tabla */
+.table-row-clickable {
+    cursor: pointer;
+}
+
+.table-empty-message {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+}
+
+.user-name {
+    color: inherit;
+    /* Mantiene la herencia original */
+}
+
+.user-email {
+    font-size: 0.75rem;
+    color: #718096;
+}
+
+.order-status-badge {
+    font-size: 0.8rem;
+    fontWeight: 600;
+    color: #2b6cb0;
+}
+
+.order-total-amount {
+    color: #2b6cb0;
+}
+
+/* Bloque lateral de detalles (Modificaciones / Extensiones) */
+.propuesta-detail {
+    flex: 0 0 37%;
+    animation: fadeIn 0.2s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.propuesta-detail-body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.detail-section-title {
+    margin: 0 0 10px 0;
+    color: #2d3748;
+    border-bottom: 1px solid #edf2f7;
+    padding-bottom: 6px;
+}
+
+.detail-section-title.spacing-top {
+    margin: 24px 0 10px 0;
+}
+
+.discount-tag {
+    background: #e6fffa;
+    color: #234e52;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.detail-empty-message {
+    font-size: 0.85rem;
+    color: #718096;
+    font-style: italic;
+}
+
+/* Lista de Tarjetas de Detalles (Cajas) */
+.detail-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.detail-card-item {
+    background: #f7fafc;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-item-info {
+    flex: 1;
+}
+
+.box-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2d3748;
+    display: block;
+}
+
+.box-qty-price {
+    font-size: 0.8rem;
+    color: #718096;
+}
+
+.box-discount-amount {
+    font-size: 0.75rem;
+    color: #e53e3e;
+    display: block;
+}
+
+.card-item-subtotal {
+    text-align: right;
+    margin-left: 10px;
+}
+
+.subtotal-amount {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4a5568;
+}
+
+/* Footer del panel de detalles */
+.propuesta-detail-footer {
+    margin-top: auto;
+    padding: 16px;
+    border-top: 2px solid #edf2f7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.footer-amount {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #2b6cb0;
+}

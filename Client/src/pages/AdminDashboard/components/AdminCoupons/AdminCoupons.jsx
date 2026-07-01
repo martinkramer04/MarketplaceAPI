@@ -10,18 +10,13 @@ function AdminCoupons() {
 
     const { discounts, loading, status: fetchStatus } = useSelector((state) => state.discount);
 
-    // Estados del formulario
     const [name, setName] = useState('');
     const [percentage, setPercentage] = useState('');
     const [discountType, setDiscountType] = useState('CUPON');
     const [code, setCode] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-
-    // Estados para el Panel de Detalle Lateral (Basado en BoxesSolicitations)
     const [activeId, setActiveId] = useState(null);
-
-    // Estados del Modal de Confirmación
     const [showModal, setShowModal] = useState(false);
     const [discountToDisable, setDiscountToDisable] = useState(null);
 
@@ -31,7 +26,7 @@ function AdminCoupons() {
         }
     }, [fetchStatus, dispatch]);
 
-    // Buscamos el beneficio seleccionado para mostrar en el panel lateral
+
     const activeDiscount = discounts.find(d => d.id === activeId) ?? null;
 
     const handleSubmit = async (e) => {
@@ -191,7 +186,6 @@ function AdminCoupons() {
                     </div>
                 </div>
 
-                {/* 👇 PANEL DETALLE LATERAL (Mismo formato estricto que BoxesSolicitations) */}
                 {activeDiscount && (
                     <div className="propuesta-detail" style={{ flex: '0 0 32%', animation: 'fadeIn 0.2s ease-out' }}>
                         <div className="propuesta-detail-header">
@@ -248,7 +242,6 @@ function AdminCoupons() {
                 )}
             </div>
 
-            {/* MODAL CONFIRMACIÓN */}
             {showModal && discountToDisable && (
                 <div className="custom-modal-overlay">
                     <div className="custom-modal">

@@ -3,16 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { validateDiscount, clearDiscount } from '../../redux/discountSlice'
 import './OrderPanel.css'
 
-/**
- * Shared right-side order summary panel used across the checkout flow.
- *
- * Props:
- *   items         – array of { id, name, price, quantity, image? }
- *   extraRows     – array of { label, value, free? } displayed between subtotal and total
- *   showCouponInput – render the coupon input (only OrderSummary page)
- *   totalOverride – use this value instead of computing from items (Confirmation page)
- *   footer        – JSX or function (total) => JSX rendered below the total row
- */
 export default function OrderPanel({
     items = [],
     extraRows = [],
@@ -51,7 +41,7 @@ export default function OrderPanel({
         <div className="order-panel">
             <h3 className="op-title">Resumen del pedido</h3>
 
-            {/* Item list */}
+
             {items.length > 0 && (
                 <div className="op-items">
                     {items.map((item, i) => (
@@ -77,7 +67,7 @@ export default function OrderPanel({
                 </div>
             )}
 
-            {/* Coupon — only OrderSummary renders this */}
+
             {showCouponInput && (
                 <div className="op-coupon">
                     <p className="op-coupon-label">Codigo de promocion</p>
@@ -116,7 +106,7 @@ export default function OrderPanel({
 
             <hr className="op-divider" />
 
-            {/* Summary rows */}
+
             <div className="op-rows">
                 <div className="op-row">
                     <span>Subtotal</span>

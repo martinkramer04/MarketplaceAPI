@@ -48,7 +48,6 @@ function AppLayout() {
 
   return (
     <>
-      {/* 🟢 Menús condicionales basados firmemente en la URL */}
       {!isProvider && !isAdmin && !isLoginPath && !isRegisterPath && <Navbar />}
       {isProvider && <NavbarProvider isAdmin={false} />}
       {isAdmin && <NavbarProvider isAdmin={true} />}
@@ -56,7 +55,6 @@ function AppLayout() {
       <ScrollToTop />
 
       <Routes>
-        {/* Rutas Públicas / Compradores */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -65,19 +63,18 @@ function AppLayout() {
         <Route path="/explore" element={<Explore />} />
         <Route path="/como-funciona" element={<HowItWorks />} />
         <Route path="/nosotros" element={<Us />} />
-        <Route path="/perfil" element={<Profile />} /> {/* Perfil para Clientes */}
+        <Route path="/perfil" element={<Profile />} />
         <Route path="/checkout/order-summary" element={<OrderSummary />} />
         <Route path="/checkout/payment" element={<Payment />} />
         <Route path="/checkout/confirmation" element={<Confirmation />} />
         <Route path="/become-provider" element={<BecomeProvider />} />
 
-        {/* 🏢 Entorno Proveedor (URL empieza con /provider) */}
         <Route path="/provider/dashboard" element={<ProviderDashboard />} />
-        <Route path="/provider/perfil" element={<Profile />} /> {/* 🟢 AGREGADO: Perfil del Proveedor */}
+        <Route path="/provider/perfil" element={<Profile />} />
 
-        {/* 👑 Entorno Administrador (URL empieza con /admin) */}
+
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/perfil" element={<Profile />} /> {/* 🟢 AGREGADO: Perfil del Administrador */}
+        <Route path="/admin/perfil" element={<Profile />} />
       </Routes>
 
       {!isLoginPath && !isRegisterPath && <Footer />}
