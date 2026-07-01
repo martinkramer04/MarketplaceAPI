@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,7 +43,11 @@ public class Box extends BaseEntity {
     private BoxStatusEnum status = BoxStatusEnum.PENDING;
 
     @ManyToMany
-    @JoinTable(name = "box_products", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @JoinTable(
+        name = "box_products", 
+        joinColumns = @JoinColumn(name = "box_id"), 
+        inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<Product> products = List.of();
 
     @ManyToOne(optional = false)
@@ -50,11 +55,11 @@ public class Box extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "box")
+    @OneToMany(mappedBy = "box", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Review> reviews = List.of();
 
-    @OneToMany(mappedBy = "box")
+    @OneToMany(mappedBy = "box", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Image> images = List.of();
 

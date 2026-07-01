@@ -11,6 +11,7 @@ function ActiveBoxesTab({ onEditBox }) {
     const [boxes, setBoxes] = useState([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
+    const [filterStatus, setFilterStatus] = useState('ACTIVE') // 👈 'ACTIVE' o 'INACTIVE'
     const [boxToDelete, setBoxToDelete] = useState(null)
 
     const toast = useToast()
@@ -25,17 +26,18 @@ function ActiveBoxesTab({ onEditBox }) {
             .then(resUser => api.get(`/api/boxes/user/${resUser.data.id}`))
             .then(resBoxes => {
                 const adaptadas = resBoxes.data
-                    .filter(b => b.status === 'APPROVED')
+                    // 👈 Filtramos para quedarnos solo con APPROVED (activas) o REJECTED (inactivas)
+                    .filter(b => b.status === 'APPROVED' || b.status === 'REJECTED')
                     .map(b => ({
                         id: b.id,
                         name: b.name || 'Caja de Experiencia',
                         sku: `SKU: EX-${b.id}00`,
                         categories: b.category ? [b.category.description.toUpperCase()] : ['SIN CATEGORIA'],
                         activations: 0,
-                        status: 'published',
+                        status: b.status === 'APPROVED' ? 'active' : 'inactive', // 👈 Mapeamos a nuevos estados para el Front
                         price: b.price || 0,
                         shortDescription: b.description || '',
-                        images: b.images || [] // 👈 PRESERVAMOS LAS IMÁGENES ORIGINALES PARA EL UTILITARIO
+                        images: b.images || []
                     }))
                 setBoxes(adaptadas)
                 setLoading(false)
@@ -47,51 +49,87 @@ function ActiveBoxesTab({ onEditBox }) {
     }
 
     const handleDeleteClick = (box) => {
-        if (box.status !== 'published') return
+        if (box.status !== 'active') return
         setBoxToDelete(box)
     }
 
     const handleConfirmDelete = () => {
         if (!boxToDelete) return
-        api.delete(`/api/boxes/${boxToDelete.id}`)
+
+        // Mantenemos el borrado lógico enviando REJECTED a la base de datos
+        api.put(`/api/boxes/${boxToDelete.id}`, { status: 'REJECTED' })
             .then(() => {
-                setBoxes(boxes.filter(b => b.id !== boxToDelete.id))
+                // En lugar de removerla del todo, cambiamos su estado localmente a 'inactive'
+                setBoxes(boxes.map(b => b.id === boxToDelete.id ? { ...b, status: 'inactive' } : b))
                 setBoxToDelete(null)
-                toast.success('La caja fue removida del catalogo correctamente.')
+                toast.success('La caja fue desactivada del catálogo correctamente.')
             })
             .catch(err => {
                 setBoxToDelete(null)
+                console.error('Error al dar de baja la caja:', err)
                 if (err.response?.status === 403) {
-                    toast.error('No tenes permisos para eliminar esta caja.')
+                    toast.error('No tenés permisos para modificar esta caja.')
                 } else {
-                    toast.error('No se pudo eliminar la caja de la base de datos.')
+                    toast.error('No se pudo remover la caja del catálogo en vivo.')
                 }
             })
     }
 
-    const filteredBoxes = boxes.filter(b =>
-        b.name.toLowerCase().includes(search.toLowerCase()) ||
-        b.id.toString().includes(search)
-    )
+    const handleReactivateBox = (box) => {
+        // 🟢 Acción inversa: mandamos APPROVED para reactivarla en la base de datos
+        api.put(`/api/boxes/${box.id}`, { status: 'APPROVED' })
+            .then(() => {
+                // Cambiamos el estado local a 'active'
+                setBoxes(boxes.map(b => b.id === box.id ? { ...b, status: 'active' } : b))
+                toast.success('La caja fue reactivada en el catálogo correctamente.')
+            })
+            .catch(err => {
+                console.error('Error al reactivar la caja:', err)
+                if (err.response?.status === 403) {
+                    toast.error('No tenés permisos para modificar esta caja.')
+                } else {
+                    toast.error('No se pudo reactivar la caja.')
+                }
+            })
+    }
+
+    // 👈 Primero filtramos por la pestaña seleccionada (Activa / Inactiva) y después por la barra de búsqueda
+    const filteredBoxes = boxes
+        .filter(b => filterStatus === 'ACTIVE' ? b.status === 'active' : b.status === 'inactive')
+        .filter(b =>
+            b.name.toLowerCase().includes(search.toLowerCase()) ||
+            b.id.toString().includes(search)
+        )
 
     if (loading) return <div style={{ padding: '2rem' }}>Cargando catalogo de experiencias en vivo...</div>
 
     return (
         <div className="active-boxes">
             <div className="tab-header">
-                <h1>Cajas Activas / Publicadas</h1>
-                <p>Metricas de tus experiencias actualmente en vivo en Boxify desde MySQL.</p>
+                <h1>Gestión del Catálogo</h1>
+                <p>Administrá y controlá las métricas de tus experiencias en Boxify.</p>
             </div>
 
             <div className="ab-table-wrapper">
-                <div className="ab-table-toolbar">
+                <div className="ab-table-toolbar" style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
                     <input
                         type="text"
                         placeholder="Buscar cajas por nombre o ID..."
                         className="ab-search"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        style={{ flex: 1 }}
                     />
+                    {/* 🟢 Selector de Filtro de Estado */}
+                    <select
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                        className="ab-search" // Reutiliza tus estilos de input o podés darle uno propio
+                        style={{ width: '200px', cursor: 'pointer' }}
+                    >
+                        <option value="ACTIVE">Cajas Activas</option>
+                        <option value="INACTIVE">Cajas Inactivas</option>
+                    </select>
                 </div>
 
                 <table className="ab-table">
@@ -108,17 +146,16 @@ function ActiveBoxesTab({ onEditBox }) {
                         {filteredBoxes.length === 0 ? (
                             <tr>
                                 <td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#6c757d' }}>
-                                    No se encontraron cajas registradas para este criterio.
+                                    No se encontraron cajas {filterStatus === 'ACTIVE' ? 'activas' : 'inactivas'} para este criterio.
                                 </td>
                             </tr>
                         ) : (
                             filteredBoxes.map((box) => {
-                                const isActive = box.status === 'published'
+                                const isActive = box.status === 'active'
                                 return (
                                     <tr key={box.id}>
                                         <td>
                                             <div className="ab-box-info">
-                                                {/* 👇 REEMPLAZAMOS EL DIV VACÍO POR LA ETIQUETA IMG USANDO TU PROPIO MÈTODO */}
                                                 <img
                                                     src={getBoxImageUrl(box)}
                                                     alt={box.name}
@@ -140,20 +177,37 @@ function ActiveBoxesTab({ onEditBox }) {
                                         </td>
                                         <td className="ab-activations">{box.activations.toLocaleString()}</td>
                                         <td>
-                                            <StatusBadge status={box.status} label={isActive ? 'En linea' : 'Borrador'} />
+                                            {/* 🟢 Pasamos las etiquetas requeridas: 'Activa' o 'Inactiva' */}
+                                            <StatusBadge
+                                                status={box.status}
+                                                label={isActive ? 'Activa' : 'Inactiva'}
+                                            />
                                         </td>
                                         <td>
                                             <div className="ab-actions-container">
-                                                <button className="btn-edit-box" onClick={() => onEditBox && onEditBox(box)}>
-                                                    Editar
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDeleteClick(box)}
-                                                    disabled={!isActive}
-                                                    className={`btn-delete-box ${isActive ? 'active' : 'disabled'}`}
-                                                >
-                                                    Eliminar
-                                                </button>
+                                                {isActive ? (
+                                                    <>
+                                                        {/* Se mantienen intactos tus dos botones originales */}
+                                                        <button className="btn-edit-box" onClick={() => onEditBox && onEditBox(box)}>
+                                                            Editar
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteClick(box)}
+                                                            className="btn-delete-box active"
+                                                        >
+                                                            Eliminar
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    // 🟢 Si está inactiva, se renderiza únicamente el botón de Reactivar
+                                                    <button
+                                                        className="btn-edit-box"
+                                                        style={{ borderColor: '#2e7d32', color: '#2e7d32' }}
+                                                        onClick={() => handleReactivateBox(box)}
+                                                    >
+                                                        Reactivar
+                                                    </button>
+                                                )}
                                             </div>
                                         </td>
                                     </tr>
@@ -164,15 +218,15 @@ function ActiveBoxesTab({ onEditBox }) {
                 </table>
 
                 <div className="ab-table-footer">
-                    Mostrando {filteredBoxes.length} cajas en el catalogo
+                    Mostrando {filteredBoxes.length} cajas en esta sección.
                 </div>
             </div>
 
             <ConfirmModal
                 open={!!boxToDelete}
-                title="Eliminar esta caja definitivamente?"
-                message={`Estas a punto de despublicar "${boxToDelete?.name}". Desaparecera de inmediato de la vitrina.`}
-                confirmLabel="Si, eliminar"
+                title="Desactivar esta caja?"
+                message={`Estas a punto de despublicar "${boxToDelete?.name}". Pasará al listado de cajas inactivas.`}
+                confirmLabel="Sí, desactivar"
                 onConfirm={handleConfirmDelete}
                 onCancel={() => setBoxToDelete(null)}
             />

@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './EditBoxForm.css';
-import api from '../../../../../api/axiosConfig'; // 🟢 Traemos Axios
+import api from '../../../../../api/axiosConfig';
+import { useToast } from '../../../../../Context/ToastContext'; // 👈 Importamos tus toasts
+import { getBoxImageUrl } from '../../../../utils/boxUtils'; // 👈 Importamos tus utilitarios de imagen
 
 function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
+  const toast = useToast(); // 👈 Instanciamos el manejador de notificaciones
+
   const [form, setForm] = useState({
     title: '',
     category: '',
@@ -18,7 +22,7 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
   useEffect(() => {
     if (propuestaInicial) {
       setForm({
-        title: propuestaInicial.title || propuestaInicial.name || '', // Resguardo por si en tu BD se llama name
+        title: propuestaInicial.title || propuestaInicial.name || '',
         category: propuestaInicial.category || '',
         price: propuestaInicial.price || '',
         shortDescription: propuestaInicial.shortDescription || '',
@@ -42,23 +46,25 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
 
     // Mapeamos el payload adaptado a lo que espera tu entidad Box de Java
     const payload = {
-      name: form.title, // Asegurate si tu entidad en Java usa name o title
+      name: form.title,
       price: parseFloat(form.price),
       description: form.shortDescription,
-      // Sumá acá los campos extras si tu base de datos los requiere
     };
 
     try {
-      // 🟢 Mandamos el PUT real a MySQL a través de tu endpoint de Admin/Provider
+      // Mandamos el PUT real a MySQL a través de tu endpoint de Java
       await api.put(`/api/boxes/${propuestaInicial.id}`, payload);
 
-      alert('¡Modificaciones guardadas e impactadas con éxito!');
+      // 📢 Reemplazamos el alert nativo por tu toast exitoso
+      toast.success(`La caja "${form.title}" fue actualizada correctamente en la base de datos.`);
+
       if (onUpdatePropuesta) {
         onUpdatePropuesta({ ...propuestaInicial, ...form });
       }
     } catch (err) {
       console.error("Error al actualizar la caja:", err);
-      alert(err.response?.data?.message || "Error interno al guardar los cambios en la base de datos.");
+      // 📢 Disparamos el toast de error si la transacción con la API falla
+      toast.error(err.response?.data?.message || "No se pudieron guardar las modificaciones en la base de datos.");
     } finally {
       setSaving(false);
     }
@@ -107,9 +113,24 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
             <div className="cd-section">
               <h2>Imágenes de Alta Resolución</h2>
               <div className="cd-image-grid">
-                {[0, 1, 2, 3].map((i) => (
-                  <div key={i} className="cd-image-slot"><span>＋</span></div>
-                ))}
+                {[0, 1, 2, 3].map((i) => {
+                  // Verificamos si la propuesta inicial contiene una imagen en este índice exacto
+                  const hasImage = propuestaInicial?.images && propuestaInicial.images[i];
+
+                  return (
+                    <div key={i} className="cd-image-slot" style={{ overflow: 'hidden', padding: 0 }}>
+                      {hasImage ? (
+                        <img
+                          src={getBoxImageUrl({ images: [propuestaInicial.images[i]] })}
+                          alt={`Caja slot ${i}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <span>＋</span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="cd-section">
