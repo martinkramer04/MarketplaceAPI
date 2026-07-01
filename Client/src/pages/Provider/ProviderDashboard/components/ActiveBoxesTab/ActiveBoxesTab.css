@@ -256,8 +256,8 @@
     padding: 6px 12px;
     font-size: 14px;
     font-weight: 500;
-    color: #2d3748; 
-    background-color: #edf2f7; 
+    color: #2d3748;
+    background-color: #edf2f7;
     border: 1px solid #cbd5e0;
     border-radius: 6px;
     cursor: pointer;
@@ -275,12 +275,12 @@
 
 .ab-stock-input-wrapper {
     display: flex;
-    gap: 6px !important; 
+    gap: 6px !important;
     align-items: center;
 }
 
 .ab-stock-input-wrapper input {
-    height: 32px; 
+    height: 32px;
     border: 1px solid #cbd5e0 !important;
     border-radius: 6px !important;
     outline: none;
@@ -291,7 +291,7 @@
 }
 
 .ab-stock-input-wrapper input:focus {
-    border-color: #319795 !important; 
+    border-color: #319795 !important;
     box-shadow: 0 0 0 1px #319795;
 }
 
@@ -300,11 +300,11 @@
     align-items: center;
     justify-content: center;
     height: 32px;
-    width: 32px; 
+    width: 32px;
     font-size: 14px;
     font-weight: bold;
     color: #ffffff;
-    background-color: #319795; 
+    background-color: #319795;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -319,4 +319,62 @@
     background-color: #cbd5e0;
     color: #718096;
     cursor: not-allowed;
+}
+
+/* ===================================================
+   Nuevos estilos migrados desde ActiveBoxesTab.jsx
+   =================================================== */
+
+.tab-loading-state {
+    padding: 2rem;
+}
+
+.ab-table-toolbar {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.ab-search {
+    flex: 1;
+}
+
+.ab-status-select {
+    width: 200px;
+    cursor: pointer;
+}
+
+.table-empty-message {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.ab-box-thumb {
+    object-fit: cover;
+}
+
+.box-price-tag {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.ab-stock-input-wrapper {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.ab-stock-field {
+    width: 60px;
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-reactivate-box {
+    border-color: #2e7d32;
+    color: #2e7d32;
+    background: transparent;
+    cursor: pointer;
 }

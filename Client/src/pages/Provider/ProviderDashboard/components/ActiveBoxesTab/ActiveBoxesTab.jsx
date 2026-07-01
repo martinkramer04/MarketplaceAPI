@@ -59,7 +59,10 @@ function ActiveBoxesTab({ onEditBox }) {
     const handleConfirmDelete = () => {
         if (!boxToDelete) return
 
-        api.put(`/api/boxes/${boxToDelete.id}`, { status: 'REJECTED' })
+        const formData = new FormData();
+        formData.append('status', 'REJECTED');
+
+        api.put(`/api/boxes/${boxToDelete.id}`, formData)
             .then(() => {
                 setBoxes(boxes.map(b => b.id === boxToDelete.id ? { ...b, status: 'inactive' } : b))
                 setBoxToDelete(null)
@@ -77,7 +80,10 @@ function ActiveBoxesTab({ onEditBox }) {
     }
 
     const handleReactivateBox = (box) => {
-        api.put(`/api/boxes/${box.id}`, { status: 'APPROVED' })
+        const formData = new FormData();
+        formData.append('status', 'APPROVED');
+
+        api.put(`/api/boxes/${box.id}`, formData)
             .then(() => {
                 setBoxes(boxes.map(b => b.id === box.id ? { ...b, status: 'active' } : b))
                 toast.success('La caja fue reactivada en el catálogo correctamente.')
@@ -179,7 +185,7 @@ function ActiveBoxesTab({ onEditBox }) {
             b.id.toString().includes(search)
         )
 
-    if (loading) return <div style={{ padding: '2rem' }}>Cargando catalogo de experiences en vivo...</div>
+    if (loading) return <div className="tab-loading-state">Cargando catalogo de experiences en vivo...</div>
 
     return (
         <div className="active-boxes">
@@ -189,20 +195,18 @@ function ActiveBoxesTab({ onEditBox }) {
             </div>
 
             <div className="ab-table-wrapper">
-                <div className="ab-table-toolbar" style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
+                <div className="ab-table-toolbar">
                     <input
                         type="text"
                         placeholder="Buscar cajas por nombre o ID..."
                         className="ab-search"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        style={{ flex: 1 }}
                     />
                     <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
-                        className="ab-search"
-                        style={{ width: '200px', cursor: 'pointer' }}
+                        className="ab-status-select"
                     >
                         <option value="ACTIVE">Cajas Activas</option>
                         <option value="INACTIVE">Cajas Inactivas</option>
@@ -222,7 +226,7 @@ function ActiveBoxesTab({ onEditBox }) {
                     <tbody>
                         {filteredBoxes.length === 0 ? (
                             <tr>
-                                <td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#6c757d' }}>
+                                <td colSpan="5" className="table-empty-message">
                                     No se encontraron cajas {filterStatus === 'ACTIVE' ? 'activas' : 'inactivas'} para este criterio.
                                 </td>
                             </tr>
@@ -239,11 +243,10 @@ function ActiveBoxesTab({ onEditBox }) {
                                                     src={getBoxImageUrl(box)}
                                                     alt={box.name}
                                                     className="ab-box-thumb"
-                                                    style={{ objectFit: 'cover' }}
                                                 />
                                                 <div>
                                                     <strong>{box.name}</strong>
-                                                    <p>{box.sku} — <span style={{ color: '#2e7d32', fontWeight: '600' }}>${box.price}</span></p>
+                                                    <p>{box.sku} — <span className="box-price-tag">${box.price}</span></p>
                                                 </div>
                                             </div>
                                         </td>
@@ -276,7 +279,7 @@ function ActiveBoxesTab({ onEditBox }) {
                                                         </button>
 
                                                         {isEditingStock ? (
-                                                            <div className="ab-stock-input-wrapper" style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                                                            <div className="ab-stock-input-wrapper">
                                                                 <input
                                                                     type="text"
                                                                     autoFocus
@@ -286,7 +289,7 @@ function ActiveBoxesTab({ onEditBox }) {
                                                                     onKeyDown={(e) => handleStockInputKeyDown(e, box)}
                                                                     onBlur={handleCancelStockInput}
                                                                     disabled={isSavingStock}
-                                                                    style={{ width: '60px', padding: '4px 6px', border: '1px solid #ccc', borderRadius: '4px' }}
+                                                                    className="ab-stock-field"
                                                                 />
                                                                 <button
                                                                     type="button"
@@ -309,8 +312,7 @@ function ActiveBoxesTab({ onEditBox }) {
                                                     </>
                                                 ) : (
                                                     <button
-                                                        className="btn-edit-box"
-                                                        style={{ borderColor: '#2e7d32', color: '#2e7d32' }}
+                                                        className="btn-reactivate-box"
                                                         onClick={() => handleReactivateBox(box)}
                                                     >
                                                         Reactivar
