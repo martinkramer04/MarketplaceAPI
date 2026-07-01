@@ -212,7 +212,6 @@
   box-sizing: border-box;
 }
 
-/* Cuando hacés foco en cualquier parte del campo, el contenedor se ilumina */
 .login-password-wrapper:focus-within {
   border-color: #6c5ce7;
   box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.12);

@@ -13,7 +13,6 @@ function NavbarProvider({ isAdmin = false }) {
     navigate('/login');
   };
 
-  // 🟢 Determinamos a qué ruta de perfil debe ir según el rol actual
   const perfilPath = isAdmin ? "/admin/perfil" : "/provider/perfil";
 
   return (
@@ -36,7 +35,6 @@ function NavbarProvider({ isAdmin = false }) {
       </div>
 
       <div className="navbar-actions">
-        {/* 🟢 CORRECCIÓN: Ahora el enlace cambia dinámicamente según el rol */}
         <Link to={perfilPath}>
           <img src={ImgPerfilBBox} alt="User Profile" className="navbar-profile-avatar" />
         </Link>

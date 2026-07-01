@@ -26,7 +26,6 @@ function Login() {
       else if (role === "ADMIN") navigate("/admin/dashboard");
       else navigate("/");
     } catch {
-      // error is already in Redux state
     }
   };
 

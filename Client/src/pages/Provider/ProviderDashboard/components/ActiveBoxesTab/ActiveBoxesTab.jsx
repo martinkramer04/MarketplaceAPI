@@ -102,7 +102,6 @@ function ActiveBoxesTab({ onEditBox }) {
         setStockInputValue('')
     }
 
-    // 🔍 MODIFICADO: Ahora permite opcionalmente un signo "-" al principio para poder restar
     const handleStockInputChange = (e) => {
         const value = e.target.value
         if (value === '' || value === '-' || /^-?\d+$/.test(value)) {
@@ -110,7 +109,6 @@ function ActiveBoxesTab({ onEditBox }) {
         }
     }
 
-    // 🛠️ MODIFICADO: Maneja tanto el aumento como la reducción de stock
     const handleConfirmStockUpdate = (box) => {
         const amount = parseInt(stockInputValue, 10)
 
@@ -121,11 +119,9 @@ function ActiveBoxesTab({ onEditBox }) {
 
         setSavingStockId(box.id)
 
-        // Definimos dinámicamente el endpoint y el body según el signo
         const isReduction = amount < 0
         const absoluteAmount = Math.abs(amount)
 
-        // Si es reducción, validamos localmente antes de pegar al back por UI
         if (isReduction && box.stock - absoluteAmount < 0) {
             toast.error(`No podés restar más stock del disponible (${box.stock}).`)
             setSavingStockId(null)
@@ -139,7 +135,6 @@ function ActiveBoxesTab({ onEditBox }) {
 
         api.put(endpoint, { amount: absoluteAmount })
             .then((res) => {
-                // Si el backend retorna la entidad actualizada usamos su stock, sino calculamos el neto
                 const nuevoStock = res.data?.stock ?? (isReduction ? box.stock - absoluteAmount : box.stock + absoluteAmount)
 
                 setBoxes(prev =>
@@ -157,7 +152,6 @@ function ActiveBoxesTab({ onEditBox }) {
                 if (err.response?.status === 403) {
                     toast.error('No tenés permisos para modificar el stock de esta caja.')
                 } else if (err.response?.status === 400 && err.response?.data?.message) {
-                    // Por si el back rechaza la operación por falta de stock
                     toast.error(err.response.data.message)
                 } else {
                     toast.error('No se pudo actualizar el stock en la base de datos.')

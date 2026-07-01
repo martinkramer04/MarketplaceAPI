@@ -30,11 +30,10 @@ public class ProviderSolicitationsService implements
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private BoxRepository boxRepository;
-    
-    
+
     @Autowired
     private com.uade.tpo.marketplace.repository.CategoryRepository categoryRepository;
 
@@ -71,7 +70,7 @@ public class ProviderSolicitationsService implements
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el email: " + email));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el email: " + email));
 
         solicitation.setUser(user);
         solicitation.setSolicitationStatus(SolicitationStatusEnum.GENERADA);
@@ -101,9 +100,9 @@ public class ProviderSolicitationsService implements
 
         return Optional.of(solicitation);
     }
+
     @Override
     public Optional<ProviderSolicitations> update(UpdateProviderSolicitationRequest entity, Long id) {
-        // 1. Validamos el ID para quitar la advertencia de Null type safety
         if (id == null) {
             return Optional.empty();
         }
@@ -112,19 +111,15 @@ public class ProviderSolicitationsService implements
 
         if (solicitation == null) {
             return Optional.empty();
-        } 
+        }
 
-        // 2. Seteamos el estado. Si te sigue tirando rojo acá, fijate si tu Enum usa APPROVED/REJECTED en vez de CONFIRMADA
         solicitation.setSolicitationStatus(entity.getSolicitationStatus());
         solicitation.setUpdatedAt(LocalDateTime.now());
 
-        // 3. Verificamos la condición del estado usando el Enum de tu proyecto
         if (entity.getSolicitationStatus() == SolicitationStatusEnum.CONFIRMADA) {
             User user = solicitation.getUser();
-            
-            // 🚨 Si 'setRole' se te pone en rojo, es porque tu entidad User espera un String o el Enum se llama distinto.
-            // Si tu clase 'Role' es un Enum de tu proyecto, se usa así:
-            user.setRole(Role.PROVIDER); 
+
+            user.setRole(Role.PROVIDER);
             userRepository.save(user);
 
             Box box = new Box();
@@ -139,7 +134,6 @@ public class ProviderSolicitationsService implements
             box.setStock(0);
             box.setPrice(solicitation.getMinPrice() != null ? solicitation.getMinPrice() : BigDecimal.ZERO);
 
-            // Buscamos la categoría de respaldo para evitar el 500
             try {
                 com.uade.tpo.marketplace.entity.Category defaultCategory = categoryRepository.findById(1L)
                     .orElseThrow(() -> new RuntimeException("Categoría por defecto ID=1 no encontrada"));
@@ -158,8 +152,7 @@ public class ProviderSolicitationsService implements
             throw new RuntimeException("Error updating solicitation: " + e.getMessage());
         }
     }
-    
-    
+
     @Override
     public boolean delete(Long id) {
         ProviderSolicitations solicitation = solicitationsRepository.findById(id).orElse(null);
@@ -175,4 +168,4 @@ public class ProviderSolicitationsService implements
             throw new RuntimeException("Error deleting solicitation: " + e.getMessage());
         }
     }
-}   
+}

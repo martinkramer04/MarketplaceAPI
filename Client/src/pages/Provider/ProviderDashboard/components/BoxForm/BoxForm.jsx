@@ -14,20 +14,20 @@ function BoxForm({ mode = "create", initialData = null, onSuccess, onCancel }) {
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  // existingImages: objects from the server { id, base64Image, ... }
+
   const [existingImages, setExistingImages] = useState(() =>
     mode === "edit" && initialData?.images ? initialData.images : [],
   );
-  // newImages: File objects added by the user during this session
+
   const [newImages, setNewImages] = useState([]);
   const [form, setForm] = useState(() =>
     mode === "edit" && initialData
       ? {
           title: initialData.title || initialData.name || "",
-          category: initialData.category?.id || initialData.category || "", // 🟢 Tomamos el ID si viene como objeto
+          category: initialData.category?.id || initialData.category || "", 
           price: initialData.price || "",
           shortDescription:
-            initialData.shortDescription || initialData.description || "", // 👈 Mapeo de description de MySQL
+            initialData.shortDescription || initialData.description || "", 
           detailedDescription: initialData.detailedDescription || "",
           subProviders: initialData.subProviders || "",
           cancellationPolicy: initialData.cancellationPolicy || "",
@@ -222,7 +222,7 @@ function BoxForm({ mode = "create", initialData = null, onSuccess, onCancel }) {
                 ref={fileInputRef}
                 type="file"
                 accept="image/jpeg,image/png"
-                multiple={!isEdit} // Múltiple sólo al crear; de a uno al editar
+                multiple={!isEdit} 
                 style={{ display: "none" }}
                 onChange={handleImageChange}
               />

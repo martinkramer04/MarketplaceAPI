@@ -164,7 +164,7 @@ public class OrderService implements IBaseService<Order, CreateOrderRequest, Upd
             }
         }
 
-        order.setOrderDetails(details); // <-- set on order before returning
+        order.setOrderDetails(details);
         order.setTotalAmount(total);
 
         try {
