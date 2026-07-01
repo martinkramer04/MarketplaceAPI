@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import "../ProposeBoxForm/ProposeBoxForm.css";
+import "./BoxForm.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../../../../redux/categorySlice";
 import { createBoxSolicitation } from "../../../../../redux/boxSolicitationSlice";
