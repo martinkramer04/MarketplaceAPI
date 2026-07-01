@@ -103,6 +103,14 @@ public class BoxService implements IBaseService<Box, CreateBoxRequest, UpdateBox
         return Optional.of(box);
     }
 
+    public Optional<Box> addStock(Long id, Integer amount) {
+        return boxRepository.findById(id)
+                .map(box -> {
+                    box.setStock(box.getStock() + amount);
+                    return boxRepository.save(box);
+                });
+    }
+
     @Override
     public Optional<Box> update(UpdateBoxRequest entity, Long id) {
         Box box = boxRepository.findById(id)

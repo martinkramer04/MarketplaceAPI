@@ -14,6 +14,11 @@ function ActiveBoxesTab({ onEditBox }) {
     const [filterStatus, setFilterStatus] = useState('ACTIVE') // 👈 'ACTIVE' o 'INACTIVE'
     const [boxToDelete, setBoxToDelete] = useState(null)
 
+    // 👇 NUEVO: controla qué fila tiene el input de "sumar stock" abierto y su valor
+    const [stockEditingId, setStockEditingId] = useState(null)
+    const [stockInputValue, setStockInputValue] = useState('')
+    const [savingStockId, setSavingStockId] = useState(null)
+
     const toast = useToast()
 
     useEffect(() => {
@@ -33,7 +38,7 @@ function ActiveBoxesTab({ onEditBox }) {
                         name: b.name || 'Caja de Experiencia',
                         sku: `SKU: EX-${b.id}00`,
                         categories: b.category ? [b.category.description.toUpperCase()] : ['SIN CATEGORIA'],
-                        activations: 0,
+                        stock: b.stock ?? 0, // 👈 NUEVO: stock real que devuelve el backend
                         status: b.status === 'APPROVED' ? 'active' : 'inactive', // 👈 Mapeamos a nuevos estados para el Front
                         price: b.price || 0,
                         shortDescription: b.description || '',
@@ -93,6 +98,68 @@ function ActiveBoxesTab({ onEditBox }) {
             })
     }
 
+    // 👇 NUEVO: abre el input de stock para esa fila puntual
+    const handleOpenStockInput = (boxId) => {
+        setStockEditingId(boxId)
+        setStockInputValue('')
+    }
+
+    // 👇 NUEVO: cierra el input sin guardar (blur, cancelar, etc.)
+    const handleCancelStockInput = () => {
+        setStockEditingId(null)
+        setStockInputValue('')
+    }
+
+    // 👇 NUEVO: solo permite dígitos en el input
+    const handleStockInputChange = (e) => {
+        const value = e.target.value
+        if (value === '' || /^\d+$/.test(value)) {
+            setStockInputValue(value)
+        }
+    }
+
+    // 👇 NUEVO: confirma el incremento usando el endpoint dedicado PATCH /api/boxes/{id}/stock
+    const handleConfirmStockAdd = (box) => {
+        const amount = parseInt(stockInputValue, 10)
+        if (!amount || amount <= 0) {
+            handleCancelStockInput()
+            return
+        }
+
+        setSavingStockId(box.id)
+        api.put(`/api/boxes/${box.id}/stock`, { amount })
+            .then((res) => {
+                const nuevoStock = res.data?.stock ?? (box.stock + amount)
+                setBoxes(prev =>
+                    prev.map(b => b.id === box.id ? { ...b, stock: nuevoStock } : b)
+                )
+                toast.success(`Se sumaron ${amount} unidades de stock.`)
+            })
+            .catch(err => {
+                console.error('Error actualizando stock:', err)
+                if (err.response?.status === 403) {
+                    toast.error('No tenés permisos para modificar el stock de esta caja.')
+                } else if (err.response?.status === 404) {
+                    toast.error('El endpoint de stock no existe en el backend todavía.')
+                } else {
+                    toast.error('No se pudo actualizar el stock en la base de datos.')
+                }
+            })
+            .finally(() => {
+                setSavingStockId(null)
+                handleCancelStockInput()
+            })
+    }
+
+    const handleStockInputKeyDown = (e, box) => {
+        if (e.key === 'Enter') {
+            e.preventDefault()
+            handleConfirmStockAdd(box)
+        } else if (e.key === 'Escape') {
+            handleCancelStockInput()
+        }
+    }
+
     // 👈 Primero filtramos por la pestaña seleccionada (Activa / Inactiva) y después por la barra de búsqueda
     const filteredBoxes = boxes
         .filter(b => filterStatus === 'ACTIVE' ? b.status === 'active' : b.status === 'inactive')
@@ -137,7 +204,7 @@ function ActiveBoxesTab({ onEditBox }) {
                         <tr>
                             <th>Experiencia</th>
                             <th>Categorias</th>
-                            <th>Activaciones</th>
+                            <th>Stock</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -152,6 +219,8 @@ function ActiveBoxesTab({ onEditBox }) {
                         ) : (
                             filteredBoxes.map((box) => {
                                 const isActive = box.status === 'active'
+                                const isEditingStock = stockEditingId === box.id
+                                const isSavingStock = savingStockId === box.id
                                 return (
                                     <tr key={box.id}>
                                         <td>
@@ -175,7 +244,7 @@ function ActiveBoxesTab({ onEditBox }) {
                                                 ))}
                                             </div>
                                         </td>
-                                        <td className="ab-activations">{box.activations.toLocaleString()}</td>
+                                        <td className="ab-activations">{box.stock.toLocaleString()}</td>
                                         <td>
                                             {/* 🟢 Pasamos las etiquetas requeridas: 'Activa' o 'Inactiva' */}
                                             <StatusBadge
@@ -197,6 +266,41 @@ function ActiveBoxesTab({ onEditBox }) {
                                                         >
                                                             Eliminar
                                                         </button>
+
+                                                        {/* 👇 NUEVO: botón / input para sumar stock. Solo tiene sentido en cajas activas */}
+                                                        {isEditingStock ? (
+                                                            <div className="ab-stock-input-wrapper" style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                                                                <input
+                                                                    type="text"
+                                                                    inputMode="numeric"
+                                                                    autoFocus
+                                                                    placeholder="Cant."
+                                                                    value={stockInputValue}
+                                                                    onChange={handleStockInputChange}
+                                                                    onKeyDown={(e) => handleStockInputKeyDown(e, box)}
+                                                                    onBlur={handleCancelStockInput}
+                                                                    disabled={isSavingStock}
+                                                                    style={{ width: '60px', padding: '4px 6px', border: '1px solid #ccc', borderRadius: '4px' }}
+                                                                />
+                                                                <button
+                                                                    type="button"
+                                                                    // onMouseDown en vez de onClick para que dispare antes del onBlur del input
+                                                                    onMouseDown={() => handleConfirmStockAdd(box)}
+                                                                    disabled={isSavingStock}
+                                                                    className="btn-add-stock-confirm"
+                                                                >
+                                                                    {isSavingStock ? '...' : '✓'}
+                                                                </button>
+                                                            </div>
+                                                        ) : (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleOpenStockInput(box.id)}
+                                                                className="btn-add-stock"
+                                                            >
+                                                                + Stock
+                                                            </button>
+                                                        )}
                                                     </>
                                                 ) : (
                                                     // 🟢 Si está inactiva, se renderiza únicamente el botón de Reactivar

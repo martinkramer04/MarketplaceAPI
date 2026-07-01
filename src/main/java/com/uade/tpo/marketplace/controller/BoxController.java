@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,6 +29,7 @@ import com.uade.tpo.marketplace.entity.Image;
 import com.uade.tpo.marketplace.entity.dto.Box.BoxDto;
 import com.uade.tpo.marketplace.entity.dto.Box.CartValidationResponse;
 import com.uade.tpo.marketplace.entity.dto.Box.CreateBoxRequest;
+import com.uade.tpo.marketplace.entity.dto.Box.StockUpdateRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.UpdateBoxRequest;
 import com.uade.tpo.marketplace.entity.dto.Box.ValidateCartRequest;
 import com.uade.tpo.marketplace.entity.dto.Image.AddImageBoxRequest;
@@ -38,6 +40,7 @@ import com.uade.tpo.marketplace.service.BoxService;
 import com.uade.tpo.marketplace.service.ImageService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import io.jsonwebtoken.io.SerialException;
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -100,6 +103,16 @@ public class BoxController {
             @PathVariable Long id,
             @RequestBody UpdateBoxRequest request) {
         Optional<Box> result = boxService.update(request, id);
+        return result.map(BoxDto::convertToDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<BoxDto> addStock(
+            @PathVariable Long id,
+            @RequestBody @Valid StockUpdateRequest request) {
+        Optional<Box> result = boxService.addStock(id, request.getAmount());
         return result.map(BoxDto::convertToDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
