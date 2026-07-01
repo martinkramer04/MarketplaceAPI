@@ -6,6 +6,11 @@ export const fetchBoxes = createAsyncThunk("boxes/fetchAll", async () => {
   return data;
 });
 
+export const fetchBoxesAvailable = createAsyncThunk("boxes/fetchAvailable", async () => {
+  const { data } = await api.get("/api/boxes/available");
+  return data;
+});
+
 export const updateBox = createAsyncThunk(
   "boxes/update",
   async ({ id, payload }, { rejectWithValue }) => {
@@ -58,6 +63,22 @@ const boxSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(fetchBoxes.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      .addCase(fetchBoxesAvailable.pending, (state) => {
+        state.loading = true;
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(fetchBoxesAvailable.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
+        state.items = action.payload;
+      })
+      .addCase(fetchBoxesAvailable.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;

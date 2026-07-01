@@ -3,7 +3,7 @@ import BoxCard from "../../components/BoxCard/BoxCard";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBoxes } from "../../redux/boxSlice";
+import { fetchBoxesAvailable } from "../../redux/boxSlice";
 import { fetchCategories } from "../../redux/categorySlice";
 import { getIconForCategory } from "../../utils/boxUtils";
 
@@ -32,7 +32,7 @@ function Home() {
 
   useEffect(() => {
     if (statusCats === "idle") dispatch(fetchCategories());
-    if (statusBoxes === "idle") dispatch(fetchBoxes());
+    if (statusBoxes === "idle") dispatch(fetchBoxesAvailable());
   }, [dispatch, statusCats, statusBoxes]);
 
   const handleCategoryClick = (categoryId) => {
@@ -40,14 +40,14 @@ function Home() {
   };
 
   const scroll = (direction) => {
-  if (trackRef.current) {
-    const scrollAmount = direction === "left" ? -300 : 300;
-    trackRef.current.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth" 
-    });
-  }
-};
+    if (trackRef.current) {
+      const scrollAmount = direction === "left" ? -300 : 300;
+      trackRef.current.scrollBy({
+        left: scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <div className="home">
@@ -69,33 +69,33 @@ function Home() {
         {errorCats && <p className="error-text">{errorCats}</p>}
 
         {!loadingCats && !errorCats && (
-<div className="categories-container-wrapper">
-        {/* BOTÓN IZQUIERDO */}
-        <button className="nav-btn left" onClick={() => scroll("left")}>
-          ‹
-        </button>
+          <div className="categories-container-wrapper">
+            {/* BOTÓN IZQUIERDO */}
+            <button className="nav-btn left" onClick={() => scroll("left")}>
+              ‹
+            </button>
 
-        <div className="categories-carousel">
-          {/* El contenedor con la referencia del scroll. Ya no duplicamos el array */}
-          <div className="categories-track" ref={trackRef}>
-            {categories.map((cat) => (
-              <div
-                key={cat.id}
-                className="category-item"
-                onClick={() => handleCategoryClick(cat.id)}
-              >
-                <span className="category-icon">{cat.icon}</span>
-                <span>{cat.name || cat.description}</span>
+            <div className="categories-carousel">
+              {/* El contenedor con la referencia del scroll. Ya no duplicamos el array */}
+              <div className="categories-track" ref={trackRef}>
+                {categories.map((cat) => (
+                  <div
+                    key={cat.id}
+                    className="category-item"
+                    onClick={() => handleCategoryClick(cat.id)}
+                  >
+                    <span className="category-icon">{cat.icon}</span>
+                    <span>{cat.name || cat.description}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* BOTÓN DERECHO */}
-        <button className="nav-btn right" onClick={() => scroll("right")}>
-          ›
-        </button>
-      </div>
+            {/* BOTÓN DERECHO */}
+            <button className="nav-btn right" onClick={() => scroll("right")}>
+              ›
+            </button>
+          </div>
         )}
       </section>
 
@@ -103,7 +103,9 @@ function Home() {
       <section className="boxes-section">
         <h2>Nuestras Experiencias</h2>
         <div className="boxes-grid">
-          {loadingBoxes && <div className="loading">Cargando experiencias...</div>}
+          {loadingBoxes && (
+            <div className="loading">Cargando experiencias...</div>
+          )}
           {errorBoxes && <div className="error-message">{errorBoxes}</div>}
           {!loadingBoxes &&
             !errorBoxes &&

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import "./explore.css";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBoxes } from "../../redux/boxSlice";
+import { fetchBoxesAvailable } from "../../redux/boxSlice";
 import { fetchCategories } from "../../redux/categorySlice";
 import BoxCard from "../../components/BoxCard/BoxCard";
 
@@ -13,7 +13,7 @@ export default function Explore() {
   const [sortBy, setSortBy] = useState("relevance");
 
   const dispatch = useDispatch();
-  const { items, error, loading, status: boxesStatus } = useSelector((state) => state.boxes);
+  const { items, error, loading } = useSelector((state) => state.boxes);
   const {
     items: categories,
     loading: loadingCats,
@@ -21,9 +21,12 @@ export default function Explore() {
   } = useSelector((state) => state.categories);
 
   useEffect(() => {
-    if (boxesStatus === "idle") dispatch(fetchBoxes());
     if (categoriesStatus === "idle") dispatch(fetchCategories());
-  }, [dispatch, boxesStatus, categoriesStatus]);
+  }, [dispatch, categoriesStatus]);
+
+  useEffect(() => {
+    dispatch(fetchBoxesAvailable());
+  }, [dispatch]);
 
   const categoryFromUrl = useMemo(() => {
     const param = searchParams.get("category");
