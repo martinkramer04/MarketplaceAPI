@@ -263,7 +263,7 @@ function ProposeBoxForm({ onCancel }) {
                   onChange={handleChange}
                   required
                 />
-                <span>Confirmo que todos los términos cumplen con los estándares globales de la plataforma BigBox.</span>
+                <span>Confirmo que todos los términos cumplen con los estándares globales de la plataforma Boxify.</span>
               </label>
             </div>
 

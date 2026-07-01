@@ -80,7 +80,7 @@ function ActiveBoxesTab({ onEditBox }) {
         <div className="active-boxes">
             <div className="tab-header">
                 <h1>Cajas Activas / Publicadas</h1>
-                <p>Metricas de tus experiencias actualmente en vivo en BigBox desde MySQL.</p>
+                <p>Metricas de tus experiencias actualmente en vivo en Boxify desde MySQL.</p>
             </div>
 
             <div className="ab-table-wrapper">

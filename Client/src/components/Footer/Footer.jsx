@@ -11,12 +11,12 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-brand">
-        <span className="footer-logo">BigBox</span>
+        <span className="footer-logo">Boxify</span>
         <p>
           Redefining the art of gifting with curated life events and premium
           culinary experiences.
         </p>
-        <p>© 2026 BigBox Marketplace. All rights reserved.</p>
+        <p>© 2026 Boxify Marketplace. All rights reserved.</p>
       </div>
 
       <div className="footer-links">

@@ -58,7 +58,7 @@ function AdminOrders() {
                                         // Mapeamos firstname y lastname directo de tu entidad User.java
                                         const userFullName = order.user
                                             ? `${order.user.firstname || ''} ${order.user.lastname || ''}`.trim()
-                                            : 'Usuario BigBox';
+                                            : 'Usuario Boxify';
 
                                         return (
                                             <tr
@@ -69,7 +69,7 @@ function AdminOrders() {
                                             >
                                                 <td>#{order.id}</td>
                                                 <td>
-                                                    <strong>{userFullName || 'Usuario BigBox'}</strong>
+                                                    <strong>{userFullName || 'Usuario Boxify'}</strong>
                                                     <br />
                                                     <span style={{ fontSize: '0.75rem', color: '#718096' }}>
                                                         {order.user?.email || '—'}

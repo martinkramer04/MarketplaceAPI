@@ -56,7 +56,7 @@ function BecomeProvider() {
       {/* HEADER */}
       <div className="bp-header">
         <h1>Convertite en Proveedor</h1>
-        <p>Sumá tus experiencias a BigBox y llegá a miles de clientes.</p>
+        <p>Sumá tus experiencias a Boxify y llegá a miles de clientes.</p>
       </div>
 
       {step < 4 && (
@@ -248,7 +248,7 @@ function BecomeProvider() {
           {/* PASO 3 - Propuesta de Experiencia */}
           {step === 3 && (
             <>
-              <h2>Propuesta de Experiencia para BigBox</h2>
+              <h2>Propuesta de Experiencia para Boxify</h2>
               <div className="bp-campo">
                 <label>Nombre de la Experiencia *</label>
                 <input

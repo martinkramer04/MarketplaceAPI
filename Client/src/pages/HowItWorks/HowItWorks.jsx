@@ -28,7 +28,7 @@ function HowItWorks() {
         <div className="como-funciona">
 
             <section className="cf-hero">
-                <h1>¿Cómo funciona BigBox?</h1>
+                <h1>¿Cómo funciona Boxify?</h1>
                 <p>Regalar experiencias nunca fue tan fácil. En cuatro simples pasos.</p>
             </section>
 

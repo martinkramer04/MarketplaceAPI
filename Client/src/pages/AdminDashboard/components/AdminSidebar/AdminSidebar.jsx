@@ -14,7 +14,7 @@ function AdminSidebar({ activeTab, onNavigate }) {
     return (
         <aside className="admin-sidebar">
             <div className="admin-sidebar-brand">
-                <span className="admin-sidebar-logo">BigBox</span>
+                <span className="admin-sidebar-logo">Boxify</span>
                 <span className="admin-sidebar-role">Management Console</span>
             </div>
 

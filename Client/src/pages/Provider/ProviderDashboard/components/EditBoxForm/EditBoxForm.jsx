@@ -123,7 +123,7 @@ function EditBoxForm({ propuestaInicial, onCancel, onUpdatePropuesta }) {
               <h2>Términos del Servicio</h2>
               <label className="cd-checkbox">
                 <input type="checkbox" name="termsAccepted" checked={form.termsAccepted} onChange={handleChange} required />
-                <span>Confirmo que las modificaciones cumplen con los estándares de la plataforma BigBox.</span>
+                <span>Confirmo que las modificaciones cumplen con los estándares de la plataforma Boxify.</span>
               </label>
             </div>
           </div>

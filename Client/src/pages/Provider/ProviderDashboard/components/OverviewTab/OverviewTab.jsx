@@ -12,7 +12,7 @@ function OverviewTab({ onNavigate }) {
         <div className="overview">
             <div className="overview-header">
                 <h1>Vista General</h1>
-                <p>Bienvenido al Portal de Proveedores de BigBox.</p>
+                <p>Bienvenido al Portal de Proveedores de Boxify.</p>
             </div>
 
             <div className="overview-stats">
@@ -39,7 +39,7 @@ function OverviewTab({ onNavigate }) {
                 <div className="action-card" onClick={() => onNavigate('active-boxes')}>
                     <span>📦</span>
                     <h3>Cajas Publicadas</h3>
-                    <p>Mirá las métricas de tus cajas activas en BigBox.</p>
+                    <p>Mirá las métricas de tus cajas activas en Boxify.</p>
                 </div>
             </div>
         </div>

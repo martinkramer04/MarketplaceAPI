@@ -27,7 +27,7 @@ function ProposeBoxTab({ onSuccess }) {
             <div className="propose-success">
                 <div className="propose-success-icon">✓</div>
                 <h2>¡Propuesta enviada!</h2>
-                <p>El equipo de BigBox revisará tu concepto. Te notificaremos cuando haya novedades.</p>
+                <p>El equipo de Boxify revisará tu concepto. Te notificaremos cuando haya novedades.</p>
             </div>
         )
     }
@@ -89,7 +89,7 @@ function ProposeBoxTab({ onSuccess }) {
                     </div>
 
                     <div className="propose-info-box">
-                        ℹ️ Una vez aprobada esta propuesta por el equipo de BigBox, podrás cargar imágenes, sub-proveedores y los términos del servicio para la publicación final.
+                        ℹ️ Una vez aprobada esta propuesta por el equipo de Boxify, podrás cargar imágenes, sub-proveedores y los términos del servicio para la publicación final.
                     </div>
 
                     <button className="btn-propose-submit" onClick={handleSubmit}>

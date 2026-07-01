@@ -20,7 +20,7 @@ function NavbarProvider({ isAdmin = false }) {
     <nav className="navbar">
       <Link to={isAdmin ? "/admin/dashboard" : "/provider/dashboard"}>
         <div className="navbar-logo">
-          <h1>BigBox</h1>
+          <h1>Boxify</h1>
         </div>
       </Link>
 

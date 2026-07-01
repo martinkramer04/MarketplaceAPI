@@ -28,7 +28,7 @@ function CompleteDetailsTab({ request, onBack }) {
                 <div>
                     <span className="cd-badge">✅ Aprobado — Completar Paso 2</span>
                     <h1>{request?.title || 'Completar Detalles de la Caja'}</h1>
-                    <p>Cargá toda la información necesaria para que BigBox publique tu caja oficialmente.</p>
+                    <p>Cargá toda la información necesaria para que Boxify publique tu caja oficialmente.</p>
                 </div>
             </div>
 
@@ -122,7 +122,7 @@ function CompleteDetailsTab({ request, onBack }) {
                                 checked={form.termsAccepted}
                                 onChange={handleChange}
                             />
-                            Confirmo que todos los términos cumplen con los estándares globales de la plataforma BigBox.
+                            Confirmo que todos los términos cumplen con los estándares globales de la plataforma Boxify.
                         </label>
                     </div>
 

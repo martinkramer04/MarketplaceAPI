@@ -11,14 +11,14 @@ function Us() {
         <div className="us">
 
             <section className="nos-hero">
-                <h1>Sobre BigBox</h1>
+                <h1>Sobre Boxify</h1>
                 <p>Redefiniendo el arte de regalar con experiencias curadas y momentos premium.</p>
             </section>
 
             <section className="nos-mision">
                 <div className="nos-mision-content">
                     <h2>Nuestra misión</h2>
-                    <p>En BigBox creemos que los mejores regalos no se guardan en cajones: se viven. Por eso creamos una plataforma donde podés encontrar experiencias únicas para cada persona y cada ocasión.</p>
+                    <p>En Boxify creemos que los mejores regalos no se guardan en cajones: se viven. Por eso creamos una plataforma donde podés encontrar experiencias únicas para cada persona y cada ocasión.</p>
                     <p>Desde una cena en un restaurante de autor hasta una aventura en paracaídas, cada box está cuidadosamente seleccionado para crear recuerdos que duran toda la vida.</p>
                 </div>
                 <div className="nos-stats">
