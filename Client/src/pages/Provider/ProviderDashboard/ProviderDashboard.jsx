@@ -62,7 +62,7 @@ function ProviderDashboard() {
             case 'active-boxes':
                 return <ActiveBoxesTab onEditBox={handleEditBox} />
             default:
-                return <OverviewTab />
+                return <OverviewTab onNavigate={handleNavigation} />
         }
     }
 

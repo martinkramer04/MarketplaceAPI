@@ -13,7 +13,12 @@ export default function Explore() {
   const [sortBy, setSortBy] = useState("relevance");
 
   const dispatch = useDispatch();
-  const { items, error, loading } = useSelector((state) => state.boxes);
+  const {
+    items,
+    error,
+    loading,
+    status: boxesStatus,
+  } = useSelector((state) => state.boxes);
   const {
     items: categories,
     loading: loadingCats,
@@ -22,11 +27,8 @@ export default function Explore() {
 
   useEffect(() => {
     if (categoriesStatus === "idle") dispatch(fetchCategories());
-  }, [dispatch, categoriesStatus]);
-
-  useEffect(() => {
-    dispatch(fetchBoxesAvailable());
-  }, [dispatch]);
+    if (categoriesStatus === "idle") dispatch(fetchBoxesAvailable());
+  }, [dispatch, categoriesStatus, boxesStatus]);
 
   const categoryFromUrl = useMemo(() => {
     const param = searchParams.get("category");

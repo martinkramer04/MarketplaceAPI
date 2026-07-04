@@ -52,6 +52,7 @@ const userSlice = createSlice({
     isAuthenticated: !!localStorage.getItem("access_token"),
     loading: false,
     error: null,
+    status: "idle",
   },
   reducers: {
     logoutUser(state) {
@@ -59,6 +60,7 @@ const userSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
+      state.status = "idle";
       localStorage.removeItem("access_token");
     },
   },
@@ -91,10 +93,15 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(fetchCurrentUser.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.data = action.payload;
       })
       .addCase(fetchCurrentUser.rejected, (state) => {
+        state.status = "failed";
         state.data = null;
         state.token = null;
         state.isAuthenticated = false;

@@ -7,6 +7,7 @@ import providerSolicitationSlice from "./providerSolicitationSlice";
 import boxSolicitationSlice from "./boxSolicitationSlice";
 import orderSlice from "./orderSlice";
 import reviewSlice from "./reviewSlice";
+import dashboardSlice from "./dashboardSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
     boxSolicitations: boxSolicitationSlice,
     orders: orderSlice,
     reviews: reviewSlice,
+    dashboard: dashboardSlice,
   },
 });

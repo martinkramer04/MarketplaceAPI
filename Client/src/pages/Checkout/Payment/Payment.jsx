@@ -106,12 +106,7 @@ function Payment() {
             >
               Tarjeta de credito/debito
             </div>
-            <div
-              className={`payment-method ${paymentMethod === "mercadopago" ? "selected" : ""}`}
-              onClick={() => setPaymentMethod("mercadopago")}
-            >
-              MercadoPago / PayPal
-            </div>
+
             <div
               className={`payment-method ${paymentMethod === "transfer" ? "selected" : ""}`}
               onClick={() => setPaymentMethod("transfer")}

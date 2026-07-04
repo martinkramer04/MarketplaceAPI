@@ -53,6 +53,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers(HttpMethod.GET, publicGetEndpoints()).permitAll()
                     .requestMatchers(HttpMethod.POST, publicPostEndpoints()).permitAll()
                     .requestMatchers(HttpMethod.GET, adminGetEndpoints()).hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, providerGetEndpoints()).hasRole("PROVIDER")
                     .requestMatchers(HttpMethod.GET, providerAdminGetEndpoints()).hasAnyRole("PROVIDER", "ADMIN")
                     .requestMatchers(HttpMethod.POST, adminPostEndpoints()).hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, providerPostEndpoints()).hasRole("PROVIDER")
@@ -146,6 +147,14 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 "/api/boxes/status/{status}",
                 "/api/box-solicitations",
                 "/api/box-solicitations/status/{status}",
+                "/api/dashboard/admin",
+        };
+    }
+
+    // GET: PROVIDER only (scoped to the requesting provider, no path variable)
+    private String[] providerGetEndpoints() {
+        return new String[] {
+                "/api/dashboard/provider",
         };
     }
 

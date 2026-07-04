@@ -215,11 +215,13 @@ function Profile() {
   const toast = useToast();
 
   const user = useSelector((state) => state.user.data);
+  const userStatus = useSelector((state) => state.user.status);
   const orders = useSelector((state) => state.orders.orders);
   const ordersLoading = useSelector((state) => state.orders.loading);
+  const ordersStatus = useSelector((state) => state.orders.status);
   const reviews = useSelector((state) => state.reviews.reviews);
+  const reviewsStatus = useSelector((state) => state.reviews.status);
 
-  const [pageLoading, setPageLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("orders");
   const [form, setForm] = useState({
     firstname: "",
@@ -229,25 +231,28 @@ function Profile() {
     repeatPassword: "",
   });
   const [saving, setSaving] = useState(false);
+  const [formUserId, setFormUserId] = useState(null);
+
+  if (user && user.id !== formUserId) {
+    setFormUserId(user.id);
+    setForm({
+      firstname: user.firstname || "",
+      lastname: user.lastname || "",
+      email: user.email || "",
+      password: "",
+      repeatPassword: "",
+    });
+  }
 
   useEffect(() => {
-    dispatch(fetchCurrentUser()).then((action) => {
-      setPageLoading(false);
-      const u = action.payload;
-      if (!u) return;
-      setForm({
-        firstname: u.firstname || "",
-        lastname: u.lastname || "",
-        email: u.email || "",
-        password: "",
-        repeatPassword: "",
-      });
-      if (u.role === "USER") {
-        dispatch(fetchOrdersByUser(u.id));
-        dispatch(fetchReviewsByUser(u.id));
-      }
-    });
-  }, [dispatch]);
+    if (userStatus === "idle") dispatch(fetchCurrentUser());
+  }, [userStatus, dispatch]);
+
+  useEffect(() => {
+    if (!user || user.role !== "USER") return;
+    if (ordersStatus === "idle") dispatch(fetchOrdersByUser(user.id));
+    if (reviewsStatus === "idle") dispatch(fetchReviewsByUser(user.id));
+  }, [user, ordersStatus, reviewsStatus, dispatch]);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -282,7 +287,9 @@ function Profile() {
   const getInitials = (firstname, lastname) =>
     `${firstname?.charAt(0) || ""}${lastname?.charAt(0) || ""}`.toUpperCase();
 
-  if (pageLoading) return <p className="loading-msg">Cargando perfil...</p>;
+  if (userStatus === "idle" || userStatus === "loading") {
+    return <p className="loading-msg">Cargando perfil...</p>;
+  }
   if (!user) return null;
 
   const pendingCount = orders.filter((o) =>

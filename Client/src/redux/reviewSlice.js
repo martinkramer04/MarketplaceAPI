@@ -92,6 +92,7 @@ const ReviewSlice = createSlice({
     selectedReview: null,
     loading: false,
     error: null,
+    status: "idle",
   },
   reducers: {
     clearSelectedReview: (state) => {
@@ -105,14 +106,17 @@ const ReviewSlice = createSlice({
     builder
       .addCase(fetchReviews.pending, (state) => {
         state.loading = true;
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchReviews.fulfilled, (state, action) => {
         state.loading = false;
+        state.status = "succeeded";
         state.reviews = action.payload;
       })
       .addCase(fetchReviews.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.payload;
       })
 
@@ -131,27 +135,33 @@ const ReviewSlice = createSlice({
 
       .addCase(fetchReviewsByBox.pending, (state) => {
         state.loading = true;
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchReviewsByBox.fulfilled, (state, action) => {
         state.loading = false;
+        state.status = "succeeded";
         state.reviews = action.payload;
       })
       .addCase(fetchReviewsByBox.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.payload;
       })
 
       .addCase(fetchReviewsByUser.pending, (state) => {
         state.loading = true;
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchReviewsByUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.status = "succeeded";
         state.reviews = action.payload;
       })
       .addCase(fetchReviewsByUser.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.payload;
       })
 

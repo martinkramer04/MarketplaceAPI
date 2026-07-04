@@ -15,14 +15,14 @@ function AdminDashboard() {
 
     const renderTab = () => {
         switch (activeTab) {
-            case 'vistaGeneral': return <VistaGeneral />
+            case 'vistaGeneral': return <VistaGeneral onNavigate={setActiveTab} />
             case 'propuestasCajas': return <PropuestasCajas />
             case 'proveedores': return <Proveedores />
             case 'boxes': return <AdminBoxes />;
             case 'cupones': return <AdminCoupons />;
             case 'ordenes': return <AdminOrders />;
             case 'configuracionSistema': return <ConfiguracionSistema />
-            default: return <VistaGeneral />
+            default: return <VistaGeneral onNavigate={setActiveTab} />
         }
     }
 

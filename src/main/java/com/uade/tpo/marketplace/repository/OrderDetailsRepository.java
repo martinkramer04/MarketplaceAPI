@@ -9,6 +9,8 @@ import com.uade.tpo.marketplace.entity.OrderDetails;
  
 @Repository
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long> {
- 
+
     List<OrderDetails> findByOrderId(Long orderId);
+
+    List<OrderDetails> findByBox_User_Id(Long userId);
 }

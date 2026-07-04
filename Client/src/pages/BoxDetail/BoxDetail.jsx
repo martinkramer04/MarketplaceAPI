@@ -12,7 +12,10 @@ function StarRating({ value }) {
   return (
     <div className="bd-star-rating">
       {[1, 2, 3, 4, 5].map((star) => (
-        <span key={star} className={star <= value ? "bd-star-filled" : "bd-star-empty"}>
+        <span
+          key={star}
+          className={star <= value ? "bd-star-filled" : "bd-star-empty"}
+        >
           ★
         </span>
       ))}
@@ -21,7 +24,8 @@ function StarRating({ value }) {
 }
 
 function ReviewAvatar({ firstname, lastname }) {
-  const initials = `${firstname?.charAt(0) || ""}${lastname?.charAt(0) || ""}`.toUpperCase();
+  const initials =
+    `${firstname?.charAt(0) || ""}${lastname?.charAt(0) || ""}`.toUpperCase();
   return <div className="bd-review-avatar">{initials}</div>;
 }
 
@@ -29,16 +33,22 @@ function formatDate(dateStr) {
   if (!dateStr) return "";
   const date = new Date(dateStr);
   if (isNaN(date)) return "";
-  return date.toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
+  return date.toLocaleDateString("es-AR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 function BoxReviews({ boxId }) {
   const dispatch = useDispatch();
-  const { reviews, loading } = useSelector((state) => state.reviews);
+  const { reviews, loading, status } = useSelector((state) => state.reviews);
 
   useEffect(() => {
-    dispatch(fetchReviewsByBox(boxId));
-  }, [dispatch, boxId]);
+    if (status === "idle") {
+      dispatch(fetchReviewsByBox(boxId));
+    }
+  }, [dispatch, boxId, status]);
 
   const published = reviews.filter((r) => r.status === "REVIEWED");
 
@@ -54,7 +64,9 @@ function BoxReviews({ boxId }) {
       {loading ? (
         <p className="bd-reviews-empty">Cargando reseñas...</p>
       ) : published.length === 0 ? (
-        <p className="bd-reviews-empty">Todavía no hay reseñas para esta caja.</p>
+        <p className="bd-reviews-empty">
+          Todavía no hay reseñas para esta caja.
+        </p>
       ) : (
         <>
           <div className="bd-reviews-summary">
@@ -62,7 +74,8 @@ function BoxReviews({ boxId }) {
             <div className="bd-summary-right">
               <StarRating value={Math.round(avgRating)} />
               <span className="bd-reviews-count">
-                {published.length} {published.length === 1 ? "reseña" : "reseñas"}
+                {published.length}{" "}
+                {published.length === 1 ? "reseña" : "reseñas"}
               </span>
             </div>
           </div>
@@ -79,7 +92,9 @@ function BoxReviews({ boxId }) {
                     <span className="bd-review-name">
                       {review.user?.firstname} {review.user?.lastname}
                     </span>
-                    <span className="bd-review-date">{formatDate(review.createdAt)}</span>
+                    <span className="bd-review-date">
+                      {formatDate(review.createdAt)}
+                    </span>
                   </div>
                   <StarRating value={review.rating} />
                 </div>
@@ -110,7 +125,8 @@ function BoxDetail() {
     }
   }, [dispatch, status]);
 
-  if (loading || status === "idle") return <p className="not-found">Cargando...</p>;
+  if (loading || status === "idle")
+    return <p className="not-found">Cargando...</p>;
   if (error) return <p className="not-found">{error}</p>;
   if (!box) return <p className="not-found">Box not found.</p>;
 
@@ -118,7 +134,11 @@ function BoxDetail() {
     <div className="box-detail">
       {/* COLUMNA IZQUIERDA */}
       <div className="box-detail-left">
-        <img src={getBoxImageUrl(box)} alt={box.name} className="box-detail-image" />
+        <img
+          src={getBoxImageUrl(box)}
+          alt={box.name}
+          className="box-detail-image"
+        />
 
         <div className="box-detail-about">
           <h2>About the {box.name}</h2>

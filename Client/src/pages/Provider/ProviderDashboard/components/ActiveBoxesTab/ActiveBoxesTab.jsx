@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import './ActiveBoxesTab.css'
 import api from '../../../../../api/axiosConfig'
+import { fetchBoxesByUser, updateBox, adjustBoxStock } from '../../../../../redux/boxSlice'
 import { useToast } from '../../../../../Context/ToastContext'
 import StatusBadge from '../../../../../components/StatusBadge/StatusBadge'
 import ConfirmModal from '../../../../../components/ConfirmModal/ConfirmModal'
@@ -8,8 +10,9 @@ import ConfirmModal from '../../../../../components/ConfirmModal/ConfirmModal'
 import { getBoxImageUrl } from '../../../../../utils/boxUtils'
 
 function ActiveBoxesTab({ onEditBox }) {
-    const [boxes, setBoxes] = useState([])
-    const [loading, setLoading] = useState(true)
+    const dispatch = useDispatch()
+    const { providerItems, providerLoading, providerStatus } = useSelector((state) => state.boxes)
+
     const [search, setSearch] = useState('')
     const [filterStatus, setFilterStatus] = useState('ACTIVE')
     const [boxToDelete, setBoxToDelete] = useState(null)
@@ -21,35 +24,26 @@ function ActiveBoxesTab({ onEditBox }) {
     const toast = useToast()
 
     useEffect(() => {
-        cargarCajas()
-    }, [])
-
-    const cargarCajas = () => {
-        setLoading(true)
         api.get('/auth/me')
-            .then(resUser => api.get(`/api/boxes/user/${resUser.data.id}`))
-            .then(resBoxes => {
-                const adaptadas = resBoxes.data
-                    .filter(b => b.status === 'APPROVED' || b.status === 'REJECTED')
-                    .map(b => ({
-                        id: b.id,
-                        name: b.name || 'Caja de Experiencia',
-                        sku: `SKU: EX-${b.id}00`,
-                        categories: b.category ? [b.category.description.toUpperCase()] : ['SIN CATEGORIA'],
-                        stock: b.stock ?? 0,
-                        status: b.status === 'APPROVED' ? 'active' : 'inactive',
-                        price: b.price || 0,
-                        shortDescription: b.description || '',
-                        images: b.images || []
-                    }))
-                setBoxes(adaptadas)
-                setLoading(false)
-            })
-            .catch(err => {
-                console.error('Error cargando cajas:', err)
-                setLoading(false)
-            })
-    }
+            .then((res) => dispatch(fetchBoxesByUser(res.data.id)))
+            .catch((err) => console.error('Error obteniendo el usuario actual:', err))
+    }, [dispatch])
+
+    const boxes = useMemo(() => (
+        providerItems
+            .filter((b) => b.status === 'APPROVED' || b.status === 'REJECTED')
+            .map((b) => ({
+                id: b.id,
+                name: b.name || 'Caja de Experiencia',
+                sku: `SKU: EX-${b.id}00`,
+                categories: b.category ? [b.category.description.toUpperCase()] : ['SIN CATEGORIA'],
+                stock: b.stock ?? 0,
+                status: b.status === 'APPROVED' ? 'active' : 'inactive',
+                price: b.price || 0,
+                shortDescription: b.description || '',
+                images: b.images || []
+            }))
+    ), [providerItems])
 
     const handleDeleteClick = (box) => {
         if (box.status !== 'active') return
@@ -59,19 +53,16 @@ function ActiveBoxesTab({ onEditBox }) {
     const handleConfirmDelete = () => {
         if (!boxToDelete) return
 
-        const formData = new FormData();
-        formData.append('status', 'REJECTED');
-
-        api.put(`/api/boxes/${boxToDelete.id}`, formData)
+        dispatch(updateBox({ id: boxToDelete.id, fields: { status: 'REJECTED' } }))
+            .unwrap()
             .then(() => {
-                setBoxes(boxes.map(b => b.id === boxToDelete.id ? { ...b, status: 'inactive' } : b))
                 setBoxToDelete(null)
                 toast.success('La caja fue desactivada del catálogo correctamente.')
             })
-            .catch(err => {
+            .catch((err) => {
                 setBoxToDelete(null)
                 console.error('Error al dar de baja la caja:', err)
-                if (err.response?.status === 403) {
+                if (err?.status === 403) {
                     toast.error('No tenés permisos para modificar esta caja.')
                 } else {
                     toast.error('No se pudo remover la caja del catálogo en vivo.')
@@ -80,17 +71,14 @@ function ActiveBoxesTab({ onEditBox }) {
     }
 
     const handleReactivateBox = (box) => {
-        const formData = new FormData();
-        formData.append('status', 'APPROVED');
-
-        api.put(`/api/boxes/${box.id}`, formData)
+        dispatch(updateBox({ id: box.id, fields: { status: 'APPROVED' } }))
+            .unwrap()
             .then(() => {
-                setBoxes(boxes.map(b => b.id === box.id ? { ...b, status: 'active' } : b))
                 toast.success('La caja fue reactivada en el catálogo correctamente.')
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error('Error al reactivar la caja:', err)
-                if (err.response?.status === 403) {
+                if (err?.status === 403) {
                     toast.error('No tenés permisos para modificar esta caja.')
                 } else {
                     toast.error('No se pudo reactivar la caja.')
@@ -123,42 +111,29 @@ function ActiveBoxesTab({ onEditBox }) {
             return
         }
 
-        setSavingStockId(box.id)
-
-        const isReduction = amount < 0
-        const absoluteAmount = Math.abs(amount)
-
-        if (isReduction && box.stock - absoluteAmount < 0) {
+        if (amount < 0 && box.stock + amount < 0) {
             toast.error(`No podés restar más stock del disponible (${box.stock}).`)
-            setSavingStockId(null)
             handleCancelStockInput()
             return
         }
 
-        const endpoint = isReduction
-            ? `/api/boxes/${box.id}/ReduceStock`
-            : `/api/boxes/${box.id}/stock`
+        setSavingStockId(box.id)
 
-        api.put(endpoint, { amount: absoluteAmount })
-            .then((res) => {
-                const nuevoStock = res.data?.stock ?? (isReduction ? box.stock - absoluteAmount : box.stock + absoluteAmount)
-
-                setBoxes(prev =>
-                    prev.map(b => b.id === box.id ? { ...b, stock: nuevoStock } : b)
-                )
-
-                if (isReduction) {
-                    toast.success(`Se restaron ${absoluteAmount} unidades de stock.`)
+        dispatch(adjustBoxStock({ id: box.id, amount }))
+            .unwrap()
+            .then(() => {
+                if (amount < 0) {
+                    toast.success(`Se restaron ${Math.abs(amount)} unidades de stock.`)
                 } else {
-                    toast.success(`Se sumaron ${absoluteAmount} unidades de stock.`)
+                    toast.success(`Se sumaron ${amount} unidades de stock.`)
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error('Error actualizando stock:', err)
-                if (err.response?.status === 403) {
+                if (err?.status === 403) {
                     toast.error('No tenés permisos para modificar el stock de esta caja.')
-                } else if (err.response?.status === 400 && err.response?.data?.message) {
-                    toast.error(err.response.data.message)
+                } else if (err?.status === 400 && err?.message) {
+                    toast.error(err.message)
                 } else {
                     toast.error('No se pudo actualizar el stock en la base de datos.')
                 }
@@ -185,7 +160,7 @@ function ActiveBoxesTab({ onEditBox }) {
             b.id.toString().includes(search)
         )
 
-    if (loading) return <div className="tab-loading-state">Cargando catalogo de experiences en vivo...</div>
+    if (providerLoading && providerStatus !== 'succeeded') return <div className="tab-loading-state">Cargando catalogo de experiences en vivo...</div>
 
     return (
         <div className="active-boxes">

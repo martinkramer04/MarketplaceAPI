@@ -19,4 +19,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByUserIdAndStatus(Long userId, ReviewStatusEnum status);
     boolean existsByUserIdAndBoxId(Long userId, Long boxId);
+
+    List<Review> findByBox_User_Id(Long userId);
 }

@@ -11,6 +11,38 @@ export const fetchBoxesAvailable = createAsyncThunk("boxes/fetchAvailable", asyn
   return data;
 });
 
+export const fetchBoxesByUser = createAsyncThunk(
+  "boxes/fetchByUser",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get(`/api/boxes/user/${userId}`);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  },
+);
+
+export const adjustBoxStock = createAsyncThunk(
+  "boxes/adjustStock",
+  async ({ id, amount }, { rejectWithValue }) => {
+    try {
+      const isReduction = amount < 0;
+      const absoluteAmount = Math.abs(amount);
+      const endpoint = isReduction
+        ? `/api/boxes/${id}/ReduceStock`
+        : `/api/boxes/${id}/stock`;
+      const { data } = await api.put(endpoint, { amount: absoluteAmount });
+      return { id, amount: absoluteAmount, isReduction, stock: data?.stock };
+    } catch (err) {
+      return rejectWithValue({
+        status: err.response?.status,
+        message: err.response?.data?.message || err.message,
+      });
+    }
+  },
+);
+
 export const updateBox = createAsyncThunk(
   "boxes/update",
   async ({ id, fields, images = [], keepImageIds = [] }, { rejectWithValue }) => {
@@ -24,7 +56,10 @@ export const updateBox = createAsyncThunk(
       const { data } = await api.put(`/api/boxes/${id}`, formData);
       return data;
     } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+      return rejectWithValue({
+        status: err.response?.status,
+        message: err.response?.data?.message || err.message,
+      });
     }
   },
 );
@@ -48,6 +83,10 @@ const boxSlice = createSlice({
     loading: false,
     error: null,
     status: "idle",
+    providerItems: [],
+    providerLoading: false,
+    providerError: null,
+    providerStatus: "idle",
     validating: false,
     cartValidation: null,
   },
@@ -90,6 +129,22 @@ const boxSlice = createSlice({
         state.error = action.error.message;
       })
 
+      .addCase(fetchBoxesByUser.pending, (state) => {
+        state.providerLoading = true;
+        state.providerStatus = "loading";
+        state.providerError = null;
+      })
+      .addCase(fetchBoxesByUser.fulfilled, (state, action) => {
+        state.providerLoading = false;
+        state.providerStatus = "succeeded";
+        state.providerItems = action.payload;
+      })
+      .addCase(fetchBoxesByUser.rejected, (state, action) => {
+        state.providerLoading = false;
+        state.providerStatus = "failed";
+        state.providerError = action.payload;
+      })
+
       .addCase(updateBox.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -98,10 +153,35 @@ const boxSlice = createSlice({
         state.loading = false;
         const index = state.items.findIndex((b) => b.id === action.payload.id);
         if (index !== -1) state.items[index] = action.payload;
+        const providerIndex = state.providerItems.findIndex((b) => b.id === action.payload.id);
+        if (providerIndex !== -1) state.providerItems[providerIndex] = action.payload;
       })
       .addCase(updateBox.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+
+      .addCase(adjustBoxStock.pending, (state) => {
+        state.providerLoading = true;
+        state.providerError = null;
+      })
+      .addCase(adjustBoxStock.fulfilled, (state, action) => {
+        state.providerLoading = false;
+        const { id, amount, isReduction, stock } = action.payload;
+        const applyStock = (arr) => {
+          const index = arr.findIndex((b) => b.id === id);
+          if (index !== -1) {
+            const current = arr[index];
+            const newStock = stock ?? (isReduction ? current.stock - amount : current.stock + amount);
+            arr[index] = { ...current, stock: newStock };
+          }
+        };
+        applyStock(state.items);
+        applyStock(state.providerItems);
+      })
+      .addCase(adjustBoxStock.rejected, (state, action) => {
+        state.providerLoading = false;
+        state.providerError = action.payload;
       })
 
       .addCase(validateCart.pending, (state) => {

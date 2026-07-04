@@ -43,7 +43,7 @@ function AdminBoxes() {
                 toast.success(`La caja "${box.name}" ha sido desactivada.`);
             }
         } catch (err) {
-            toast.error(`Error al modificar el estado: ${typeof err === 'string' ? err : 'Intente de nuevo.'}`);
+            toast.error(`Error al modificar el estado: ${typeof err === 'string' ? err : err?.message || 'Intente de nuevo.'}`);
         } finally {
             setShowModal(false);
             setBoxToHide(null);
