@@ -77,9 +77,7 @@ const boxSolicitationSlice = createSlice({
     status: "idle",
   },
   reducers: {
-    clearError: (state) => {
-      state.error = null;
-    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -170,5 +168,5 @@ const boxSolicitationSlice = createSlice({
   },
 });
 
-export const { clearError } = boxSolicitationSlice.actions;
+
 export default boxSolicitationSlice.reducer;

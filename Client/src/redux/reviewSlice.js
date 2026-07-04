@@ -95,12 +95,7 @@ const ReviewSlice = createSlice({
     status: "idle",
   },
   reducers: {
-    clearSelectedReview: (state) => {
-      state.selectedReview = null;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -208,6 +203,4 @@ const ReviewSlice = createSlice({
       });
   },
 });
-
-export const { clearSelectedReview, clearError } = ReviewSlice.actions;
 export default ReviewSlice.reducer;

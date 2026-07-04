@@ -91,9 +91,7 @@ const boxSlice = createSlice({
     cartValidation: null,
   },
   reducers: {
-    clearCartValidation: (state) => {
-      state.cartValidation = null;
-    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -199,5 +197,5 @@ const boxSlice = createSlice({
   },
 });
 
-export const { clearCartValidation } = boxSlice.actions;
+
 export default boxSlice.reducer;

@@ -102,12 +102,7 @@ const providerSolicitationSlice = createSlice({
     status: "idle",
   },
   reducers: {
-    clearSelectedSolicitation: (state) => {
-      state.selectedSolicitation = null;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -230,6 +225,4 @@ const providerSolicitationSlice = createSlice({
   },
 });
 
-export const { clearSelectedSolicitation, clearError } =
-  providerSolicitationSlice.actions;
 export default providerSolicitationSlice.reducer;

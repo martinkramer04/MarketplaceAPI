@@ -70,12 +70,7 @@ const PaymentMethodsSlice = createSlice({
     error: null,
   },
   reducers: {
-    clearSelectedPaymentMethod: (state) => {
-      state.selectedPaymentMethod = null;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -151,6 +146,5 @@ const PaymentMethodsSlice = createSlice({
   },
 });
 
-export const { clearSelectedPaymentMethod, clearError } =
-  PaymentMethodsSlice.actions;
+
 export default PaymentMethodsSlice.reducer;
