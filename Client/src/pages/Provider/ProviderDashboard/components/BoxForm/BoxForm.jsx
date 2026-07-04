@@ -234,7 +234,7 @@ function BoxForm({ mode = "create", initialData = null, onSuccess, onCancel }) {
                     style={{ position: "relative", cursor: "default" }}
                   >
                     <img
-                      src={`data:image/png;base64,${img.base64Image}`}
+                      src={img.url}
                       alt={`imagen-existente-${i}`}
                       style={{
                         width: "100%",

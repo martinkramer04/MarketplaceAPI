@@ -13,9 +13,7 @@ function Confirmation() {
         name: d.boxName,
         price: d.subtotal,
         quantity: 1,
-        image: d.box?.images?.[0]?.base64Image
-            ? `data:image/png;base64,${d.box.images[0].base64Image}`
-            : null,
+        image: d.box?.images?.[0]?.url ?? null,
     }))
 
     return (

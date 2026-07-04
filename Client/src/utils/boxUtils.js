@@ -2,18 +2,11 @@ const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400'
 
 export const getBoxImageUrl = (box) => {
-  if (box.images && box.images.length > 0 && box.images[0].base64Image) {
-    return `data:image/png;base64,${box.images[0].base64Image}`
-  }
-  return FALLBACK_IMAGE
+  return box.images?.[0]?.url ?? FALLBACK_IMAGE
 }
 
 export const getItemImageUrl = (item) => {
-  if (item.images?.length > 0) {
-    if (item.images[0].base64Image) return `data:image/png;base64,${item.images[0].base64Image}`
-    if (item.images[0].url) return item.images[0].url
-  }
-  return item.image ?? FALLBACK_IMAGE
+  return item.images?.[0]?.url ?? item.image ?? FALLBACK_IMAGE
 }
 
 export const formatPrice = (value) =>

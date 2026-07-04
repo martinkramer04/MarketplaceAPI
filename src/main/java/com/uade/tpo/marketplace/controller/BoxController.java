@@ -3,7 +3,6 @@ package com.uade.tpo.marketplace.controller;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +38,7 @@ import com.uade.tpo.marketplace.entity.enums.BoxStatusEnum;
 import com.uade.tpo.marketplace.repository.UserRepository;
 import com.uade.tpo.marketplace.service.BoxService;
 import com.uade.tpo.marketplace.service.ImageService;
+import com.uade.tpo.marketplace.util.ImageBlobUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import io.jsonwebtoken.io.SerialException;
 import jakarta.validation.Valid;
@@ -158,9 +158,8 @@ public class BoxController {
     @GetMapping("/display-image")
     public ResponseEntity<ImageResponse> displayImage(@RequestParam("id") long id) throws IOException, SQLException {
         Image image = imageService.viewById(id);
-        String encodedString = Base64.getEncoder()
-                .encodeToString(image.getImage().getBytes(1, (int) image.getImage().length()));
-        return ResponseEntity.ok().body(ImageResponse.builder().file(encodedString).id(id).build());
+        byte[] bytes = image.getImage().getBytes(1, (int) image.getImage().length());
+        return ResponseEntity.ok().body(ImageResponse.builder().file(ImageBlobUtils.resolveSrc(bytes)).id(id).build());
     }
 
     @GetMapping("/status/{status}")
